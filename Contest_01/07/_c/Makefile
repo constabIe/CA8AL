@@ -40,7 +40,7 @@ all: build run
 
 build: ${SOURCES}
 	@mkdir -p $@
-	@${CC} ${CFLAGS} $< -o ${EXECUTABLE}
+	${CC} ${CFLAGS} $< -o ${EXECUTABLE}
 
 run:
 	@./${EXECUTABLE}
