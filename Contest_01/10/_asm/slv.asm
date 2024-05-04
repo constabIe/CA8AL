@@ -21,7 +21,7 @@ main:
 	mov  dword [i_days], eax
 
 	xor eax, eax
-	
+
 	; preps for arith ops
 	dec  dword [i_months]
 	add  eax, dword [even_month]
@@ -32,6 +32,7 @@ main:
 	; (i_months - 1) / 2
 	mov  eax, dword [i_months]
 	mov  ebx, 0x0002
+	cdq
 	div  ebx
 
 	; save the values after div
@@ -40,12 +41,14 @@ main:
 
 	; days_in_year += (i_months - 1) / 2 * (even + odd)
 	; mov  eax, dword [quotient]
+	cdq
 	mul  dword [sum_even_odd]
 
 	add  dword [days_in_year], eax
 
 	; days_in_year += ((i_months - 1) % 2) * even
 	mov  eax, dword [remainder]
+	cdq
 	mul  dword [even_month]
 
 	add  dword [days_in_year], eax
