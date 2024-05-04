@@ -22,8 +22,8 @@ main:
 
 	; preps for arith ops
 	sub  dword [i_months], 1
-	add  eax, dword [even_month]
-	add  eax, dword [odd_month]
+	add  eax, even_month
+	add  eax, odd_month
 
 	mov  dword [sum_even_odd], eax
 
@@ -44,7 +44,7 @@ main:
 
 	; days_in_year += ((i_months - 1) % 2) * even
 	mov  eax, dword [remainder]
-	mul  dword [even_month]
+	mul  even_month
 
 	add  dword [days_in_year], eax
 
