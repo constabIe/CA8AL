@@ -5,13 +5,13 @@
 # 		 -Wall \
 # 		 -Wextra \
 
-# SOURCE = slv.cpp
+# SOURCES = slv.cpp
 
 # EXECUTABLE = build/slv_cpp
 
 # all: build run clean
 
-# build: ${SOURCE}
+# build: ${SOURCES}
 # 	@mkdir -p build
 # 	@${CC} ${CXXFLAGS} $< -o ${EXECUTABLE}
 
@@ -38,7 +38,7 @@ EXECUTABLE = build/slv_c
 
 all: build run 
 
-build: ${SOURCE}
+build: ${SOURCES}
 	@mkdir -p $@
 	@${CC} ${CFLAGS} $< -o ${EXECUTABLE}
 
