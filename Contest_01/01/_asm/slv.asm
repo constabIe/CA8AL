@@ -31,21 +31,21 @@ main:
 	; interim calculations
 	mov eax, dword [a_half]
 	mov ebx, dword [t]
-	mul eax, ebx
+	mul ebx
 
 	add eax, dword [v]
 
-	mul eax, ebx
+	mul ebx
 
 	mov dword [S], eax
 
 	mov eax, dword [a_half + 1]
 	mov ebx, dword [t]
-	mul eax, ebx
+	mul ebx
 
 	add eax, dword [v + 1]
 
-	mul eax, ebx
+	mul ebx
 
 	mov dword [S + 1], eax
 
