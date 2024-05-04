@@ -20,17 +20,19 @@ main:
 	call io_get_dec
 	mov  dword [i_days], eax
 
+	xor eax, eax
+	
 	; preps for arith ops
-	sub  dword [i_months], 1
-	add  eax, even_month
-	add  eax, odd_month
+	dec  dword [i_months]
+	add  eax, dword [even_month]
+	add  eax, dword [odd_month]
 
 	mov  dword [sum_even_odd], eax
 
 	; (i_months - 1) / 2
 	mov  eax, dword [i_months]
-	mov  ecx, 2
-	div  ecx
+	mov  ebx, 0x0002
+	div  ebx
 
 	; save the values after div
 	mov  dword [quotient], eax
@@ -44,7 +46,7 @@ main:
 
 	; days_in_year += ((i_months - 1) % 2) * even
 	mov  eax, dword [remainder]
-	mul  even_month
+	mul  dword [even_month]
 
 	add  dword [days_in_year], eax
 
