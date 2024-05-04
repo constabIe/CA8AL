@@ -58,6 +58,9 @@ build/%.o: %.asm
 	@mkdir -p build
 	$(AS) $(ASFLAGS) $< -o $@
 
+run: $(EXECUTABLE)
+	./$<
+
 clean:
 	rm -rf build
 
