@@ -54,7 +54,7 @@ main:
 	add  dword [days_in_year], eax
 
 	; days_in_year += i_days
-	mov  eax, i_days
+	mov  eax, dword [i_days]
 	add  dword [days_in_year], eax
 
 	mov  eax, dword [days_in_year]
