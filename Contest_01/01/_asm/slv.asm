@@ -29,25 +29,25 @@ main:
 	mov dword [t], eax
 
 	; interim calculations
-	mov eax, [a_half]
-	mov ecx, [t]
-	mul ecx
+	mov eax, dword [a_half]
+	mov ebx, dword [t]
+	mul eax, ebx
 
-	add eax, [v]
+	add eax, dword [v]
 
-	mul ecx
+	mul eax, ebx
 
-	mov [S], eax
+	mov dword [S], eax
 
-	mov eax, [a_half + 1]
-	mov ecx, [t]
-	mul ecx
+	mov eax, dword [a_half + 1]
+	mov ebx, dword [t]
+	mul eax, ebx
 
-	add eax, [v + 1]
+	add eax, dword [v + 1]
 
-	mul ecx
+	mul eax, ebx
 
-	mov [S + 1], eax
+	mov dword [S + 1], eax
 
 	; result output
 	mov eax, [S]
