@@ -53,8 +53,8 @@ main:
 	mov eax, [S]
 	call io_print_dec
 
-	mov eax, space
-	call io_print_char
+	; mov eax, space
+	; call io_print_char
 
 	mov eax, [S + 1]
 	call io_print_dec
@@ -71,7 +71,7 @@ section .bss
 	S:			resd 2
 
 
-section .rodata
-	space: 		db ` `
+; section .rodata
+; 	space: 		db ` `
 
 
