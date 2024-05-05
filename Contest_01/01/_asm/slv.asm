@@ -17,13 +17,13 @@ main:
 	mov [v_xy], eax
 
 	call io_get_dec
-	mov [v_xy + 1], eax
+	mov [v_xy + 4], eax
 
 	call io_get_dec
 	mov [a_xy_half], eax
 
 	call io_get_dec
-	mov [a_xy_half + 1], eax
+	mov [a_xy_half + 4], eax
 
 	call io_get_dec
 	mov [t], eax
@@ -32,6 +32,7 @@ main:
 	; S_x
 	mov eax, [a_xy_half]
 	mov ebx, [t]
+	cdq
 	mul ebx
 
 	add eax, [v_xy]
@@ -41,14 +42,14 @@ main:
 	mov [s_xy], eax
 
 	; S_y
-	mov eax, [a_xy_half + 1]
+	mov eax, [a_xy_half + 4]
 	mul ebx
 
-	add eax, [v_xy + 1]
+	add eax, [v_xy + 4]
 
 	mul ebx
 
-	mov [s_xy + 1], eax
+	mov [s_xy + 4], eax
 
 	; output
 	mov eax, [s_xy]
@@ -57,7 +58,7 @@ main:
 	mov eax, space
 	call io_print_char
 
-	mov eax, [s_xy + 1]
+	mov eax, [s_xy + 4]
 	call io_print_dec
 
 	xor eax, eax
