@@ -54,7 +54,7 @@ main:
 	mov eax, [s_xy]
 	call io_print_dec
 
-	mov eax, [space]
+	mov eax, space
 	call io_print_char
 
 	mov eax, [s_xy + 1]
