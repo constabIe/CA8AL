@@ -12,66 +12,62 @@ extern io_print_char, o_print_string, io_newline
 section .text
 global main
 main:
-	; get input
+	; input
 	call io_get_dec
-	mov dword [v], eax
-
-	call io_get_dec
-	mov dword [v + 1], eax
+	mov [v_xy], eax
 
 	call io_get_dec
-	mov dword [a_half], eax
+	mov [v_xy + 1], eax
 
 	call io_get_dec
-	mov dword [a_half + 1], eax
+	mov [a_xy_half], eax
 
 	call io_get_dec
-	mov dword [t], eax
+	mov [a_xy_half + 1], eax
 
-	; interim calculations
-	mov eax, dword [a_half]
-	mov ebx, dword [t]
-	mul ebx
+	call io_get_dec
+	mov [t], eax
 
-	add eax, dword [v]
+	; calculations
+	; S_x
+	mov eax, [a_xy_half]
+	mul [t]
 
-	mul ebx
+	add eax, [v_xy]
 
-	mov dword [S], eax
+	mul [t]
 
-	mov eax, dword [a_half + 1]
-	mov ebx, dword [t]
-	mul ebx
+	mov [s_xy], eax
 
-	add eax, dword [v + 1]
+	; S_y
+	mov eax, [a_xy_half + 1]
+	mul [t]
 
-	mul ebx
+	add eax, [v_xy + 1]
 
-	mov dword [S + 1], eax
+	mul [t]
 
-	; result output
-	mov eax, [S]
+	mov [s_xy + 1], eax
+
+	; output
+	mov eax, [s_xy]
 	call io_print_dec
 
-	; mov eax, space
-	; call io_print_char
+	mov eax, space
+	call io_print_char
 
-	mov eax, [S + 1]
+	mov eax, [s_xy + 1]
 	call io_print_dec
 
 	xor eax, eax
-	ret 0
+	ret
+	
+section .bss 
+	v_xy:		resd 	2
+	a_xy_half:	resd 	2
+	t: 			resd 	1
+	s_xy:		resd 	2
 
-
-section .bss
-	; R \in \mathbb{R} ^ 2
-	v:			resd 2
-	a_half:		resd 2
-	t:			resd 1
-	S:			resd 2
-
-
-; section .rodata
-; 	space: 		db ` `
-
+section .data
+	space		db 		0x20
 
