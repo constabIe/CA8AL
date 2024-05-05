@@ -31,21 +31,22 @@ main:
 	; calculations
 	; S_x
 	mov eax, [a_xy_half]
-	mul [t]
+	mov ebx, [t]
+	mul ebx
 
 	add eax, [v_xy]
 
-	mul [t]
+	mul ebx
 
 	mov [s_xy], eax
 
 	; S_y
 	mov eax, [a_xy_half + 1]
-	mul [t]
+	mul ebx
 
 	add eax, [v_xy + 1]
 
-	mul [t]
+	mul ebx
 
 	mov [s_xy + 1], eax
 
@@ -53,7 +54,7 @@ main:
 	mov eax, [s_xy]
 	call io_print_dec
 
-	mov eax, space
+	mov eax, [space]
 	call io_print_char
 
 	mov eax, [s_xy + 1]
@@ -61,7 +62,7 @@ main:
 
 	xor eax, eax
 	ret
-	
+
 section .bss 
 	v_xy:		resd 	2
 	a_xy_half:	resd 	2
