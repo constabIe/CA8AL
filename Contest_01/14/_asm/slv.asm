@@ -57,7 +57,6 @@ main:
 	sub eax, [x]
 
 	test eax, eax
-	; jns valid_hour
 	js invalid_hour	
 
 	mov eax, [result]
@@ -68,10 +67,6 @@ main:
 
 valid_remainder:
 	inc dword [beet_q]
-
-; valid_hour:
-; 	mov eax, [box_q]
-; 	mov [result], eax
 
 invalid_hour:
 	mov eax, [beet_q]
@@ -99,7 +94,4 @@ section .bss
 section .rodata
 	; appropriate time
 	hour_start: 	dd		0
-	minute_start: 	dd 		0
 	hour_end:		dd		5
-	minute_end:		dd 		59
-
