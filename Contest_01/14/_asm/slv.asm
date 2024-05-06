@@ -42,16 +42,14 @@ main:
 	mov [beet_q], eax
 
 	; boxes quantity
-	mov eax, [d]
-	mov ebx, [beet_q]
-	; cdq 				; maybe using uint32_t would be the better way 
-	idiv ebx
+	mov ebx, [d]
+	div ebx
 
 	; box_q++ if remainder != 0
 	sub edx, [d]
 
 	test edx, edx
-	js valid_remainder:
+	js valid_remainder
 
 	mov [result], ebx ; result = beet_q
 
@@ -69,7 +67,7 @@ main:
 	ret
 
 valid_remainder:
-	inc [beet_q]
+	inc dword [beet_q]
 
 ; valid_hour:
 ; 	mov eax, [box_q]
@@ -84,26 +82,24 @@ invalid_hour:
 	sub [result], eax
 
 
-
-
 section .bss
-	n:			resd 	1
-	m:			resd 	1 
-	k:			resd 	1
-	d:			resd 	1
-	x:			resd 	1
-	y:			resd 	1
-
-	s:			resd 	1
-	beet_q:		resd 	1
-	box_q:		resd 	1
-	result:		resd	1
+	n:				resd 	1
+	m:				resd 	1 
+	k:				resd 	1
+	d:				resd 	1
+	x:				resd 	1
+	y:				resd 	1
+	
+	s:				resd 	1
+	beet_q:			resd 	1
+	box_q:			resd 	1
+	result:			resd	1
 
 
 section .rodata
 	; appropriate time
-	hour_start 	dd		0
-	minute_start dd 		0
-	hour_end	dd		5
-	minute_end	dd 		59
+	hour_start: 	dd		0
+	minute_start: 	dd 		0
+	hour_end:		dd		5
+	minute_end:		dd 		59
 
