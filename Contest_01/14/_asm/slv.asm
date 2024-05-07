@@ -10,30 +10,31 @@ extern io_print_char, o_print_string, io_newline
 section .text
 global main
 main:
+	; input
 	call io_get_dec
 	mov [n], eax
 
 	call io_get_dec
 	mov [m], eax
-
+	
 	call io_get_dec
 	mov [k], eax
-
+	
 	call io_get_dec
 	mov [d], eax
-
+	
 	call io_get_dec
 	mov [x], eax
-
+	
 	call io_get_dec
 	mov [y], eax
 
-	; field square 
+	; field square
 	mov eax, [n]
 	mov ebx, [m]
 	imul ebx
 
-	mov [s], eax
+	mov [s], ebx
 
 	; beetroot quantity
 	mov ebx, [k]
@@ -43,22 +44,21 @@ main:
 
 	; boxes quantity
 	mov ebx, [d]
-	div ebx
+	idiv ebx
 
-	; box_q++ if remainder != 0
-	sub edx, [d]
+	mov [box_q], eax
 
-	test edx, edx
+	cmp edx, ebx
 	js valid_remainder
+	
+	mov eax, [box_q]
+	mov [result], eax
 
-	mov [result], ebx ; result = beet_q
+	mov eax, [x]
+	cmp [valid_hour_end], eax
+	js invalid_hour
 
-	mov eax, [hour_end]
-	sub eax, [x]
-
-	test eax, eax
-	js invalid_hour	
-
+	; output
 	mov eax, [result]
 	call io_print_dec
 
@@ -66,32 +66,28 @@ main:
 	ret
 
 valid_remainder:
-	inc dword [beet_q]
+	inc dword [box_q]
 
 invalid_hour:
-	mov eax, [beet_q]
-	mov ebx, 0x0003
-	cdq
-	idiv ebx
+	mov eax, [box_q]
+	idiv 3
 
 	sub [result], eax
 
 
 section .bss
-	n:				resd 	1
-	m:				resd 	1 
-	k:				resd 	1
-	d:				resd 	1
-	x:				resd 	1
-	y:				resd 	1
-	
-	s:				resd 	1
-	beet_q:			resd 	1
-	box_q:			resd 	1
-	result:			resd	1
-
+	n:					resd	1
+	m:					resd	1
+	k:					resd	1
+	d:					resd	1
+	x:					resd	1
+	y:					resd	1
+			
+	s:					resd	1
+	beet_q:				resd	1
+	box_q:				resd	1
+	result:				resd	1
 
 section .rodata
-	; appropriate time
-	hour_start: 	dd		0
-	hour_end:		dd		5
+	valid_hour_start:	dd		0
+	valid_hour_end:		dd		5
