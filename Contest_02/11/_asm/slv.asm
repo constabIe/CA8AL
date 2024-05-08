@@ -15,7 +15,6 @@ section .text
 global main
 main:
 	; get and verify input
-	; call io_get_dec
 	GET_DEC 4, eax
 	mov [a], eax
 
@@ -25,7 +24,6 @@ main:
 	cmp eax, MAX_LIMIT
 	jns RangeExceptionCondition
 
-	; call io_get_dec
 	GET_DEC 4, eax
 	mov [b], eax
 
@@ -34,6 +32,10 @@ main:
 
 	cmp eax, MAX_LIMIT
 	jns RangeExceptionCondition
+
+	; a = max(a, b) 
+	cmp eax, [a]
+	jns if_max
 
 	mov eax, [a] ; divisible
 	mov ebx, [b] ; divinded
@@ -58,11 +60,14 @@ gcd_cycle:
 if_remainder_eq_to_zero:
 	jmp exit_program
 
-exit_program:
-	; mov eax, ecx
-	; call io_print_dec
-	; call io_newline
+if_max:
+	mov eax, [a]
+	mov ebx, [b]
 
+	mov [a], ebx
+	mov [b], eax
+
+exit_program:
 	PRINT_DEC 4, cx
 	NEWLINE
 
@@ -70,10 +75,6 @@ exit_program:
 	ret
 
 RangeExceptionCondition:
-	; mov eax, RangeExceptionMessage
-	; call io_print_string
-	; call io_newline
-
 	PRINT_STRING RangeExceptionMessage
 	NEWLINE
 
@@ -86,3 +87,4 @@ section .bss
 
 section .rodata
 	RangeExceptionMessage	db	`Inputed data is out of range`, 0
+
