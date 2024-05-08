@@ -7,55 +7,71 @@ extern io_print_dec, io_print_udec, io_print_hex
 extern io_print_char, o_print_string, io_newline
 
 UINT32_LEN	equ	32
-UINT32_MAX	equ 0xFFFFFFFF
+UINT32_MAX	equ	0xFFFFFFFF
 
-section .text
+section	.text
 global main
-main:
-	; input	
+	; get and check input
 	call io_get_udec
 	mov [n], eax
 
-	call io_get_udec
+	call io_get_dec
 	mov [k], eax
 
-	; prepare variables for the cycle
-	mov ecx, UINT32_LEN 				; initial shift size
-	sub ecx, [k]
-	mov [initial_shift_size], ecx
+	cmp 31, eax
+	js RangeException
 
+	; [template] and itterator preparing
+	mov ecx, UINT32_MAX
+	sub ecx, [k]
+
+	mov eax, [template]
 	shl dword [template], cl
 
-	inc ecx
-
-find_max_cycle:
+	; cycle to find [max_value] 
+find_max_loop:
 	mov eax, [template]
 	and eax, [n]
+
 	shr eax, cl
 
-	cmp eax, [max_val]
-	jns if_1 							
+	cmp [max_value], eax
+	js if
+	jns continue_loop
 
+if:							; val > max_val
+	mov [max_value], eax
+	jmp continue_loop
+
+continue_loop:
 	shr dword [template], 1
 
-	loop find_max_cycle
+	dec ecx
+	jns find_max_loop
+	js exit_program
 
-	mov eax, [max_val]
+exit_program:
 	call io_print_udec
 
 	xor eax, eax
 	ret
 
-if_1:						; val > max_val
-	mov [max_val], eax
+RangeException:
+	mov eax, [RangeExceptionMessage]
+	call o_print_string
 
+	xor eax, eax
+	int 0x0A 
 
 section .bss
-	n:					resd 	1
-	k:					resd	1
-
+	n:	resd	1
+	k:	resd	1
 
 section .data
-	template:			dd		UINT32_MAX
-	max_val:			dd 		0
+	template	dd 	UINT32_MAX
+	max_value	dd 	0
+
+section .rodata
+	RangeExceptionMessage	db `Invalid input`, 0
+
 
