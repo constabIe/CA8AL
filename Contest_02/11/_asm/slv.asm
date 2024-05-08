@@ -70,10 +70,7 @@ exit_program:
 	ret
 
 RangeExceptionCondition:
-	PRINT_STRING BRED
-	PRINT_STRING error
 	PRINT_STRING RangeExceptionMessage
-	PRINT_STRING RESET
 	NEWLINE
 
 	xor eax, eax
@@ -84,6 +81,5 @@ section .bss
 	b:	resd	1
 
 section .rodata
-	error					db 	`error: `, 0
 	RangeExceptionMessage	db	`Inputed data is out of range`, 0
 
