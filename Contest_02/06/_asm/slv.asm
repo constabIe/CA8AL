@@ -16,7 +16,7 @@ main:
 	call io_get_udec
 	mov [n], eax
 
-	call io_uget_dec
+	call io_get_dec
 	mov [k], eax
 
 	cmp eax, 31
