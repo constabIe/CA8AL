@@ -20,19 +20,18 @@ main:
 	mov [k], eax
 
 	; prepare variables for the cycle
-	mov eсx, UINT32_LEN 				; initial shift size
-	sub eсx, [k]
-	mov [initial_shift_size], eсx
+	mov ecx, UINT32_LEN 				; initial shift size
+	sub ecx, [k]
+	mov [initial_shift_size], ecx
 
-	shl [template], cl
+	shl dword [template], cl
 
-	inc dword [initial_shift_size]
-	mov ecx, [initial_shift_size]
+	inc ecx
 
 find_max_cycle:
 	mov eax, [template]
 	and eax, [n]
-	shr eax, ecx
+	shr eax, cl
 
 	cmp eax, [max_val]
 	jns if_1 							
@@ -54,7 +53,6 @@ if_1:						; val > max_val
 section .bss
 	n:					resd 	1
 	k:					resd	1
-	initial_shift_size:	resd	1
 
 
 section .data
