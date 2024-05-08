@@ -31,9 +31,9 @@ main:
 	cmp eax, MAX_LIMIT
 	jns RangeExceptionCondition
 
-	mov eax, [a]
-	mov ebx, [b]
-	mov ecx, [b]
+	mov eax, [a] ; divisible
+	mov ebx, [b] ; divinded
+	mov ecx, [b] ; r_prev
 
 	jmp gcd_cycle
 
@@ -43,13 +43,15 @@ gcd_cycle:
 	idiv ebx
 
 	test edx, edx
-	jz if_rem_zero
+	jz if_remainder_eq_to_zero
 
-	mov eax, ebx
-	mov ebx, edx
-	mov ecx, edx
+	mov eax, ebx 
+	mov ebx, edx 
+	mov ecx, edx 
 
-if_rem_zero:
+	jmp gcd_cycle
+
+if_remainder_eq_to_zero:
 	jmp exit_program
 
 exit_program:
