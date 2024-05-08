@@ -2,14 +2,10 @@ bits 32
 
 %include "io.inc"
 
-; extern io_get_dec, io_get_udec, io_get_hex 
-; extern io_get_char, io_get_string
-
-; extern io_print_dec, io_print_udec, io_print_hex 
-; extern io_print_char, io_print_string, io_newline
-
-MAX_LIMIT equ	1000000000
-MIN_LIMIT equ	2
+MAX_LIMIT 	equ	1000000000
+MIN_LIMIT 	equ	2
+BRED    	equ "\033[1;31m"
+RESET   	equ "\033[0m"
 
 section .text
 global main
@@ -24,24 +20,30 @@ main:
 	cmp eax, MAX_LIMIT
 	jns RangeExceptionCondition
 
-	GET_DEC 4, eax
-	mov [b], eax
+	GET_DEC 4, ebx
+	mov [b], ebx
 
-	cmp eax, MIN_LIMIT
+	cmp ebx, MIN_LIMIT
 	js RangeExceptionCondition
 
-	cmp eax, MAX_LIMIT
+	cmp ebx, MAX_LIMIT
 	jns RangeExceptionCondition
 
 	; a = max(a, b) 
-	cmp eax, [a]
-	jns if_max
+	cmp eax, ebx
+	js if_b_more_than_a
 
 	mov eax, [a] ; divisible
 	mov ebx, [b] ; divinded
 	mov ecx, [b] ; r_prev
+				 ; edx = r_curr
 
 	jmp gcd_cycle
+
+if_b_more_than_a:
+	xchg eax, ebx
+	mov [a], eax
+	mov [b], ebx
 
 	; Euclidean algorithm
 gcd_cycle:
@@ -60,13 +62,6 @@ gcd_cycle:
 if_remainder_eq_to_zero:
 	jmp exit_program
 
-if_max:
-	mov eax, [a]
-	mov ebx, [b]
-
-	mov [a], ebx
-	mov [b], eax
-
 exit_program:
 	PRINT_DEC 4, cx
 	NEWLINE
@@ -75,7 +70,10 @@ exit_program:
 	ret
 
 RangeExceptionCondition:
+	PRINT_STRING BRED
+	PRINT_STRING error
 	PRINT_STRING RangeExceptionMessage
+	PRINT_STRING RESET
 	NEWLINE
 
 	xor eax, eax
@@ -86,5 +84,6 @@ section .bss
 	b:	resd	1
 
 section .rodata
+	error					db 	`error: `, 0
 	RangeExceptionMessage	db	`Inputed data is out of range`, 0
 
