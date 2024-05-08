@@ -16,7 +16,7 @@ global main
 main:
 	; get and verify input
 	; call io_get_dec
-	GET_DEC 8, eax
+	GET_DEC 4, eax
 	mov [a], eax
 
 	cmp eax, MIN_LIMIT
@@ -26,7 +26,7 @@ main:
 	jns RangeExceptionCondition
 
 	; call io_get_dec
-	GET_DEC 8, eax
+	GET_DEC 4, eax
 	mov [b], eax
 
 	cmp eax, MIN_LIMIT
@@ -63,7 +63,7 @@ exit_program:
 	; call io_print_dec
 	; call io_newline
 
-	PRINT_DEC ecx
+	PRINT_DEC 4, cx
 	NEWLINE
 
 	xor eax, eax
