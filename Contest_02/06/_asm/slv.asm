@@ -18,8 +18,8 @@ global main
 	call io_get_dec
 	mov [k], eax
 
-	cmp 31, eax
-	js RangeException
+	cmp eax, 31
+	jns RangeException
 
 	; [template] and itterator preparing
 	mov ecx, UINT32_MAX
