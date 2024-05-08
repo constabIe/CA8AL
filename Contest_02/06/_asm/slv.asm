@@ -6,7 +6,7 @@ extern io_get_char, io_get_string
 extern io_print_dec, io_print_udec, io_print_hex 
 extern io_print_char, o_print_string, io_newline
 
-UINT32_LEN 	equ 32
+UINT32_LEN	equ	32
 UINT32_MAX	equ 0xFFFFFFFF
 
 section .text
@@ -20,7 +20,7 @@ main:
 	mov [k], eax
 
 	; prepare variables for the cycle
-	mov ebx, UINT32_LEN ; initial shift size
+	mov ebx, UINT32_LEN 				; initial shift size
 	sub ebx, [k]
 	mov [initial_shift_size], ebx
 
@@ -35,7 +35,7 @@ find_max_cycle:
 	shr eax, ecx
 
 	cmp eax, [max_val]
-	js if_val_more_than_max_val
+	jns if_1 							
 
 	shr dword [template], 1
 
@@ -47,8 +47,7 @@ find_max_cycle:
 	xor eax, eax
 	ret
 
-
-if_val_more_than_max_val:
+if_1:						; val > max_val
 	mov [max_val], eax
 
 
@@ -57,7 +56,8 @@ section .bss
 	k:					resd	1
 	initial_shift_size:	resd	1
 
+
 section .data
 	template:			dd		UINT32_MAX
-	val: 				dd		0
 	max_val:			dd 		0
+
