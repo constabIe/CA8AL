@@ -16,7 +16,7 @@ main:
 	call io_get_udec
 	mov [n], eax
 
-	call io_get_dec
+	call io_uget_dec
 	mov [k], eax
 
 	cmp eax, 31
@@ -54,7 +54,7 @@ continue_loop:
 	js exit_program
 
 exit_program:
-	mov eax, [max_val]
+	mov eax, [max_value]
 	call io_print_udec
 	call io_newline
 
@@ -62,7 +62,7 @@ exit_program:
 	ret
 
 RangeException:
-	mov eax, [RangeExceptionMessage]
+	mov eax, RangeExceptionMessage
 	call io_print_string
 	call io_newline
 
