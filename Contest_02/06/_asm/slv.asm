@@ -37,8 +37,8 @@ find_max_loop:
 	shr eax, cl
 
 	cmp [max_value], eax
-	js if
-	jns continue_loop
+	jns if
+	js continue_loop
 
 if:							; val > max_val
 	mov [max_value], eax
