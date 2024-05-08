@@ -11,6 +11,7 @@ UINT32_MAX	equ	0xFFFFFFFF
 
 section	.text
 global main
+main:
 	; get and check input
 	call io_get_udec
 	mov [n], eax
