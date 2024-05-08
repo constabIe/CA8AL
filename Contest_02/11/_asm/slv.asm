@@ -1,10 +1,12 @@
 bits 32
 
-extern io_get_dec, io_get_udec, io_get_hex 
-extern io_get_char, io_get_string
+%include io.inc
 
-extern io_print_dec, io_print_udec, io_print_hex 
-extern io_print_char, io_print_string, io_newline
+; extern io_get_dec, io_get_udec, io_get_hex 
+; extern io_get_char, io_get_string
+
+; extern io_print_dec, io_print_udec, io_print_hex 
+; extern io_print_char, io_print_string, io_newline
 
 MAX_LIMIT equ	1000000000
 MIN_LIMIT equ	2
@@ -13,7 +15,8 @@ section .text
 global main
 main:
 	; get and verify input
-	call io_get_dec
+	; call io_get_dec
+	GET_DEC 8, eax
 	mov [a], eax
 
 	cmp eax, MIN_LIMIT
@@ -22,7 +25,8 @@ main:
 	cmp eax, MAX_LIMIT
 	jns RangeExceptionCondition
 
-	call io_get_dec
+	; call io_get_dec
+	GET_DEC 8, eax
 	mov [b], eax
 
 	cmp eax, MIN_LIMIT
@@ -55,17 +59,23 @@ if_remainder_eq_to_zero:
 	jmp exit_program
 
 exit_program:
-	mov eax, ecx
-	call io_print_dec
-	call io_newline
+	; mov eax, ecx
+	; call io_print_dec
+	; call io_newline
+
+	PRINT_DEC ecx
+	NEWLINE
 
 	xor eax, eax
 	ret
 
 RangeExceptionCondition:
-	mov eax, RangeExceptionMessage
-	call io_print_string
-	call io_newline
+	; mov eax, RangeExceptionMessage
+	; call io_print_string
+	; call io_newline
+
+	PRINT_STRING RangeExceptionMessage
+	NEWLINE
 
 	xor eax, eax
 	int 0x0A
