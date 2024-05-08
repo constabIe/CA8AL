@@ -20,11 +20,11 @@ main:
 	mov [k], eax
 
 	; prepare variables for the cycle
-	mov ebx, UINT32_LEN 				; initial shift size
-	sub ebx, [k]
-	mov [initial_shift_size], ebx
+	mov eсx, UINT32_LEN 				; initial shift size
+	sub eсx, [k]
+	mov [initial_shift_size], eсx
 
-	shl dword [template], ebx
+	shl [template], cl
 
 	inc dword [initial_shift_size]
 	mov ecx, [initial_shift_size]
