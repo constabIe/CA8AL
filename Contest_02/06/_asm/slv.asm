@@ -48,11 +48,15 @@ continue_loop:
 	shr dword [template], 1
 
 	dec ecx
+
+	cmp ecx, 0
 	jns find_max_loop
 	js exit_program
 
 exit_program:
+	mov eax, [max_val]
 	call io_print_udec
+	call io_newline
 
 	xor eax, eax
 	ret
@@ -60,6 +64,7 @@ exit_program:
 RangeException:
 	mov eax, [RangeExceptionMessage]
 	call io_print_string
+	call io_newline
 
 	xor eax, eax
 	int 0x0A 
