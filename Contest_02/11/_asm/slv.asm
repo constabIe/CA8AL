@@ -1,6 +1,6 @@
 bits 32
 
-%include io.inc
+%include "io.inc"
 
 ; extern io_get_dec, io_get_udec, io_get_hex 
 ; extern io_get_char, io_get_string
