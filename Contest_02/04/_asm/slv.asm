@@ -7,7 +7,6 @@ global main
 main:
 	; get input
 	GET_UDEC 4, eax
-	; mov [n], eax
 
 	; I am going to divide [n] to 8 until quotient -- result of division -- more than 8. I.e. the standard steps for converting 
 	; from the 10 to 8 number system 
@@ -15,20 +14,20 @@ main:
 	mov ebx, 8
 	mov ecx, 0
 
-	jmp cycle
-cycle:
+	jmp loopp
+
+loopp:
 	inc ecx
 
-	cdq
 	div ebx
 
 	cmp edx, ebx
-	jns if 		; quotient < 8
+	jns if 		
 	jns else
 
-if: 
+if: 			; quotient < 8
 	push edx
-	jmp cycle
+	jmp loopp
 
 else:
 	push eax
@@ -40,6 +39,4 @@ output_loop:
 
 	loop output_loop
 
-; section .bss
-; 	n:	resd	1
 
