@@ -31,13 +31,23 @@ main:
 
 	; a = max(a, b) 
 	cmp eax, ebx
-	js if_b_more_than_a
+	js if_1
+	jns continue_main
 
 	PRINT_UDEC 4, [a]
 	NEWLINE
 	PRINT_UDEC 4, [b]
 	NEWLINE
 
+	; b > a
+if_1:				
+	xchg eax, ebx
+	mov [a], eax
+	mov [b], ebx
+
+	jmp continue_main
+
+continue_main:
 	mov eax, [a] ; divisible
 	mov ebx, [b] ; divinded
 	mov ecx, [b] ; r_prev
@@ -45,18 +55,13 @@ main:
 
 	jmp gcd_cycle
 
-if_b_more_than_a:
-	xchg eax, ebx
-	mov [a], eax
-	mov [b], ebx
-
 	; Euclidean algorithm
 gcd_cycle:
 	xor edx, edx
 	div ebx
 
 	test edx, edx
-	jz if_remainder_eq_to_zero
+	jz if_2
 
 	mov eax, ebx 
 	mov ebx, edx 
@@ -64,7 +69,8 @@ gcd_cycle:
 
 	jmp gcd_cycle
 
-if_remainder_eq_to_zero:
+	; remainder == 0
+if_2:
 	jmp exit_program
 
 exit_program:
@@ -80,6 +86,7 @@ RangeExceptionCondition:
 
 	xor eax, eax
 	int 0x0A
+
 
 section .bss
 	a:	resd	1
