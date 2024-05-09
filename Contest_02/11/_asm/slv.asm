@@ -4,8 +4,6 @@ bits 32
 
 MAX_LIMIT 	equ	1000000000
 MIN_LIMIT 	equ	2
-BRED    	equ "\033[1;31m"
-RESET   	equ "\033[0m"
 
 section .text
 global main
@@ -63,7 +61,7 @@ if_remainder_eq_to_zero:
 	jmp exit_program
 
 exit_program:
-	PRINT_DEC 4, cx
+	PRINT_DEC 4, ecx
 	NEWLINE
 
 	xor eax, eax
