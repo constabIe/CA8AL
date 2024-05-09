@@ -9,8 +9,7 @@ section .text
 global main
 main:
 	; get and verify input
-	GET_DEC 4, eax
-	mov [a], eax
+	GET_UDEC 4, eax
 
 	cmp eax, MIN_LIMIT
 	js RangeExceptionCondition
@@ -18,8 +17,9 @@ main:
 	cmp eax, MAX_LIMIT
 	jns RangeExceptionCondition
 
-	GET_DEC 4, ebx
-	mov [b], ebx
+	mov [a], eax
+
+	GET_UDEC 4, ebx
 
 	cmp ebx, MIN_LIMIT
 	js RangeExceptionCondition
@@ -27,10 +27,17 @@ main:
 	cmp ebx, MAX_LIMIT
 	jns RangeExceptionCondition
 
+	mov [b], ebx
+
 	; a = max(a, b) 
 	cmp eax, ebx
 	js if_b_more_than_a
-
+; ///////
+	PRINT_UDEC 4, eax
+	NEWLINE
+	PRINT_UDEC 4, ebx
+	NEWLINE
+; ///////
 	mov eax, [a] ; divisible
 	mov ebx, [b] ; divinded
 	mov ecx, [b] ; r_prev
@@ -45,8 +52,7 @@ if_b_more_than_a:
 
 	; Euclidean algorithm
 gcd_cycle:
-	cdq
-	idiv ebx
+	div ebx
 
 	test edx, edx
 	jz if_remainder_eq_to_zero
@@ -61,7 +67,7 @@ if_remainder_eq_to_zero:
 	jmp exit_program
 
 exit_program:
-	PRINT_DEC 4, ecx
+	PRINT_UDEC 4, ecx
 	NEWLINE
 
 	xor eax, eax
