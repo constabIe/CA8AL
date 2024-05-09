@@ -135,6 +135,8 @@ if_max:
 continue_find_max_loop:
 	shr dword [template], 1
 
+	dec ecx
+
 	cmp ecx, -1
 	jz exit_program
 	jnz find_max_loop
