@@ -22,18 +22,30 @@ loopp:
 	jns if 		
 	js else
 
-if: 			; quotient < 8
+if: 
 	push edx
 	jmp loopp
 
 else:
 	push edx
 	push eax
+
+	inc ecx
+
 	jmp output_loop
 
 output_loop:
 	pop eax
+
 	PRINT_UDEC 4, eax
-	NEWLINE
 
 	loop output_loop
+
+	jmp exit_program
+
+exit_program:
+	NEWLINE
+
+	xor eax, eax
+	int 0x80
+
