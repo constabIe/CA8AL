@@ -32,12 +32,12 @@ main:
 	; a = max(a, b) 
 	cmp eax, ebx
 	js if_b_more_than_a
-///////
+
 	PRINT_UDEC 4, [a]
 	NEWLINE
 	PRINT_UDEC 4, [b]
 	NEWLINE
-///////
+
 	mov eax, [a] ; divisible
 	mov ebx, [b] ; divinded
 	mov ecx, [b] ; r_prev
