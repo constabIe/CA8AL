@@ -79,5 +79,5 @@ section .bss
 	b:	resd	1
 
 section .rodata
-	RangeExceptionMessage	db	`Inputed data is out of range`, 0
+	RangeExceptionMessage	db	`Input data is out of range`, 0
 
