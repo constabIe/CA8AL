@@ -52,6 +52,7 @@ if_b_more_than_a:
 
 	; Euclidean algorithm
 gcd_cycle:
+	xor edx, edx
 	div ebx
 
 	test edx, edx

@@ -7,10 +7,10 @@ int main(void)
 	int a, b;
 	scanf("%d %d", &a, &b);
 
-	int	divinded  = b,
-		divisible = a;
+	int	divinded  = b,	// eax
+		divisible = a;	// ebx
 
-	int r_curr, 
+	int r_curr, 	
 		r_prev = divinded;
 	int res;
 
