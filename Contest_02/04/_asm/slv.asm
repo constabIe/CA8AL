@@ -32,12 +32,13 @@ else:
 	cmp eax, 0
 	jnz else_if
 	
-	inc ecx
-
 	jmp output_loop
 
 else_if:
 	push eax
+	inc ecx
+
+	jmp output_loop
 
 output_loop:
 	pop eax
