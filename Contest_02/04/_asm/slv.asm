@@ -12,13 +12,15 @@ main:
 	; from the 10 to 8 number system 
 
 	mov ebx, 8
-	mov ecx, 0
+	xor ecx, ecx
+	xor edx, edx
 
 	jmp loopp
 
 loopp:
 	inc ecx
 
+	cdq
 	div ebx
 
 	cmp edx, ebx
@@ -38,5 +40,3 @@ output_loop:
 	PRINT_UDEC 4, eax
 
 	loop output_loop
-
-
