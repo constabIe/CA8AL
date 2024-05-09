@@ -28,11 +28,16 @@ if:
 
 else:
 	push edx
-	push eax
 
+	cmp eax, 0
+	jnz else_if
+	
 	inc ecx
 
 	jmp output_loop
+
+else_if:
+	push eax
 
 output_loop:
 	pop eax
@@ -47,5 +52,5 @@ exit_program:
 	NEWLINE
 
 	xor eax, eax
-	int 0x80
+	ret
 
