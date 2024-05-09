@@ -5,27 +5,22 @@ bits 32
 section .text
 global main
 main:
-	; get input
-	GET_UDEC 4, eax
-
-	; I am going to divide [n] to 8 until quotient -- result of division -- more than 8. I.e. the standard steps for converting 
-	; from the 10 to 8 number system 
+	GET_UDEC 4, eax 
 
 	mov ebx, 8
 	xor ecx, ecx
-	xor edx, edx
 
 	jmp loopp
 
 loopp:
 	inc ecx
-
-	cdq
+	
+	xor edx, edx
 	div ebx
 
-	cmp edx, ebx
+	cmp eax, ebx
 	jns if 		
-	jns else
+	js else
 
 if: 			; quotient < 8
 	push edx
