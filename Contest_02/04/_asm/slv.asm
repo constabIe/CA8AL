@@ -14,7 +14,7 @@ main:
 
 loopp:
 	inc ecx
-	
+
 	xor edx, edx
 	div ebx
 
@@ -27,11 +27,13 @@ if: 			; quotient < 8
 	jmp loopp
 
 else:
+	push edx
 	push eax
 	jmp output_loop
 
 output_loop:
 	pop eax
 	PRINT_UDEC 4, eax
+	NEWLINE
 
 	loop output_loop
