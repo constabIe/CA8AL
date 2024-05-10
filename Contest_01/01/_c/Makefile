@@ -4,7 +4,8 @@ CFLAGS = \
 		 -Werror \
 		 -Wall \
   	 	 -Wfloat-equal \
-		 -O2
+		 -O2 \
+		 -std=gnu99
 
 SOURCES = slv.c
 
@@ -15,7 +16,7 @@ all: build run
 
 build: ${SOURCES}
 	@mkdir -p $@
-	@${CC} ${CFLAGS} $< -o ${EXECUTABLE}
+	${CC} ${CFLAGS} $< -o ${EXECUTABLE}
 
 run:
 	@./${EXECUTABLE}

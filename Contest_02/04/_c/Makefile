@@ -4,7 +4,8 @@ CFLAGS = \
 		 -Werror \
 		 -Wall \
   	 	 -Wfloat-equal \
-		 -O2
+		 -O2 \
+		 -std=gnu99
 
 SOURCES = slv.c
 
