@@ -6,17 +6,20 @@ extern io_get_char, io_get_string
 extern io_print_dec, io_print_udec, io_print_hex 
 extern io_print_char, io_print_string, io_newline
 
-MAX_SIDE_LEN equ 1000
-MAX_QUANTITY equ 1000
-MAX_CAPACITY equ 10000
-MAX_HOUR 	 equ 23
-MAX_MINUTE 	 equ 59
-
-MIN_SIDE_LEN equ 1
-MIN_QUANTITY equ 0
-MIN_CAPACITY equ 1
-MIN_HOUR	 equ 0
-MIN_MINUTE	 equ 0
+MAX_SIDE_LEN 	equ 	1000
+MAX_QUANTITY 	equ 	1000
+MAX_CAPACITY 	equ 	10000
+MAX_HOUR 	 	equ 	23
+MAX_MINUTE 	 	equ 	59
+		
+MIN_SIDE_LEN 	equ 	1
+MIN_QUANTITY 	equ 	0
+MIN_CAPACITY 	equ 	1
+MIN_HOUR	 	equ 	0
+MIN_MINUTE	 	equ 	0
+	
+VALID_HOUR_END 	equ 	5
+MULTIPLICITY	equ 	3
 
 section .text
 global main
@@ -97,15 +100,16 @@ main:
 
 	; boxes quantity
 	mov ebx, [d]
+	xor edx, edx
 	idiv ebx
 
 	mov [box_q], eax
 
 	cmp edx, ebx
-	js valid_remainder
+	js if_remainder
 	jns continue_main
 
-valid_remainder:
+if_remainder: ; (remainder != 0)
 	inc dword [box_q]
 
 	jmp continue_main
@@ -116,13 +120,15 @@ continue_main:
 
 	mov eax, [x]
 
-	cmp [valid_hour_end], eax
-	js invalid_hour
-	jns exit_program
+	cmp eax, VALID_HOUR_END
+	jns if_hour
+	js exit_program
 
-invalid_hour:
+if_hour: ; transpoortation time in appropriate
 	mov eax, [box_q]
-	idiv 3
+	mov ecx, MULTIPLICITY
+	xor edx, edx
+	idiv ecx
 
 	sub [result], eax
 
