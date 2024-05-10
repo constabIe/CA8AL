@@ -90,7 +90,7 @@ main:
 	mov ebx, [m]
 	imul ebx
 
-	mov [s], ebx
+	mov [s], eax
 
 	; beetroot quantity
 	mov ebx, [k]
@@ -105,9 +105,9 @@ main:
 
 	mov [box_q], eax
 
-	cmp edx, ebx
-	js if_remainder
-	jns continue_main
+	cmp edx, 0
+	jnz if_remainder
+	jz continue_main
 
 if_remainder: ; (remainder != 0)
 	inc dword [box_q]
@@ -124,7 +124,7 @@ continue_main:
 	jns if_hour
 	js exit_program
 
-if_hour: ; transpoortation time in appropriate
+if_hour: ; transpoortation time in appropriate neighborhood
 	mov eax, [box_q]
 	mov ecx, MULTIPLICITY
 	xor edx, edx
@@ -137,13 +137,13 @@ if_hour: ; transpoortation time in appropriate
 exit_program:
 	mov eax, [result]
 	call io_print_dec
+	call io_newline
 
 	xor eax, eax
 	ret
 
 RangeExceptionCondition:
 	mov eax, RangeExceptionMessage
-
 	call io_print_string
 	call io_newline
 
