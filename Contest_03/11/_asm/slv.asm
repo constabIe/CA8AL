@@ -5,7 +5,7 @@ bits 32
 global div3
 
 %define	value 			dword [ebp + 8]
-%define iterations_q	15
+%define iterations_q	16
 
 div3:
 	push 	ebp
@@ -15,8 +15,8 @@ div3:
 	push 	edx		; bit position
 	push 	esi		; check sub
 
-	xor ebx, ebx
-	xor edx, edx
+	mov ebx, 0
+	mov edx, 0
 	inc edx
 
 .loop_half_even:
@@ -24,8 +24,8 @@ div3:
 	jae 	.exit_loop_half_even
 
 	bt 		value, edx
-
 	jc 		.bit_1_even
+
 	jmp 	.continue_loop_half_even
 	
 	.bit_1_even:
@@ -39,16 +39,16 @@ div3:
 	jmp 	.loop_half_even
 
 .exit_loop_half_even:
-	xor ebx, ebx
-	xor edx, edx
+	mov ebx, 0
+	mov edx, 0
 
 .loop_half_odd:
 	cmp 	ebx, iterations_q
 	jae 	.exit_loop_half_odd
 
 	bt 		value, edx
-
 	jc 		.bit_1_odd
+
 	jmp 	.continue_loop_half_odd
 	
 	.bit_1_odd:
@@ -62,8 +62,8 @@ div3:
 	jmp 	.loop_half_odd
 
 .exit_loop_half_odd:
-	xor 	ebx, ebx
-	xor 	edx, edx
+	mov ebx, 0
+	mov edx, 0
 
 .flag_setting:
 	cmp 	esi, 15
@@ -85,7 +85,6 @@ div3:
 	jz 		.flag_true		
 
 	jmp 	.flag_false
-
 
 .flag_false:
 	mov 	eax, 0
