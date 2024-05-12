@@ -125,10 +125,10 @@ global main
 main:
 	GET_DEC 4, eax
 
-	cmp 	eax, MAX_VALUE
+	cmp 	eax, MAX_QUANTITY
 	ja 		RangeExceptionCondition
 
-	cmp 	eax, MIN_VALUE
+	cmp 	eax, MIN_QUANTITY
 	jb 		RangeExceptionCondition
 
 	mov 	[n], eax
@@ -160,24 +160,35 @@ cycle:
 	jnz 	div3_false
 
 	div3_true:
-		PRINT_STRING 	YES
-		NEWLINE
+		mov [verdicts + ecx], YES
+		; PRINT_STRING 	YES
+		; NEWLINE
 
 		jmp 	continue_cycle
 
 	div3_false:
-		PRINT_STRING 	NO
-		NEWLINE
+		mov [verdicts + ecx], NO
+		; PRINT_STRING 	NO
+		; NEWLINE
 
 		jmp 	continue_cycle
 
 continue_cycle:
 	inc 	ecx
-
 	jmp 	cycle
 
 exit_cycle:
-	jmp 	exit_program
+	mov 	ecx, 0
+	jmp 	output
+
+output:
+	cmp 	ecx, [n]
+	jae 	exit_program
+	
+	PRINT_STRING dword [verdict + ecx]
+
+	inc 	ecx
+	jmp 	output
 
 exit_program:
 	pop     ebx
@@ -201,10 +212,11 @@ RangeExceptionCondition:
 
 section .bss
 	n: 						resd 	1
+	verdicts:				resd 	MAX_QUANTITY	
 
 section .data
-	MAX_VALUE				equ		100000
-	MIN_VALUE				equ		1
+	MAX_QUANTITY			equ		100000
+	MIN_QUANTITY			equ		1
 
 section .rodata
 	RangeExceptionMessage	db 		`Input data is out of range`, 0
