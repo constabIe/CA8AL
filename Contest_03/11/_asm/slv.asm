@@ -59,6 +59,8 @@ div3:
 	jmp 	.continue_loop_half_odd
 	
 	.bit_1_odd:
+		PRINT_DEC 4, esi
+		NEWLINE
 		sub 	esi, 1
 		jmp 	.continue_loop_half_odd
 
@@ -72,8 +74,7 @@ div3:
 	mov ebx, 0
 	mov edx, 0
 
-	PRINT_DEC 4, esi
-	NEWLINE
+
 
 .flag_setting:
 	cmp 	esi, 15
