@@ -185,7 +185,7 @@ output:
 	cmp 	ecx, [n]
 	jae 	exit_program
 
-	PRINT_STRING [verdicts + ecx]
+	PRINT_STRING dword [verdicts + ecx]
 
 	inc 	ecx
 	jmp 	output
