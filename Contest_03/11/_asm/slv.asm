@@ -2,15 +2,7 @@ bits 32
 
 %include "io.inc"
 
-section .text
-
-RangeExceptionCondition:
-	PRINT_STRING RangeExceptionMessage
-	NEWLINE
-
-	xor 	eax, eax
-	int 	0x0A
-
+global div3
 %define	value 			dword [ebp + 8]
 %define iterations_q	15
 
@@ -112,6 +104,15 @@ div3:
 
 	ret
 
+global RangeExceptionCondition
+RangeExceptionCondition:
+	PRINT_STRING RangeExceptionMessage
+	NEWLINE
+
+	xor 	eax, eax
+	int 	0x0A
+
+section .text
 global main
 main:
 	GET_DEC 4, eax
@@ -157,10 +158,11 @@ continue_cycle:
 	jmp cycle
 
 exit_cycle:
+	jmp exit_program
+
+exit_program:
 	xor eax, eax
 	ret
-
-
 
 section .bss
 	n: 						resd 	1
