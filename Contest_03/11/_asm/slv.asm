@@ -184,8 +184,8 @@ exit_cycle:
 output:
 	cmp 	ecx, [n]
 	jae 	exit_program
-	
-	PRINT_STRING dword [verdict + ecx]
+
+	PRINT_STRING dword [verdicts + ecx]
 
 	inc 	ecx
 	jmp 	output
@@ -221,5 +221,5 @@ section .data
 section .rodata
 	RangeExceptionMessage	db 		`Input data is out of range`, 0
 
-	YES						db		`YES`, 0
-	NO						db		`NO`, 0
+	YES						dd		`YES`, 0
+	NO						dd		`NO`, 0, 0
