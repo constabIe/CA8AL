@@ -66,7 +66,7 @@ div3:
 
 .continue_loop_half_odd:
 	inc 	ebx
-	add 	ebx, 2
+	add 	edx, 2
 
 	jmp 	.loop_half_odd
 
