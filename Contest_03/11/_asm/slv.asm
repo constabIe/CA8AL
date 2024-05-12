@@ -20,6 +20,10 @@ div3:
 	inc edx
 
 .loop_half_even:
+	mov edi, 2222
+	PRINT_DEC 4, edi
+	NEWLINE
+
 	cmp 	ebx, iterations_q	
 	jae 	.exit_loop_half_even
 
