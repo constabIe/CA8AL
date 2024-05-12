@@ -104,14 +104,6 @@ div3:
 
 	ret
 
-global RangeExceptionCondition
-RangeExceptionCondition:
-	PRINT_STRING RangeExceptionMessage
-	NEWLINE
-
-	xor 	eax, eax
-	int 	0x0A
-
 section .text
 global main
 main:
@@ -126,6 +118,8 @@ main:
 	mov 	[n], eax
 
 	mov 	ecx, eax
+
+	jmp 	cycle
 
 cycle:	
 	cmp 	ecx, [n]
@@ -163,6 +157,13 @@ exit_cycle:
 exit_program:
 	xor eax, eax
 	ret
+
+RangeExceptionCondition:
+	PRINT_STRING RangeExceptionMessage
+	NEWLINE
+
+	xor 	eax, eax
+	int 	0x0A
 
 section .bss
 	n: 						resd 	1
