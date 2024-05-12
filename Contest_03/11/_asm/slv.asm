@@ -3,6 +3,7 @@ bits 32
 %include "io.inc"
 
 global div3
+
 %define	value 			dword [ebp + 8]
 %define iterations_q	15
 
@@ -95,9 +96,9 @@ div3:
 	jmp 	.exit_func
 
 .exit_func:
-	pop  	esi	; itterator 
-	pop 	edx	; bit position
-	pop 	ebx	; check sub
+	pop  	esi	
+	pop 	edx	
+	pop 	ebx	
 
 	mov 	esp, ebp
 	pop 	ebp
@@ -117,7 +118,7 @@ main:
 
 	mov 	[n], eax
 
-	mov 	ecx, eax
+	mov 	ecx, 0
 
 	jmp 	cycle
 
@@ -147,7 +148,7 @@ cycle:
 		jmp continue_cycle
 
 continue_cycle:
-	dec ecx
+	inc ecx
 
 	jmp cycle
 
