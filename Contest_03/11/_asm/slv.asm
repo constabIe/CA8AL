@@ -2,6 +2,7 @@ bits 32
 
 %include "io.inc"
 
+section .text
 global div3
 
 %define	value 			dword [ebp + 8]
@@ -120,6 +121,9 @@ div3:
 
 	ret
 
+%undef	value
+%undef iterations_q
+
 section .text
 global main
 main:
@@ -212,7 +216,7 @@ section .data
 	MAX_QUANTITY			equ		100000
 	MIN_QUANTITY			equ		1
 
-	verdicts				dd 	MAX_QUANTITY	
+	verdicts				dd 		MAX_QUANTITY	
 
 section .rodata
 	RangeExceptionMessage	db 		`Input data is out of range`, 0
