@@ -186,6 +186,7 @@ output:
 	jae 	exit_program
 
 	PRINT_STRING dword [verdicts + ecx * 4]
+	NEWLINE
 
 	inc 	ecx
 	jmp 	output
