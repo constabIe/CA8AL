@@ -221,5 +221,5 @@ section .data
 section .rodata
 	RangeExceptionMessage	db 		`Input data is out of range`, 0
 
-	YES						dd		`YES`, 0
-	NO						dd		`NO`, 0, 0
+	YES						db		`YES`, 0
+	NO						db		`NO`, 0, 0
