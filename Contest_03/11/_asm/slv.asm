@@ -20,6 +20,9 @@ div3:
 	mov edx, 0
 	inc edx
 
+	PRINT_UDEC 4, [ebp + 8]
+	NEWLINE
+
 .loop_half_even:
 	cmp 	ebx, iterations_q	
 	jae 	.exit_loop_half_even
