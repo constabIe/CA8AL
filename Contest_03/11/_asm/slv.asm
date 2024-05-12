@@ -46,9 +46,9 @@ div3:
 	mov ebx, 0
 	mov edx, 0
 
-	PRINT_DEC 4, ebx
+	PRINT_DEC 4, esi
 	NEWLINE
-	
+
 .loop_half_odd:
 	cmp 	ebx, iterations_q
 	jae 	.exit_loop_half_odd
@@ -71,9 +71,6 @@ div3:
 .exit_loop_half_odd:
 	mov ebx, 0
 	mov edx, 0
-
-	PRINT_DEC 4, ebx
-	NEWLINE
 
 .flag_setting:
 	cmp 	esi, 15
