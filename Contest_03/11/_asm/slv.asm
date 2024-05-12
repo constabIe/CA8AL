@@ -133,6 +133,13 @@ main:
 
 	mov 	[n], eax
 
+	push    ebp
+    mov     ebp, esp
+
+	push  	ebx		
+	push 	edx		
+	push 	esi	
+
 	mov 	ecx, 0
 
 	jmp 	cycle
@@ -140,13 +147,6 @@ main:
 cycle:	
 	cmp 	ecx, [n]
 	jae 	exit_cycle
-
-	push    ebp
-    mov     ebp, esp
-
-	push  	ebx		
-	push 	edx		
-	push 	esi	
 
     sub     esp, 12
 
@@ -172,6 +172,15 @@ continue_cycle:
 	jmp 	cycle
 
 exit_cycle:
+	pop     ebx
+    pop     edx
+    pop     esi
+
+    add     esp, 12
+
+    mov     esp, ebp
+    pop     ebp
+
 	mov 	ecx, 0
 	jmp 	output
 
@@ -186,15 +195,6 @@ output:
 	jmp 	output
 
 exit_program:
-	pop     ebx
-    pop     edx
-    pop     esi
-
-    add     esp, 12
-
-    mov     esp, ebp
-    pop     ebp
-
 	xor 	eax, eax
 	ret
 
