@@ -72,6 +72,9 @@ div3:
 	mov ebx, 0
 	mov edx, 0
 
+	PRINT_DEC 4, esi
+	NEWLINE
+
 .flag_setting:
 	cmp 	esi, 15
 	jz 		.flag_true
