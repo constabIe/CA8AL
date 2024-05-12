@@ -15,6 +15,7 @@ div3:
 	push 	edx		; bit position
 	push 	esi		; check sub
 
+	xor esi, esi 
 	mov ebx, 0
 	mov edx, 0
 	inc edx
