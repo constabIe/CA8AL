@@ -20,10 +20,6 @@ div3:
 	inc edx
 
 .loop_half_even:
-	mov edi, 2222
-	PRINT_DEC 4, edi
-	NEWLINE
-
 	cmp 	ebx, iterations_q	
 	jae 	.exit_loop_half_even
 
@@ -130,6 +126,15 @@ cycle:
 	cmp 	ecx, [n]
 	jae 	exit_cycle
 
+	push    ebp
+    mov     ebp, esp
+
+	push  	ebx		
+	push 	edx		
+	push 	esi	
+
+    sub     esp, 12
+
 	GET_UDEC 4, eax
 
 	mov 	value, eax
@@ -143,28 +148,37 @@ cycle:
 		PRINT_STRING 	YES
 		NEWLINE
 
-		jmp continue_cycle
+		jmp 	continue_cycle
 
 	div3_false:
 		PRINT_STRING 	NO
 		NEWLINE
 
-		jmp continue_cycle
+		jmp 	continue_cycle
 
 continue_cycle:
-	inc ecx
+	inc 	ecx
 
-	jmp cycle
+	jmp 	cycle
 
 exit_cycle:
-	jmp exit_program
+	jmp 	exit_program
 
 exit_program:
-	xor eax, eax
+	pop     ebx
+    pop     edx
+    pop     esi
+
+    add     esp, 12
+
+    mov     esp, ebp
+    pop     ebp
+
+	xor 	eax, eax
 	ret
 
 RangeExceptionCondition:
-	PRINT_STRING RangeExceptionMessage
+	PRINT_STRING 	RangeExceptionMessage
 	NEWLINE
 
 	xor 	eax, eax
