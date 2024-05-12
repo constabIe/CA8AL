@@ -185,7 +185,7 @@ output:
 	cmp 	ecx, [n]
 	jae 	exit_program
 
-	PRINT_STRING dword [verdicts + ecx]
+	PRINT_STRING [verdicts + ecx]
 
 	inc 	ecx
 	jmp 	output
@@ -222,4 +222,4 @@ section .rodata
 	RangeExceptionMessage	db 		`Input data is out of range`, 0
 
 	YES						db		`YES`, 0
-	NO						db		`NO`, 0, 0
+	NO						db		`NO`, 0
