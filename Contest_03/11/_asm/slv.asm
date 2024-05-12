@@ -160,14 +160,14 @@ cycle:
 	jnz 	div3_false
 
 	div3_true:
-		mov dword [verdicts + ecx], YES
+		mov dword [verdicts + ecx * 4], YES
 		; PRINT_STRING 	YES
 		; NEWLINE
 
 		jmp 	continue_cycle
 
 	div3_false:
-		mov dword [verdicts + ecx], NO
+		mov dword [verdicts + ecx * 4], NO
 		; PRINT_STRING 	NO
 		; NEWLINE
 
@@ -185,7 +185,7 @@ output:
 	cmp 	ecx, [n]
 	jae 	exit_program
 
-	PRINT_STRING dword [verdicts + ecx]
+	PRINT_STRING dword [verdicts + ecx * 4]
 
 	inc 	ecx
 	jmp 	output
