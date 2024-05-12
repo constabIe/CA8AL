@@ -20,8 +20,8 @@ div3:
 	mov edx, 0
 	inc edx
 
-	PRINT_UDEC 4, [ebp + 8]
-	NEWLINE
+	; PRINT_UDEC 4, [ebp + 8]
+	; NEWLINE
 
 .loop_half_even:
 	cmp 	ebx, iterations_q	
@@ -46,6 +46,9 @@ div3:
 	mov ebx, 0
 	mov edx, 0
 
+	PRINT_DEC 4, ebx
+	NEWLINE
+	
 .loop_half_odd:
 	cmp 	ebx, iterations_q
 	jae 	.exit_loop_half_odd
@@ -68,6 +71,9 @@ div3:
 .exit_loop_half_odd:
 	mov ebx, 0
 	mov edx, 0
+
+	PRINT_DEC 4, ebx
+	NEWLINE
 
 .flag_setting:
 	cmp 	esi, 15
