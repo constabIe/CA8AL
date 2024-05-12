@@ -83,16 +83,31 @@ div3:
 	jz 		.flag_true	
 
 	cmp 	esi, 0
+	jz 		.flag_true	
+
+	cmp 	esi, -3
+	jz 		.flag_true
+
+	cmp 	esi, -6
+	jz 		.flag_true
+
+	cmp 	esi, -9
+	jz 		.flag_true
+
+	cmp 	esi, -12
+	jz 		.flag_true	
+
+	cmp 	esi, -15
 	jz 		.flag_true		
 
 	jmp 	.flag_false
 
-.flag_false:
-	mov 	eax, 0
-	jmp 	.exit_func
-
 .flag_true:
 	mov 	eax, 1
+	jmp 	.exit_func
+
+.flag_false:
+	mov 	eax, 0
 	jmp 	.exit_func
 
 .exit_func:
