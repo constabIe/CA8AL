@@ -155,7 +155,7 @@ cycle:
 
 	GET_UDEC 4, eax
 
-	mov 	value, eax
+	push 	value
 	call 	div3
 
 	cmp 	eax, 1
