@@ -137,6 +137,7 @@ main:
 
 	mov 	[n], eax
 
+<<<<<<< HEAD
 	push    ebp
     mov     ebp, esp
 
@@ -146,6 +147,8 @@ main:
 
 	sub     esp, 12
 
+=======
+>>>>>>> parent of 582fc69 (03-11: Умножение. Sample #29)
 	mov 	ecx, 0
 
 	jmp 	cycle
@@ -154,6 +157,18 @@ cycle:
 	cmp 	ecx, [n]
 	jae 	exit_cycle
 
+<<<<<<< HEAD
+=======
+	push    ebp
+    mov     ebp, esp
+
+	push  	ebx		
+	push 	edx		
+	push 	esi	
+
+    sub     esp, 12
+
+>>>>>>> parent of 582fc69 (03-11: Умножение. Sample #29)
 	GET_UDEC 4, eax
 
 	push 	eax
@@ -176,15 +191,6 @@ continue_cycle:
 	jmp 	cycle
 
 exit_cycle:
-	pop     ebx
-    pop     edx
-    pop     esi
-
-    add     esp, 12
-
-    mov     esp, ebp
-    pop     ebp
-
 	mov 	ecx, 0
 	jmp 	output
 
@@ -205,6 +211,15 @@ output:
 	jmp 	output
 
 exit_program:
+	pop     ebx
+    pop     edx
+    pop     esi
+
+    add     esp, 12
+
+    mov     esp, ebp
+    pop     ebp
+
 	xor 	eax, eax
 	ret
 
