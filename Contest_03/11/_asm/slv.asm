@@ -16,10 +16,10 @@ div3:
 	push 	edx		; bit position
 	push 	esi		; check sub
 
-	xor esi, esi 
-	mov ebx, 0
-	mov edx, 0
-	inc edx
+	xor 	esi, esi 
+	mov 	ebx, 0
+	mov 	edx, 0
+	inc 	edx
 
 .loop_half_even:
 	cmp 	ebx, iterations_q	
@@ -31,8 +31,8 @@ div3:
 	jmp 	.continue_loop_half_even
 	
 	.bit_1_even:
-		add esi, 1
-		jmp .continue_loop_half_even
+		add 	esi, 1
+		jmp 	.continue_loop_half_even
 
 .continue_loop_half_even:
 	inc 	ebx
@@ -41,8 +41,8 @@ div3:
 	jmp 	.loop_half_even
 
 .exit_loop_half_even:
-	mov ebx, 0
-	mov edx, 0
+	mov 	ebx, 0
+	mov 	edx, 0
 
 .loop_half_odd:
 	cmp 	ebx, iterations_q
@@ -144,6 +144,8 @@ main:
 	push 	edx		
 	push 	esi	
 
+	sub     esp, 12
+
 	mov 	ecx, 0
 
 	jmp 	cycle
@@ -151,8 +153,6 @@ main:
 cycle:	
 	cmp 	ecx, [n]
 	jae 	exit_cycle
-
-    sub     esp, 12
 
 	GET_UDEC 4, eax
 
@@ -228,4 +228,3 @@ section .rodata
 	RangeExceptionMessage	db 		`Input data is out of range`, 0
 
 	YES_NO					db		`YES`, 0, `NO`, 0
-	NO						db		`NO`, 0
