@@ -164,11 +164,11 @@ cycle:
 	jnz 	div3_false
 
 	div3_true:
-		mov 	dword [verdicts + ecx * 4], YES
+		mov 	byte [verdicts + ecx], 1
 		jmp 	continue_cycle
 
 	div3_false:
-		mov 	dword [verdicts + ecx * 4], NO
+		mov 	byte [verdicts + ecx], 0
 		jmp 	continue_cycle
 
 continue_cycle:
@@ -192,7 +192,13 @@ output:
 	cmp 	ecx, [n]
 	jae 	exit_program
 
-	PRINT_STRING 	dword [verdicts + ecx * 4]
+	xor eax, eax
+	movzx 	eax, byte [verdicts + ecx]
+	mul 	4
+
+	add  	eax, YES_NO
+
+	PRINT_STRING 	eax
 	NEWLINE
 
 	inc 	ecx
@@ -216,10 +222,10 @@ section .data
 	MAX_QUANTITY			equ		100000
 	MIN_QUANTITY			equ		1
 
-	verdicts				dd 		MAX_QUANTITY	
+	verdicts				db 		MAX_QUANTITY	
 
 section .rodata
 	RangeExceptionMessage	db 		`Input data is out of range`, 0
 
-	YES						db		`YES`, 0
+	YES_NO					db		`YES`, 0, `NO`, 0
 	NO						db		`NO`, 0
