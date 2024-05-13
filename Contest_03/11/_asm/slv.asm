@@ -2,7 +2,6 @@ bits 32
 
 %include "io.inc"
 
-section .text
 global div3
 
 %define	value 			dword [ebp + 8]
@@ -16,10 +15,10 @@ div3:
 	push 	edx		; bit position
 	push 	esi		; check sub
 
-	xor 	esi, esi 
-	mov 	ebx, 0
-	mov 	edx, 0
-	inc 	edx
+	xor esi, esi 
+	mov ebx, 0
+	mov edx, 0
+	inc edx
 
 .loop_half_even:
 	cmp 	ebx, iterations_q	
@@ -31,8 +30,8 @@ div3:
 	jmp 	.continue_loop_half_even
 	
 	.bit_1_even:
-		add 	esi, 1
-		jmp 	.continue_loop_half_even
+		add esi, 1
+		jmp .continue_loop_half_even
 
 .continue_loop_half_even:
 	inc 	ebx
@@ -41,8 +40,8 @@ div3:
 	jmp 	.loop_half_even
 
 .exit_loop_half_even:
-	mov 	ebx, 0
-	mov 	edx, 0
+	mov ebx, 0
+	mov edx, 0
 
 .loop_half_odd:
 	cmp 	ebx, iterations_q
@@ -121,34 +120,19 @@ div3:
 
 	ret
 
-%undef	value
-%undef iterations_q
-
 section .text
 global main
 main:
 	GET_DEC 4, eax
 
-	cmp 	eax, MAX_QUANTITY
+	cmp 	eax, MAX_VALUE
 	ja 		RangeExceptionCondition
 
-	cmp 	eax, MIN_QUANTITY
+	cmp 	eax, MIN_VALUE
 	jb 		RangeExceptionCondition
 
 	mov 	[n], eax
 
-<<<<<<< HEAD
-	push    ebp
-    mov     ebp, esp
-
-	push  	ebx		
-	push 	edx		
-	push 	esi	
-
-	sub     esp, 12
-
-=======
->>>>>>> parent of 582fc69 (03-11: Умножение. Sample #29)
 	mov 	ecx, 0
 
 	jmp 	cycle
@@ -157,8 +141,6 @@ cycle:
 	cmp 	ecx, [n]
 	jae 	exit_cycle
 
-<<<<<<< HEAD
-=======
 	push    ebp
     mov     ebp, esp
 
@@ -168,7 +150,6 @@ cycle:
 
     sub     esp, 12
 
->>>>>>> parent of 582fc69 (03-11: Умножение. Sample #29)
 	GET_UDEC 4, eax
 
 	push 	eax
@@ -179,36 +160,24 @@ cycle:
 	jnz 	div3_false
 
 	div3_true:
-		mov 	byte [verdicts + ecx], 1
+		PRINT_STRING 	YES
+		NEWLINE
+
 		jmp 	continue_cycle
 
 	div3_false:
-		mov 	byte [verdicts + ecx], 0
+		PRINT_STRING 	NO
+		NEWLINE
+
 		jmp 	continue_cycle
 
 continue_cycle:
 	inc 	ecx
+
 	jmp 	cycle
 
 exit_cycle:
-	mov 	ecx, 0
-	jmp 	output
-
-output:
-	cmp 	ecx, [n]
-	jae 	exit_program
-
-	xor eax, eax
-	movzx 	eax, byte [verdicts + ecx]
-	mul 	4
-
-	add  	eax, YES_NO
-
-	PRINT_STRING 	eax
-	NEWLINE
-
-	inc 	ecx
-	jmp 	output
+	jmp 	exit_program
 
 exit_program:
 	pop     ebx
@@ -234,12 +203,11 @@ section .bss
 	n: 						resd 	1
 
 section .data
-	MAX_QUANTITY			equ		100000
-	MIN_QUANTITY			equ		1
-
-	verdicts				db 		MAX_QUANTITY	
+	MAX_VALUE				equ		100000
+	MIN_VALUE				equ		1
 
 section .rodata
 	RangeExceptionMessage	db 		`Input data is out of range`, 0
 
-	YES_NO					db		`YES`, 0, `NO`, 0
+	YES						db		`YES`, 0
+	NO						db		`NO`, 0
