@@ -15,10 +15,10 @@ div3:
 	push 	edx		; bit position
 	push 	esi		; check sub
 
-	xor esi, esi 
-	mov ebx, 0
-	mov edx, 0
-	inc edx
+	xor 	esi, esi 
+	mov 	ebx, 0
+	mov 	edx, 0
+	inc 	edx
 
 .loop_half_even:
 	cmp 	ebx, iterations_q	
@@ -30,8 +30,8 @@ div3:
 	jmp 	.continue_loop_half_even
 	
 	.bit_1_even:
-		add esi, 1
-		jmp .continue_loop_half_even
+		add 	esi, 1
+		jmp 	.continue_loop_half_even
 
 .continue_loop_half_even:
 	inc 	ebx
@@ -135,12 +135,6 @@ main:
 
 	mov 	ecx, 0
 
-	jmp 	cycle
-
-cycle:	
-	cmp 	ecx, [n]
-	jae 	exit_cycle
-
 	push    ebp
     mov     ebp, esp
 
@@ -149,6 +143,10 @@ cycle:
 	push 	esi	
 
     sub     esp, 12
+
+cycle:	
+	cmp 	ecx, [n]
+	jae 	exit_cycle
 
 	GET_UDEC 4, eax
 
