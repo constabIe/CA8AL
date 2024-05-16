@@ -21,8 +21,8 @@ reverse_half:
 		jmp 	.exit_while
 
 		.out_odd: 	
-			PRINT_DEC 4, eax
-			PRINT_CHAR ` `
+			PRINT_DEC 	4, eax
+			PRINT_CHAR 	` `
 
 			jmp 	.while
 
@@ -36,14 +36,16 @@ reverse_half:
 		jmp .out_even_loop
 
 	.out_even_loop:
+		cmp 	ecx, 0
+		jbe 	.exit_function 		
+
 		pop  	eax
 
 		PRINT_DEC 4, eax
 		PRINT_CHAR ` `
 
-		loop 	.out_even_loop
-
-		jmp  	.exit_function
+		dec 	ecx
+		jmp 	.out_even_loop
 
 	.exit_function:
 		pop  	ecx
