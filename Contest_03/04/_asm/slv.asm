@@ -15,7 +15,7 @@ reverse_half:
 	.while:
 		GET_DEC 4, eax
 
-		bt 		31
+		bt 		eax, 31
 		jnc 	.out_odd
 		jc 		.in_even
 		jmp 	.exit_while
