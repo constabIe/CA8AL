@@ -11,7 +11,10 @@ reverse_half:
 	push 	eax
 	push 	ecx
 
+	
+
 	xor 	ecx, ecx
+
 	.while:
 		GET_DEC 4, eax
 
@@ -60,7 +63,19 @@ reverse_half:
 
 global main:
 main:
+	push 	ebp
+	mov 	ebp, esp
+
+	push 	eax
+	push 	ecx
+
 	call 	reverse_half
+
+	pop  	ecx
+	pop 	eax
+
+	mov  	esp, ebp
+	pop  	ebp
 
 	xor  	eax, eax
 	ret
