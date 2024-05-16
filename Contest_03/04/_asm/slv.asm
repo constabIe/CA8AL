@@ -8,10 +8,9 @@ reverse_half:
 	push 	ebp
 	mov 	ebp, esp
 
-	push 	eax
-	push 	ecx
-
-	
+	push 	eax	; input storage
+	push 	ecx ; common iterator
+	push  	ebx ; even iterator
 
 	xor 	ecx, ecx
 
@@ -22,17 +21,21 @@ reverse_half:
 		jz 		.exit_while
 
 		bt 		ecx, 31
-		jc 		.out_odd
-		jnc 	.in_even
+		jnc 	.out_odd
+		jc 		.in_even
 
 		.out_odd: 	
 			PRINT_DEC 	4, eax
 			PRINT_CHAR 	` `
 
+			inc 	ecx
+
 			jmp 	.while
 
 		.in_even:
 			inc 	ecx
+			inc  	ebx
+
 			push 	eax
 
 			jmp 	.while
@@ -41,7 +44,7 @@ reverse_half:
 		jmp .out_even_loop
 
 	.out_even_loop:
-		cmp 	ecx, 0
+		cmp 	ebx, 0
 		jz 		.exit_function 		
 
 		pop  	eax
@@ -49,10 +52,11 @@ reverse_half:
 		PRINT_DEC 4, eax
 		PRINT_CHAR ` `
 
-		dec 	ecx
+		dec 	ebx
 		jmp 	.out_even_loop
 
 	.exit_function:
+		pop  	ebx
 		pop  	ecx
 		pop  	eax
 
@@ -68,9 +72,11 @@ main:
 
 	push 	eax
 	push 	ecx
+	push  	ebx
 
 	call 	reverse_half
 
+	pop  	ebx
 	pop  	ecx
 	pop 	eax
 
