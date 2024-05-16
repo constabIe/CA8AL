@@ -22,7 +22,7 @@ reverse_half:
 		cmp  	eax, 0
 		jz 		.exit_while
 
-		bt 		ecx, 32
+		bt 		ecx, 0
 		jnc 	.out_odd
 		jc 		.in_even
 
