@@ -12,6 +12,8 @@ reverse_half:
 	push 	ecx ; common iterator
 	push  	ebx ; even iterator
 
+	sub     esp, 12
+
 	xor 	ecx, ecx
 
 	.while:
@@ -20,7 +22,7 @@ reverse_half:
 		cmp  	eax, 0
 		jz 		.exit_while
 
-		bt 		ecx, 31
+		bt 		ecx, 32
 		jnc 	.out_odd
 		jc 		.in_even
 
@@ -49,13 +51,17 @@ reverse_half:
 
 		pop  	eax
 
-		PRINT_DEC 4, eax
-		PRINT_CHAR ` `
+		PRINT_DEC 	4, eax
+		PRINT_CHAR 	` `
 
 		dec 	ebx
 		jmp 	.out_even_loop
 
 	.exit_function:
+		NEWLINE
+
+    	add     esp, 12
+
 		pop  	ebx
 		pop  	ecx
 		pop  	eax
@@ -74,7 +80,11 @@ main:
 	push 	ecx
 	push  	ebx
 
+	sub     esp, 12
+
 	call 	reverse_half
+
+    add     esp, 12
 
 	pop  	ebx
 	pop  	ecx
