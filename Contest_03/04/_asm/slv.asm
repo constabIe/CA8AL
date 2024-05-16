@@ -15,7 +15,7 @@ reverse_half:
 	.while:
 		GET_DEC 4, eax
 
-		test 	ecx, ecx
+		test 	eax, eax
 		jnp 	.out_odd
 		jp 		.in_even
 		jmp 	.exit_while
