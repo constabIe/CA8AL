@@ -15,10 +15,12 @@ reverse_half:
 	.while:
 		GET_DEC 4, eax
 
+		cmp  	eax, 0
+		jz 		.exit_while
+
 		bt 		ecx, 31
 		jc 		.out_odd
 		jnc 	.in_even
-		jmp 	.exit_while
 
 		.out_odd: 	
 			PRINT_DEC 	4, eax
