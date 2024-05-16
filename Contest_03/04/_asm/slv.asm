@@ -37,7 +37,7 @@ reverse_half:
 
 	.out_even_loop:
 		cmp 	ecx, 0
-		jbe 	.exit_function 		
+		jz 		.exit_function 		
 
 		pop  	eax
 
