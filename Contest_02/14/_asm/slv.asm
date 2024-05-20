@@ -1,6 +1,6 @@
 bits 32
 
-%inclue "io.inc"
+%include "io.inc"
 
 section .text
 global factorial
