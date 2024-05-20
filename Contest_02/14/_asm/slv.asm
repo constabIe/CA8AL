@@ -11,6 +11,9 @@ RangeExceptionLabel:
 
 global main
 main:
+	push 	ebp
+	mov 	ebp, esp
+
 	GET_DEC	4, eax
 	mov 	[n], eax
 
@@ -22,6 +25,9 @@ main:
 	call 	combination
 
 	PRINT_DEC 4, eax
+
+	mov 	esp, ebp 
+	pop 	ebp
 
 	xor 	eax, eax
 	ret
@@ -40,12 +46,12 @@ combination:
 	push  	esi	; interim calculations
 
 	; verify arguments
-	cmp  	k, 1
-	jb 		RangeExceptionLabel
+	; cmp  	k, 1
+	; jb 		RangeExceptionLabel
 
-	mov  	eax, n
-	cmp  	k, eax
-	ja 		RangeExceptionLabel
+	; mov  	eax, n
+	; cmp  	k, eax
+	; ja 		RangeExceptionLabel
 
 	push 	n
 	call  	factorial
