@@ -76,7 +76,7 @@ combination:
 	pop 	ecx
 	pop  	ebx
 
-	mov  	esp ,ebp
+	mov  	esp, ebp
 	pop 	ebp
 
 	ret 
@@ -94,8 +94,7 @@ factorial:
 	push  	ecx
 
 	cmp  	val, 0
-	jb 		
-RangeExceptionLabel
+	jb 		RangeExceptionLabel
 	je  	.if_zero
 
 	mov 	ecx, 1
