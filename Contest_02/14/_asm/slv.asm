@@ -3,9 +3,10 @@ bits 32
 %include "io.inc"
 
 section .text
+
 global factorial
 
-%define		n 	dword [ebp + 8]
+%define		val 	dword [ebp + 8]
 
 factorial:
 	push 	ebp
@@ -13,15 +14,15 @@ factorial:
 
 	push  	ecx
 
-	cmp  	n, 0
-	jb 		.RangeExceptionLabel
+	cmp  	val, 0
+	jb 		factorial.RangeExceptionLabel
 	je  	.if_zero
 
 	mov 	ecx, 1
 	mov 	eax, 1
 
 	.cycle:
-		cmp  	ecx, n
+		cmp  	ecx, val
 		ja 		.exit_cycle
 
 		mul 	ecx
@@ -39,7 +40,7 @@ factorial:
 	jmp .exit_function
 
 .exit_function:
-	pop  	ebx
+	pop  	ecx
 
 	mov  	esp, ebp
 	pop 	ebp
@@ -54,9 +55,8 @@ factorial:
 
 global main
 main:
-	GET_DEC	4, eax ; n
-
-	; GET_DEC	4, ebx	; k
+	GET_DEC	4, eax
+	mov 	[n], eax
 
 	push  	eax
 	call 	factorial
@@ -68,7 +68,6 @@ main:
 
 section .bss
 	n: 	resd 	1
-	; k: 	resd	1
 
 section .rodata
 	RangeExceptionMessage	db `Input data is out of range`, 0
