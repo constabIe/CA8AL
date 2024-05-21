@@ -11,14 +11,15 @@ main:
 	GET_DEC	4, eax
 	mov 	[n], eax
 
-	GET_DEC	4, eax
-	mov 	[k], eax
+	; GET_DEC	4, eax
+	; mov 	[k], eax
 
-	push  	dword [k]
+	; push  	dword [k]
 	push  	dword [n]	
-	call 	combination
+	call 	factorial
 
 	PRINT_DEC 4, eax
+	NEWLINE
 
 	mov 	esp, ebp 
 	pop 	ebp
@@ -27,11 +28,11 @@ main:
 	ret
 
 %define	k 					dword [ebp + 12]
-%define	n 					dword [ebp + 8]
+%define	n 					dword [ebp +  8]
 
-%define n_factorial 		dword [ebp - 8]
-%define k_factorial 		dword [ebp - 12]
-%define n_sub_k_factorial 	dword [ebp - 16]
+%define n_factorial 		dword [ebp -  4]
+%define k_factorial 		dword [ebp -  8]
+%define n_sub_k_factorial 	dword [ebp -  12]
 
 global combination
 combination:
@@ -44,12 +45,12 @@ combination:
 	push  	esi	; interim calculations
 
 	; verify arguments
-	; cmp  	k, 1
-	; jb 	RangeExceptionLabel
+	cmp  	k, 1
+	jl 		RangeExceptionLabel
 
-	; mov  	eax, n
-	; cmp  	k, eax
-	; ja 	RangeExceptionLabel
+	mov  	eax, n
+	cmp  	k, eax
+	ja 		RangeExceptionLabel
 
 	push 	n
 	call  	factorial
@@ -88,7 +89,7 @@ combination:
 %undef	k
 %undef	n
 
-%define	val 	dword [ebp + 8]
+%define	val	dword [ebp + 8]
 
 global factorial
 factorial:
