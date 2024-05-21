@@ -93,7 +93,7 @@ combination:
 
 	mov		ebx, eax
 
-	mov 	eax, n_factoria
+	mov 	eax, n_factorial
 	cdq		
 	idiv	ebx
 
