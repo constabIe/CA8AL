@@ -69,6 +69,9 @@ combination:
 	call	factorial
 	UNALIGN_STACK 4
 
+	PRINT_CHAR `w`
+	NEWLINE
+
 	mov		n_factorial, eax
 
 	ALIGN_STACK 4
