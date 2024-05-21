@@ -66,6 +66,9 @@ not_just_zeros:
 		jmp  	not_just_zeros.count_zeros_loop
 
 	.counter_check:
+		NEWLINE
+		PRINT_DEC 4, eax
+		NEWLINE
 		cmp		eax, k
 		je 		not_just_zeros.exit_function
 
