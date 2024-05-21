@@ -18,19 +18,21 @@ not_just_zeros:
 	mov 	ecx, 31
 	.find_one_loop:
 		cmp 	ecx, 0
-		jb 		not_just_zeros.zero_val_or_ne_k
+		jb 		not_just_zeros.continue_function
 
 		bt 		val, ecx
 		jc 		not_just_zeros.bit_one
-
-		dec 	ecx
-		jmp 	not_just_zeros.find_one_loop
+		jmp		not_just_zeros.continue_find_one_loop
 
 		.bit_one:
 			mov 	ebx, ecx
-			jmp  	not_just_zeros.count_zeros_loop_prepares
+			jmp  	not_just_zeros.continue_function
 
-	.count_zeros_loop_prepares:
+	.continue_find_one_loop:
+		dec 	ecx
+		jmp 	not_just_zeros.find_one_loop
+
+	.continue_function:
 		xor 	eax, eax
 
 	.count_zeros_loop:
@@ -47,14 +49,12 @@ not_just_zeros:
 
 	.continue_count_zeros_loop:
 		dec  	ebx
-
 		jmp  	not_just_zeros.count_zeros_loop
 
 	.counter_check:
 		cmp		eax, k
 		je 		not_just_zeros.exit_function
 
-	.zero_val_or_ne_k:
 		mov  	eax, 0
 
 .exit_function:
