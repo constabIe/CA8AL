@@ -3,12 +3,6 @@ bits 32
 %include "io.inc"
 
 section .text
-RangeExceptionLabel:
-	PRINT_STRING RangeExceptionMessage
-	NEWLINE
-
-	int 0x0A
-
 global main
 main:
 	push 	ebp
@@ -32,8 +26,12 @@ main:
 	xor 	eax, eax
 	ret
 
-%define	k 	dword [ebp + 12]
-%define	n 	dword [ebp + 8]
+%define	k 					dword [ebp + 12]
+%define	n 					dword [ebp + 8]
+
+%define n_factorial 		dword [ebp - 8]
+%define k_factorial 		dword [ebp - 12]
+%define n_sub_k_factorial 	dword [ebp - 16]
 
 global combination
 combination:
@@ -47,35 +45,35 @@ combination:
 
 	; verify arguments
 	; cmp  	k, 1
-	; jb 		RangeExceptionLabel
+	; jb 	RangeExceptionLabel
 
 	; mov  	eax, n
 	; cmp  	k, eax
-	; ja 		RangeExceptionLabel
+	; ja 	RangeExceptionLabel
 
 	push 	n
 	call  	factorial
-	mov 	ebx, eax
+	mov 	n_factorial, eax
 
 	push 	k
 	call  	factorial
-	mov 	ecx, eax
+	mov 	k_factorial, eax
 
 	mov 	esi, n
 	sub 	esi, k
 
 	push 	esi
 	call 	factorial
-	mov 	edx, eax
+	mov 	n_sub_k_factorial, eax
 
-	mov 	eax, ecx
-	mul 	edx
+	mov 	eax, k_factorial
+	imul 	n_sub_k_factorial
 
-	mov  	ecx, eax
+	mov  	ebx, eax
 
-	mov  	eax, ebx
+	mov  	eax, n_sub_k_factorial
 	cdq 	
-	div 	ecx
+	idiv 	ebx
 
 	pop 	esi
 	pop 	edx
@@ -101,28 +99,27 @@ factorial:
 
 	cmp  	val, 0
 	jb 		RangeExceptionLabel
-	je  	.if_zero
+	je  	factorial.if_zero
 
 	mov 	ecx, 1
 	mov 	eax, 1
 
 	.cycle:
 		cmp  	ecx, val
-		ja 		.exit_cycle
+		ja 		factorial.exit_cycle
 
 		mul 	ecx
 
 		inc 	ecx
-
-		jmp 	.cycle
+		jmp 	factorial.cycle
 
 	.exit_cycle:
-		jmp 	.exit_function
+		jmp 	factorial.exit_function
 
 .if_zero:
 	mov  eax, 1
 
-	jmp .exit_function
+	jmp factorial.exit_function
 
 .exit_function:
 	pop  	ecx
@@ -133,6 +130,12 @@ factorial:
 	ret
 
 %undef	val 
+
+RangeExceptionLabel:
+	PRINT_STRING RangeExceptionMessage
+	NEWLINE
+
+	int 0x0A
 
 section .bss
 	n: 	resd 	1
