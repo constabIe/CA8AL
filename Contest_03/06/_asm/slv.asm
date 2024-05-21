@@ -89,8 +89,8 @@ main:
 		cmp 	ecx, edx
 		jae 	continue_main
 
-		GET_DEC 4, dword [vals_arr + ebx]
-		PRINT_DEC 4, dword [vals_arr + ebx] ;
+		GET_DEC 4, [vals_arr + ebx]
+		PRINT_DEC 4, [vals_arr + ebx] ;
 		NEWLINE ;
 
 		add 	ebx, DWORD_BYTE_SIZE
@@ -112,7 +112,7 @@ continue_main:
 		push 	dword [k]
 		call 	not_just_zeros
 
-		PRINT_DEC 4, dword [vals_arr + ebx] ;
+		PRINT_DEC 4, [vals_arr + ebx] ;
 		NEWLINE ;
 
 		add		esi, eax
