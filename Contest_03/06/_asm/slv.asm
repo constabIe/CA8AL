@@ -4,7 +4,8 @@ bits 32
 
 section .text
 
-%define	k 	dword [ebp +  8]
+%define	k 	dword [ebp + 12]
+%define val dword [ebp +  8]
 
 global 	not_just_zeros
 not_just_zeros:
@@ -63,7 +64,8 @@ not_just_zeros:
 
 	ret
 
-%undef	k 
+%undef k 
+%undef val
 
 global main
 main:
@@ -88,7 +90,7 @@ main:
 
 		GET_DEC 4, dword [vals_arr + ebx]
 
-		add 	ebx, INT_BYTE_SIZE
+		add 	ebx, DWORD_BYTE_SIZE
 		inc 	ecx
 
 		jmp 	input_loop
@@ -102,6 +104,7 @@ continue_main:
 		jae 	output
 
 		push 	dword [vals_arr + ebx]
+		push 	dword [k]
 		call 	not_just_zeros
 
 		add		esi, eax
@@ -131,7 +134,7 @@ exit_main:
 
 section .data
 	MAX_INPUT_QUANTITY	equ 1000
-	INT_BYTE_SIZE		equ	4
+	DWORD_BYTE_SIZE		equ	4
 
 section .bss 
 	n 			resd 	1
