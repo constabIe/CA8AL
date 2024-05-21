@@ -36,8 +36,8 @@ not_just_zeros:
 		; PRINT_CHAR `w` ;
 		; NEWLINE ;
 
-		; PRINT_DEC 4, ebx
-		; NEWLINE
+		PRINT_DEC 4, ebx
+		NEWLINE
 
 		dec  	ebx
 		xor 	eax, eax
