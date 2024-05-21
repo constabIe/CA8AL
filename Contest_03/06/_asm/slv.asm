@@ -125,8 +125,8 @@ continue_main:
 		cmp 	ecx, edx
 		jae 	output
 
-		push 	dword [vals_arr + ebx]
 		push 	dword [k]
+		push 	dword [vals_arr + ebx]
 		call 	not_just_zeros
 
 		; PRINT_DEC 4, [vals_arr + ebx] ;
