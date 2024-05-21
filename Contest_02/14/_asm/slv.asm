@@ -14,8 +14,8 @@ main:
 	GET_DEC	4, eax
 	mov 	[k], eax
 
-	push  	dword [n]
-	push  	dword [k]	
+	push  	dword [k]
+	push  	dword [n]	
 	call 	combination
 
 	PRINT_DEC 4, eax
