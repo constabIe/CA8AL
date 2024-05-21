@@ -84,6 +84,7 @@ main:
 
 	xor  	ecx, ecx
 	xor  	ebx, ebx
+
 	input_loop:
 		cmp 	ecx, edx
 		jae 	continue_main
@@ -99,6 +100,7 @@ continue_main:
 	xor  	ecx, ecx
 	xor  	ebx, ebx
 	xor  	esi, esi
+
 	verifying_loop:
 		cmp 	ecx, edx
 		jae 	output
@@ -109,7 +111,7 @@ continue_main:
 
 		add		esi, eax
 
-		add 	ebx, INT_BYTE_SIZE
+		add 	ebx, DWORD_BYTE_SIZE
 		inc 	ecx
 
 		jmp 	verifying_loop
