@@ -3,6 +3,17 @@ bits 32
 %include "io.inc"
 
 section .text
+
+%macro ALIGN_STACK 1.nolist
+    sub     esp, %1
+    and     esp, 0xfffffff0
+    add     esp, %1
+%endmacro
+
+%macro UNALIGN_STACK 1.nolist
+    add     esp, %1
+%endmacro
+
 global main
 main:
 	push 	ebp
