@@ -18,7 +18,7 @@ not_just_zeros:
 	mov 	ecx, 31
 	.find_one_loop:
 		cmp 	ecx, 0
-		jb 		not_just_zeros.continue_function
+		jl 		not_just_zeros.continue_function
 
 		bt 		val, ecx
 		jc 		not_just_zeros.bit_one
@@ -44,7 +44,7 @@ not_just_zeros:
 
 	.count_zeros_loop:
 		cmp  	ebx, 0
-		jb 		not_just_zeros.counter_check
+		jl 		not_just_zeros.counter_check
 
 		; PRINT_CHAR `w` ;
 		; NEWLINE ;
