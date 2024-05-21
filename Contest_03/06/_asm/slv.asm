@@ -112,7 +112,7 @@ continue_main:
 		jmp 	verifying_loop
 
 output:
-	PRIINT_DEC 4, esi
+	PRINT_DEC 4, esi
 	NEWLINE
 
 exit_main:
