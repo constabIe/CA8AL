@@ -60,8 +60,8 @@ not_just_zeros:
 			jmp 	not_just_zeros.continue_count_zeros_loop
 
 	.continue_count_zeros_loop:
-		PRINT_DEC 4, ebx
-		NEWLINE
+		; PRINT_DEC 4, ebx
+		; NEWLINE
 		dec  	ebx
 		jmp  	not_just_zeros.count_zeros_loop
 
