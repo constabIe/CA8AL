@@ -4,8 +4,8 @@ bits 32
 
 section .text
 
-%define	k 	dword [ebp + 12]
-%define val dword [ebp +  8]
+%define	k 		dword [ebp + 12]
+%define val 	dword [ebp +  8]
 
 global 	not_just_zeros
 not_just_zeros:
@@ -15,11 +15,10 @@ not_just_zeros:
 	push  	ebx
 	push  	ecx	
 
-	mov 	eax, 0
 	mov 	ecx, 31
 	.find_one_loop:
 		cmp 	ecx, 0
-		jb 		not_just_zeros.exit_function
+		jb 		not_just_zeros.zero_val_or_ne_k
 
 		bt 		val, ecx
 		jc 		not_just_zeros.bit_one
@@ -36,10 +35,11 @@ not_just_zeros:
 
 	.count_zeros_loop:
 		cmp  	ebx, 0
-		jb 		not_just_zeros.exit_function
+		jb 		not_just_zeros.counter_check
 
 		bt 		val, ebx
-		jnc 	not_just_zeros.continue_count_zeros_loop
+		jnc 	not_just_zeros.zero_flag_true
+		jmp		not_just_zeros.continue_count_zeros_loop
 
 		.zero_flag_true:
 			inc  	eax
@@ -50,10 +50,12 @@ not_just_zeros:
 
 		jmp  	not_just_zeros.count_zeros_loop
 
-	cmp		eax, k
-	je 		not_just_zeros.exit_function
-	
-	mov  	eax, 0
+	.counter_check:
+		cmp		eax, k
+		je 		not_just_zeros.exit_function
+
+	.zero_val_or_ne_k:
+		mov  	eax, 0
 
 .exit_function:
 	pop 	ecx
@@ -93,7 +95,7 @@ main:
 		PRINT_DEC 4, [vals_arr + ebx] ;
 		NEWLINE ;
 
-		add 	ebx, DWORD_BYTE_SIZE
+		add 	ebx, DWORD_SIZE
 		inc 	ecx
 
 		jmp 	input_loop
@@ -117,7 +119,7 @@ continue_main:
 
 		add		esi, eax
 
-		add 	ebx, DWORD_BYTE_SIZE
+		add 	ebx, DWORD_SIZE
 		inc 	ecx
 
 		jmp 	verifying_loop
@@ -142,7 +144,7 @@ exit_main:
 
 section .data
 	MAX_INPUT_QUANTITY	equ 1000
-	DWORD_BYTE_SIZE		equ	4
+	DWORD_SIZE			equ	4
 
 section .bss 
 	n 			resd 	1
