@@ -119,6 +119,8 @@ main:
 		jmp 	input_loop
 
 continue_main:
+	GET_DEC	4, [k]
+
 	; NEWLINE ;
 	xor  	ecx, ecx
 	xor  	ebx, ebx
