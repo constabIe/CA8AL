@@ -36,11 +36,15 @@ not_just_zeros:
 		PRINT_CHAR `w` ;
 		NEWLINE ;
 
+		dec  	ebx
 		xor 	eax, eax
 
 	.count_zeros_loop:
 		cmp  	ebx, 0
 		jb 		not_just_zeros.counter_check
+
+		PRINT_CHAR `w` ;
+		NEWLINE ;
 
 		bt 		val, ebx
 		jnc 	not_just_zeros.zero_flag_true
