@@ -54,8 +54,8 @@ not_just_zeros:
 		jmp		not_just_zeros.continue_count_zeros_loop
 
 		.zero_flag_true:
-			; PRINT_CHAR `w` ;
-			; NEWLINE ;
+			PRINT_CHAR `w` ;
+			NEWLINE ;
 			inc  	eax
 			jmp 	not_just_zeros.continue_count_zeros_loop
 
