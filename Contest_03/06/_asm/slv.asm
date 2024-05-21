@@ -92,8 +92,9 @@ main:
 		jae 	continue_main
 
 		GET_DEC 4, [vals_arr + ebx]
-		PRINT_DEC 4, [vals_arr + ebx] ;
-		NEWLINE ;
+		
+		; PRINT_DEC 4, [vals_arr + ebx] ;
+		; NEWLINE ;
 
 		add 	ebx, DWORD_SIZE
 		inc 	ecx
@@ -101,7 +102,7 @@ main:
 		jmp 	input_loop
 
 continue_main:
-	NEWLINE ;
+	; NEWLINE ;
 	xor  	ecx, ecx
 	xor  	ebx, ebx
 	xor  	esi, esi
@@ -114,8 +115,8 @@ continue_main:
 		push 	dword [k]
 		call 	not_just_zeros
 
-		PRINT_DEC 4, [vals_arr + ebx] ;
-		NEWLINE ;
+		; PRINT_DEC 4, [vals_arr + ebx] ;
+		; NEWLINE ;
 
 		add		esi, eax
 
