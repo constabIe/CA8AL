@@ -33,12 +33,6 @@ not_just_zeros:
 		jmp 	not_just_zeros.find_one_loop
 
 	.continue_function:
-		; PRINT_CHAR `w` ;
-		; NEWLINE ;
-
-		PRINT_DEC 4, ebx
-		NEWLINE
-
 		dec  	ebx
 		xor 	eax, eax
 
@@ -46,29 +40,20 @@ not_just_zeros:
 		cmp  	ebx, 0
 		jl 		not_just_zeros.counter_check
 
-		PRINT_CHAR `w` ;
-		NEWLINE ;
 
 		bt 		val, ebx
 		jnc 	not_just_zeros.zero_flag_true
 		jmp		not_just_zeros.continue_count_zeros_loop
 
 		.zero_flag_true:
-			PRINT_CHAR `w` ;
-			NEWLINE ;
 			inc  	eax
 			jmp 	not_just_zeros.continue_count_zeros_loop
 
 	.continue_count_zeros_loop:
-		; PRINT_DEC 4, ebx
-		; NEWLINE
 		dec  	ebx
 		jmp  	not_just_zeros.count_zeros_loop
 
 	.counter_check:
-		NEWLINE
-		PRINT_DEC 4, eax
-		NEWLINE
 		cmp		eax, k
 		je 		not_just_zeros.exit_function
 
@@ -110,8 +95,6 @@ main:
 
 		GET_DEC 4, [vals_arr + ebx]
 
-		; PRINT_DEC 4, [vals_arr + ebx] ;
-		; NEWLINE ;
 
 		add 	ebx, DWORD_SIZE
 		inc 	ecx
@@ -121,7 +104,6 @@ main:
 continue_main:
 	GET_DEC	4, [k]
 
-	; NEWLINE ;
 	xor  	ecx, ecx
 	xor  	ebx, ebx
 	xor  	esi, esi
@@ -134,8 +116,6 @@ continue_main:
 		push 	dword [vals_arr + ebx]
 		call 	not_just_zeros
 
-		; PRINT_DEC 4, [vals_arr + ebx] ;
-		; NEWLINE ;
 
 		add		esi, eax
 
