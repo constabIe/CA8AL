@@ -4,16 +4,6 @@ bits 32
 
 section .text
 
-%macro ALIGN_STACK 1.nolist
-    sub     esp, %1
-    and     esp, 0xfffffff0
-    add     esp, %1
-%endmacro
-
-%macro UNALIGN_STACK 1.nolist
-    add     esp, %1
-%endmacro
-
 global main
 main:
 	push 	ebp
@@ -25,11 +15,9 @@ main:
 	GET_DEC	4, eax
 	mov 	[k], eax
 
-	ALIGN_STACK 8	
 	push  	dword [k]
 	push  	dword [n]	
 	call 	combination
-	UNALIGN_STACK 8
 
 	PRINT_DEC 4, eax
 	NEWLINE
@@ -64,30 +52,21 @@ combination:
 	cmp  	k, eax
 	ja 		RangeExceptionLabel
 
-	ALIGN_STACK 4
 	push	n
 	call	factorial
-	UNALIGN_STACK 4
-
-	PRINT_CHAR `w`
-	NEWLINE
 
 	mov		n_factorial, eax
 
-	ALIGN_STACK 4
 	push 	k
 	call 	factorial
-	UNALIGN_STACK 4
 
 	mov 	k_factorial, eax
 
 	mov		eax, n
 	sub		eax, k
-
-	ALIGN_STACK 4	
+	
 	push	eax
 	call 	factorial
-	UNALIGN_STACK 4
 
 	mov	    n_sub_k_factorial, eax
 
