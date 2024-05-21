@@ -36,6 +36,9 @@ not_just_zeros:
 		; PRINT_CHAR `w` ;
 		; NEWLINE ;
 
+		PRINT_DEC 4, ebx
+		NEWLINE
+
 		dec  	ebx
 		xor 	eax, eax
 
@@ -51,12 +54,14 @@ not_just_zeros:
 		jmp		not_just_zeros.continue_count_zeros_loop
 
 		.zero_flag_true:
-			PRINT_CHAR `w` ;
-			NEWLINE ;
+			; PRINT_CHAR `w` ;
+			; NEWLINE ;
 			inc  	eax
 			jmp 	not_just_zeros.continue_count_zeros_loop
 
 	.continue_count_zeros_loop:
+		PRINT_DEC 4, ebx
+		NEWLINE
 		dec  	ebx
 		jmp  	not_just_zeros.count_zeros_loop
 
