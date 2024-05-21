@@ -11,12 +11,14 @@ main:
 	GET_DEC	4, eax
 	mov 	[n], eax
 
-	; GET_DEC	4, eax
-	; mov 	[k], eax
+	GET_DEC	4, eax
+	mov 	[k], eax
 
-	; push  	dword [k]
+	ALIGN_STACK 8	
+	push  	dword [k]
 	push  	dword [n]	
-	call 	factorial
+	call 	combination
+	UNALIGN_STACK 8
 
 	PRINT_DEC 4, eax
 	NEWLINE
@@ -32,17 +34,16 @@ main:
 
 %define n_factorial 		dword [ebp -  4]
 %define k_factorial 		dword [ebp -  8]
-%define n_sub_k_factorial 	dword [ebp -  12]
+%define n_sub_k_factorial 	dword [ebp - 12]
 
 global combination
 combination:
 	push 	ebp
 	mov 	ebp, esp
 
-	push 	ebx ; n!
-	push 	ecx ; k!
-	push 	edx ; (n - k)!
-	push  	esi	; interim calculations
+	sub 	esp, 12
+
+	push 	ebx
 
 	; verify arguments
 	cmp  	k, 1
@@ -52,34 +53,42 @@ combination:
 	cmp  	k, eax
 	ja 		RangeExceptionLabel
 
-	push 	n
-	call  	factorial
-	mov 	n_factorial, eax
+	ALIGN_STACK 4
+	push	n
+	call	factorial
+	UNALIGN_STACK 4
 
+	mov		n_factorial, eax
+
+	ALIGN_STACK 4
 	push 	k
-	call  	factorial
+	call 	factorial
+	UNALIGN_STACK 4
+
 	mov 	k_factorial, eax
 
-	mov 	esi, n
-	sub 	esi, k
+	mov		eax, n
+	sub		eax, k
 
-	push 	esi
+	ALIGN_STACK 4	
+	push	eax
 	call 	factorial
-	mov 	n_sub_k_factorial, eax
+	UNALIGN_STACK 4
+
+	mov	    n_sub_k_factorial, eax
 
 	mov 	eax, k_factorial
 	imul 	n_sub_k_factorial
 
-	mov  	ebx, eax
+	mov		ebx, eax
 
-	mov  	eax, n_sub_k_factorial
-	cdq 	
-	idiv 	ebx
+	mov 	eax, n_factoria
+	cdq		
+	idiv	ebx
 
-	pop 	esi
-	pop 	edx
-	pop 	ecx
 	pop  	ebx
+
+	add		esp, 12
 
 	mov  	esp, ebp
 	pop 	ebp
