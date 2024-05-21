@@ -33,6 +33,9 @@ not_just_zeros:
 		jmp 	not_just_zeros.find_one_loop
 
 	.continue_function:
+		PRINT_CHAR `w` ;
+		NEWLINE ;
+
 		xor 	eax, eax
 
 	.count_zeros_loop:
@@ -69,7 +72,7 @@ not_just_zeros:
 %undef k 
 %undef val
 
-global main
+global	main
 main:
 	push	ebp
 	mov 	ebp, esp
@@ -92,7 +95,7 @@ main:
 		jae 	continue_main
 
 		GET_DEC 4, [vals_arr + ebx]
-		
+
 		; PRINT_DEC 4, [vals_arr + ebx] ;
 		; NEWLINE ;
 
