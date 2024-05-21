@@ -36,8 +36,8 @@ not_just_zeros:
 		; PRINT_CHAR `w` ;
 		; NEWLINE ;
 
-		PRINT_DEC 4, ebx
-		NEWLINE
+		; PRINT_DEC 4, ebx
+		; NEWLINE
 
 		dec  	ebx
 		xor 	eax, eax
@@ -46,8 +46,8 @@ not_just_zeros:
 		cmp  	ebx, 0
 		jl 		not_just_zeros.counter_check
 
-		; PRINT_CHAR `w` ;
-		; NEWLINE ;
+		PRINT_CHAR `w` ;
+		NEWLINE ;
 
 		bt 		val, ebx
 		jnc 	not_just_zeros.zero_flag_true
