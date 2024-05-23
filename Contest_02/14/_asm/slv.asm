@@ -15,12 +15,30 @@ main:
 	GET_DEC	4, eax
 	mov 	[k], eax
 
-	push  	dword [k]
-	push  	dword [n]	
-	call 	combination
+
+	ALIGN_STACK	8
+	push	dword [n]
+	push	dword [k]
+	call	combination
+	UNALIGN_STACK
 
 	PRINT_DEC 4, eax
-	NEWLINE
+	; mov 	eax, dword [n]
+	; mov 	ecx, 31
+
+	; loop_find_n:
+	; 	cmp		ecx, 0
+	; 	jl		loop_exit_find_n
+
+	; 	bt		eax, ecx
+	; 	jc 		loop_zeros
+
+	; 	dec  	ecx
+	; 	jmp  	loop_find_n
+
+	; 	significant_zeros:
+	; 		dec 	ecx
+	; 		mov 	ebx, ecx
 
 	mov 	esp, ebp 
 	pop 	ebp
@@ -52,26 +70,34 @@ combination:
 	cmp  	k, eax
 	ja 		RangeExceptionLabel
 
+	ALIGN_STACK 4
 	push	n
 	call	factorial
+	UNALIGN_STACK
 
 	mov		n_factorial, eax
 
+	ALIGN_STACK 4
 	push 	k
 	call 	factorial
+	UNALIGN_STACK
 
 	mov 	k_factorial, eax
 
 	mov		eax, n
 	sub		eax, k
-	
+
+	ALIGN_STACK 4	
 	push	eax
 	call 	factorial
+	UNALIGN_STACK
 
 	mov	    n_sub_k_factorial, eax
 
+	ALIGN_STACK 4
 	mov 	eax, k_factorial
 	imul 	n_sub_k_factorial
+	UNALIGN_STACK
 
 	mov		ebx, eax
 
