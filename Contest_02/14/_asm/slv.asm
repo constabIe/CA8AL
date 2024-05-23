@@ -15,7 +15,6 @@ main:
 	GET_DEC	4, eax
 	mov 	[k], eax
 
-
 	ALIGN_STACK	8
 	push	dword [n]
 	push	dword [k]
@@ -23,6 +22,7 @@ main:
 	UNALIGN_STACK
 
 	PRINT_DEC 4, eax
+	NEWLINE
 	; mov 	eax, dword [n]
 	; mov 	ecx, 31
 
@@ -63,12 +63,12 @@ combination:
 	push 	ebx
 
 	; verify arguments
-	cmp  	k, 1
-	jl 		RangeExceptionLabel
+	; cmp  	k, 1
+	; jl 		RangeExceptionLabel
 
-	mov  	eax, n
-	cmp  	k, eax
-	ja 		RangeExceptionLabel
+	; mov  	eax, n
+	; cmp  	k, eax
+	; ja 		RangeExceptionLabel
 
 	ALIGN_STACK 4
 	push	n
