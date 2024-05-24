@@ -17,8 +17,7 @@ global main
     add     esp, %1
 %endmacro
 
-%define matrix	dword [ebp + 12]
-%define n		dword [ebp +  8]
+%define matrix_ptr	dword [ebp + 12]
 
 main:
 	push 	ebp
@@ -26,9 +25,13 @@ main:
 
 	sub		esp, 8
 
+	push	ebx
+
+	lea 	ebx, n
+
 	ALIGN_STACK 8	
 	push 	format
-	push 	n
+	push 	ebx
 	call	scanf
 	UNALIGN_STACK 8
 
@@ -37,22 +40,22 @@ main:
 	call	allocate_matrix
 	UNALIGN_STACK 4
 
-	mov		matrix, eax
+	mov		matrix_ptr, eax
 
 	ALIGN_STACK 8
 	push 	dword [n]
-	push 	matrix
+	push 	matrix_ptr
 	call	scanf_matrix
 	UNALIGN_STACK 8
 
 	ALIGN_STACK 8
 	push 	dword [n]
-	push 	matrix
+	push 	matrix_ptr
 	call	printf_matrix
 	UNALIGN_STACK 8
 
 	ALIGN_STACK 4
-	push	matrix
+	push	matrix_ptr
 	call	deallocate_matrix
 	UNALIGN_STACK 4
 
@@ -64,7 +67,7 @@ main:
 	xor		eax, eax
 	ret
 
-%undef matrix
+%undef matrix_ptr
 %undef n
 
 %define dimension	dword [ebp +  8]
@@ -95,7 +98,7 @@ allocate_matrix:
 
 %undef dimension
 
-%define matrix	dword [ebp +  8]
+%define matrix_ptr	dword [ebp +  8]
 
 global deallocate_matrix
 deallocate_matrix:
@@ -103,7 +106,7 @@ deallocate_matrix:
 	mov 	ebp, esp
 
 	ALIGN_STACK 4
-	push 	matrix
+	push 	matrix_ptr
 	call	free
 	UNALIGN_STACK 4
 
@@ -112,10 +115,10 @@ deallocate_matrix:
 
 	ret
 
-%undef matrix
+%undef matrix_ptr
 
-%define dimension 	dword [ebp + 12]
-%define matrix		dword [ebp +  8]
+%define dimension 		dword [ebp + 12]
+%define matrix_ptr		dword [ebp +  8]
 
 global scanf_matrix
 scanf_matrix:
@@ -138,7 +141,7 @@ scanf_matrix:
 		cmp  	ecx, 0
 		jle		scanf_matrix.exit_func
 
-		lea		eax, [matrix + ebx]
+		lea		eax, [matrix_ptr + ebx]
 
 		ALIGN_STACK 8
 		push 	format
@@ -163,10 +166,10 @@ scanf_matrix:
 	ret
 
 %undef dimension
-%undef matrix
+%undef matrix_ptr
 
-%define dimension 	dword [ebp + 12]
-%define matrix 		dword [ebp +  8]
+%define dimension 		dword [ebp + 12]
+%define matrix_ptr 		dword [ebp +  8]
 
 global printf_matrix
 printf_matrix:
@@ -189,7 +192,7 @@ printf_matrix:
 		cmp  	ecx, 0
 		jle		printf_matrix.exit_func
 
-		mov		eax, [matrix + ebx]
+		mov		eax, [matrix_ptr + ebx]
 
 		ALIGN_STACK 8
 		push 	format
@@ -214,8 +217,11 @@ printf_matrix:
 	ret
 
 %undef dimension
-%undef matrix
+%undef matrix_ptr
 
 section .data
 	DWORD_SIZE 	equ		4
 	format		db 		`%d`, 0
+
+section .bss
+	n 	resd 	1
