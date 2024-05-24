@@ -17,11 +17,14 @@ global main
     add     esp, %1
 %endmacro
 
-%define matrix	dword [ebp +  8]
+%define matrix	dword [ebp + 12]
+%define n		dword [ebp +  8]
 
 main:
 	push 	ebp
 	mov 	ebp, esp
+
+	sub		esp, 8
 
 	ALIGN_STACK 8	
 	push 	format
@@ -34,7 +37,7 @@ main:
 	call	allocate_matrix
 	UNALIGN_STACK 4
 
-	mov		[matrix], eax
+	mov		matrix, eax
 
 	ALIGN_STACK 8
 	push 	dword [n]
@@ -53,7 +56,7 @@ main:
 	call	deallocate_matrix
 	UNALIGN_STACK 4
 
-	add		esp, 4
+	add		esp, 8
 
 	mov		esp, ebp
 	pop		ebp
@@ -61,6 +64,8 @@ main:
 	xor		eax, eax
 	ret
 
+%undef matrix
+%undef n
 
 %define dimension	dword [ebp +  8]
 
@@ -73,18 +78,13 @@ allocate_matrix:
 
 	mov 	eax, dimension
 	mul		dimension
-
 	mov		ebx, DWORD_SIZE
 	mul		ebx
 
-	sub		esp, 4
-	and		esp, 0xfffffff0
-	add		esp, 4
-
+	ALIGN_STACK 4
 	push 	eax
 	call	malloc
-
-	add 	esp, 4
+	UNALIGN_STACK 4
 
 	pop  	ebx
 
@@ -95,31 +95,27 @@ allocate_matrix:
 
 %undef dimension
 
-%define matrix_pointer	dword [ebp +  8]
+%define matrix	dword [ebp +  8]
 
 global deallocate_matrix
 deallocate_matrix:
 	push	ebp
 	mov 	ebp, esp
 
-	sub		esp, 4
-	and		esp, 0xfffffff0
-	add		esp, 4
-
-	push 	matrix_pointer
-	call	malloc
-
-	add 	esp, 4
+	ALIGN_STACK 4
+	push 	matrix
+	call	free
+	UNALIGN_STACK 4
 
 	mov		esp, ebp
 	pop		ebp
 
 	ret
 
-%undef matrix_pointer
+%undef matrix
 
-%define dimension 			dword [ebp + 12]
-%define matrix_pointer 		dword [ebp +  8]
+%define dimension 	dword [ebp + 12]
+%define matrix		dword [ebp +  8]
 
 global scanf_matrix
 scanf_matrix:
@@ -142,17 +138,13 @@ scanf_matrix:
 		cmp  	ecx, 0
 		jle		scanf_matrix.exit_func
 
-		sub		esp, 8
-		and		esp, 0xfffffff0
-		add		esp, 8
-
 		lea		eax, [matrix + ebx]
 
+		ALIGN_STACK 8
 		push 	format
 		push 	eax
 		call	scanf
-
-		add		esp, 8
+		UNALIGN_STACK 8
 
 		add		ebx, DWORD_SIZE
 
@@ -173,8 +165,8 @@ scanf_matrix:
 %undef dimension
 %undef matrix
 
-%define dimension 		dword [ebp + 12]
-%define matrix_pointer 	dword [ebp +  8]
+%define dimension 	dword [ebp + 12]
+%define matrix 		dword [ebp +  8]
 
 global printf_matrix
 printf_matrix:
@@ -197,17 +189,13 @@ printf_matrix:
 		cmp  	ecx, 0
 		jle		printf_matrix.exit_func
 
-		sub		esp, 8
-		and		esp, 0xfffffff0
-		add		esp, 8
-
 		mov		eax, [matrix + ebx]
 
+		ALIGN_STACK 8
 		push 	format
 		push 	eax
 		call	printf
-
-		add		esp, 8
+		UNALIGN_STACK 8
 
 		add		ebx, DWORD_SIZE
 
@@ -231,7 +219,3 @@ printf_matrix:
 section .data
 	DWORD_SIZE 	equ		4
 	format		db 		`%d`, 0
-
-section .bss
-	n 			resd	1
-	matrix  	resd	1
