@@ -36,7 +36,7 @@ main:
 	call	allocate_matrix
 	UNALIGN_STACK 4
 
-	lea		[matrix], eax
+	mov		[matrix], eax
 
 	ALIGN_STACK 8
 	push 	dword [n]
