@@ -74,9 +74,13 @@ allocate_matrix:
 	push	ebp
 	mov 	ebp, esp
 
+	push	ebx
+
 	mov 	eax, dimension
 	mul		dimension
-	mul		4
+
+	mov		ebx, DWORD_SIZE
+	mul		ebx
 
 	sub		esp, 4
 	and		esp, 0xfffffff0
@@ -86,6 +90,8 @@ allocate_matrix:
 	call	malloc
 
 	add 	esp, 4
+
+	pop  	ebx
 
 	mov		esp, ebp
 	pop		ebp
