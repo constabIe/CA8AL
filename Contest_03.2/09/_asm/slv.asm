@@ -76,7 +76,7 @@ allocate_matrix:
 
 	mov 	eax, dimension
 	mul		dimension
-	mul		DWORD_SIZE
+	mul		4
 
 	sub		esp, 4
 	and		esp, 0xfffffff0
