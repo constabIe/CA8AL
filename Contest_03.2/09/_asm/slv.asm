@@ -21,8 +21,6 @@ main:
 	push 	ebp
 	mov 	ebp, esp
 
-	sub		esp, 4
-
 	push	ebx
 
 	ALIGN_STACK 8	
@@ -40,22 +38,20 @@ main:
 
 	ALIGN_STACK 8
 	push 	dword [n]
-	push 	[matrix]
+	push 	dword [matrix]
 	call	scanf_matrix
 	UNALIGN_STACK 8
 
 	ALIGN_STACK 8
 	push 	dword [n]
-	push 	[matrix]
+	push 	dword [matrix]
 	call	printf_matrix
 	UNALIGN_STACK 8
 
 	ALIGN_STACK 4
-	push	[matrix]
+	push	dword [matrix]
 	call	deallocate_matrix
 	UNALIGN_STACK 4
-
-	add		esp, 4
 
 	mov		esp, ebp
 	pop		ebp
