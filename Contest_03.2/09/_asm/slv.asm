@@ -97,7 +97,7 @@ allocate_matrix:
 %define matrix_pointer	dword [ebp +  8]
 
 global deallocate_matrix
-allocate_matrix:
+deallocate_matrix:
 	push	ebp
 	mov 	ebp, esp
 
@@ -145,7 +145,7 @@ scanf_matrix:
 		and		esp, 0xfffffff0
 		add		esp, 8
 
-		lea		eax, [matrix_pointer + ebx]
+		lea		eax, [matrix + ebx]
 
 		push 	format
 		push 	eax
@@ -200,7 +200,7 @@ printf_matrix:
 		and		esp, 0xfffffff0
 		add		esp, 8
 
-		mov		eax, [matrix_pointer + ebx]
+		mov		eax, [matrix + ebx]
 
 		push 	format
 		push 	eax
@@ -232,5 +232,5 @@ section .data
 	format		db 		`%d`, 0
 
 section .bss
-	n 		dword	1
-	matrix 	dword	1
+	n: 			dword	1
+	matrix: 	dword	1
