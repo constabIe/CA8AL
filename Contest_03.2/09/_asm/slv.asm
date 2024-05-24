@@ -232,5 +232,5 @@ section .data
 	format		db 		`%d`, 0
 
 section .bss
-	n: 			dword	1
-	matrix: 	dword	1
+	n 			resd	1
+	matrix  	resd	1
