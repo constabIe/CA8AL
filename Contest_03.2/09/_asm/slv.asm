@@ -17,13 +17,11 @@ global main
     add     esp, %1
 %endmacro
 
-%define matrix_ptr	dword [ebp + 12]
-
 main:
 	push 	ebp
 	mov 	ebp, esp
 
-	sub		esp, 8
+	sub		esp, 4
 
 	push	ebx
 
@@ -40,35 +38,32 @@ main:
 	call	allocate_matrix
 	UNALIGN_STACK 4
 
-	mov		matrix_ptr, eax
+	mov		matrix, eax
 
 	ALIGN_STACK 8
 	push 	dword [n]
-	push 	matrix_ptr
+	push 	matrix
 	call	scanf_matrix
 	UNALIGN_STACK 8
 
 	ALIGN_STACK 8
 	push 	dword [n]
-	push 	matrix_ptr
+	push 	matrix
 	call	printf_matrix
 	UNALIGN_STACK 8
 
 	ALIGN_STACK 4
-	push	matrix_ptr
+	push	matrix
 	call	deallocate_matrix
 	UNALIGN_STACK 4
 
-	add		esp, 8
+	add		esp, 4
 
 	mov		esp, ebp
 	pop		ebp
 
 	xor		eax, eax
 	ret
-
-%undef matrix_ptr
-%undef n
 
 %define dimension	dword [ebp +  8]
 
@@ -135,17 +130,15 @@ scanf_matrix:
 	mul		dimension
 
 	mov		ecx, eax
-	xor		ebx, ebx
+	mov		ebx, matrix_ptr
 
 	.loop_scanf:
 		cmp  	ecx, 0
 		jle		scanf_matrix.exit_func
 
-		lea		eax, [matrix_ptr + ebx]
-
 		ALIGN_STACK 8
 		push 	format
-		push 	eax
+		push 	ebx
 		call	scanf
 		UNALIGN_STACK 8
 
@@ -192,11 +185,12 @@ printf_matrix:
 		cmp  	ecx, 0
 		jle		printf_matrix.exit_func
 
-		mov		eax, [matrix_ptr + ebx]
+		mov		eax, matrix_ptr
+		add 	eax, ebx
 
 		ALIGN_STACK 8
 		push 	format
-		push 	eax
+		push 	[eax]
 		call	printf
 		UNALIGN_STACK 8
 
@@ -224,4 +218,8 @@ section .data
 	format		db 		`%d`, 0
 
 section .bss
-	n 	resd 	1
+	n 		resd 	1
+	matrix	resd	1
+
+
+
