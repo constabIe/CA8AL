@@ -6,59 +6,54 @@ extern scanf, printf
 section .text
 
 global main
+
+%macro ALIGN_STACK 1.nolist
+    sub     esp, %1
+    and     esp, 0xfffffff0
+    add     esp, %1
+%endmacro
+
+%macro UNALIGN_STACK 1.nolist
+    add     esp, %1
+%endmacro
+
+%define matrix	dword [ebp +  8]
+
 main:
 	push 	ebp
 	mov 	ebp, esp
 
-	sub		esp, 8
-	and		esp, 0xfffffff0
-	add		esp, 8	
-
+	ALIGN_STACK 8	
 	push 	format
 	push 	n
 	call	scanf
+	UNALIGN_STACK 8
 
-	add		esp, 8
-
-	sub		esp, 4
-	and		esp, 0xfffffff0
-	add		esp, 4	
-
+	ALIGN_STACK 4	
 	push	dword [n]
 	call	allocate_matrix
-
-	add		esp, 4
+	UNALIGN_STACK 4
 
 	mov		[matrix], eax
 
-	sub		esp, 8
-	and		esp, 0xfffffff0
-	add		esp, 8	
-
+	ALIGN_STACK 8
 	push 	dword [n]
 	push 	matrix
 	call	scanf_matrix
+	UNALIGN_STACK 8
 
-	add		esp, 8
-
-	sub		esp, 8
-	and		esp, 0xfffffff0
-	add		esp, 8	
-
+	ALIGN_STACK 8
 	push 	dword [n]
 	push 	matrix
 	call	printf_matrix
+	UNALIGN_STACK 8
 
-	sub		esp, 4
-	and		esp, 0xfffffff0
-	add		esp, 4	
-
+	ALIGN_STACK 4
 	push	matrix
 	call	deallocate_matrix
+	UNALIGN_STACK 4
 
-	add		esp, 4	
-
-	add		esp, 8
+	add		esp, 4
 
 	mov		esp, ebp
 	pop		ebp
