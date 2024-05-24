@@ -40,18 +40,18 @@ main:
 
 	ALIGN_STACK 8
 	push 	dword [n]
-	push 	matrix
+	push 	[matrix]
 	call	scanf_matrix
 	UNALIGN_STACK 8
 
 	ALIGN_STACK 8
 	push 	dword [n]
-	push 	matrix
+	push 	[matrix]
 	call	printf_matrix
 	UNALIGN_STACK 8
 
 	ALIGN_STACK 4
-	push	matrix
+	push	[matrix]
 	call	deallocate_matrix
 	UNALIGN_STACK 4
 
