@@ -114,7 +114,7 @@ scanf_matrix:
 	push	ebp
 	mov 	ebp, esp
 
-	sub 	esp, 4
+	sub 	esp, 8
 
 	push	eax
 	push	ebx
@@ -138,14 +138,14 @@ scanf_matrix:
 
 		add		ebx, DWORD_SIZE
 
-		jmp 	.loop_scanf
+		jmp 	scanf_matrix.loop_scanf
 
 .exit_func:
 	pop 	ecx
 	pop 	ebx
 	pop 	eax
 
-	add		esp, 4
+	add		esp, 8
 
 	mov		esp, ebp
 	pop		ebp
@@ -163,7 +163,7 @@ printf_matrix:
 	push	ebp
 	mov 	ebp, esp
 
-	sub 	esp, 4
+	sub 	esp, 8
 
 	push	eax
 	push	ebx
@@ -175,7 +175,7 @@ printf_matrix:
 	mov		ecx, eax
 	xor		ebx, ebx
 
-	.loop_scanf:
+	.loop_printf:
 		cmp  	ecx, 0
 		jle		printf_matrix.exit_func
 
@@ -190,14 +190,14 @@ printf_matrix:
 
 		add		ebx, DWORD_SIZE
 
-		jmp 	.loop_scanf
+		jmp 	printf_matrix.loop_printf
 
 .exit_func:
 	pop 	ecx
 	pop 	ebx
 	pop 	eax
 
-	add		esp, 4
+	add		esp, 8
 
 	mov		esp, ebp
 	pop		ebp
