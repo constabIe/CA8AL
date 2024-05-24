@@ -23,9 +23,9 @@ main:
 
 	push	ebx
 
-	ALIGN_STACK 8	
+	ALIGN_STACK 8
+	push 	n	
 	push 	format
-	push 	n
 	call	scanf
 	UNALIGN_STACK 8
 
@@ -131,8 +131,8 @@ scanf_matrix:
 		jle		scanf_matrix.exit_func
 
 		ALIGN_STACK 8
-		push 	format
 		push 	ebx
+		push 	format
 		call	scanf
 		UNALIGN_STACK 8
 
@@ -183,8 +183,8 @@ printf_matrix:
 		add 	eax, ebx
 
 		ALIGN_STACK 8
-		push 	format
 		push 	dword [eax]
+		push 	format
 		call	printf
 		UNALIGN_STACK 8
 
