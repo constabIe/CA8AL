@@ -24,8 +24,8 @@ main:
 	push	ebx
 
 	ALIGN_STACK 8	
-	push 	n
 	push 	format
+	push 	n
 	call	scanf
 	UNALIGN_STACK 8
 
