@@ -25,11 +25,9 @@ main:
 
 	push	ebx
 
-	lea 	ebx, n
-
 	ALIGN_STACK 8	
 	push 	format
-	push 	ebx
+	push 	n
 	call	scanf
 	UNALIGN_STACK 8
 
@@ -38,7 +36,7 @@ main:
 	call	allocate_matrix
 	UNALIGN_STACK 4
 
-	mov		matrix, eax
+	lea		matrix, eax
 
 	ALIGN_STACK 8
 	push 	dword [n]
@@ -190,7 +188,7 @@ printf_matrix:
 
 		ALIGN_STACK 8
 		push 	format
-		push 	[eax]
+		push 	dword [eax]
 		call	printf
 		UNALIGN_STACK 8
 
