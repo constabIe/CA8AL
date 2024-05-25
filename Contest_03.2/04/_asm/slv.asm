@@ -16,6 +16,13 @@ section .text
 
 global main
 main:
+	push	ebp
+	mov 	ebp, esp
+
+	push	eax
+
+	xor		eax, eax
+
 	ALIGN_STACK 8
 	push	n
 	push	format
@@ -28,6 +35,8 @@ main:
 	call	printf
 	UNALIGN_STACK 8
 
+	pop 	eax
+
 	xor 	eax, eax
 	ret
 
@@ -35,4 +44,4 @@ section .bss
 	n	resd	1
 
 section .data
-	format 	db `%d`, 0
+	format 	db "%d", 0
