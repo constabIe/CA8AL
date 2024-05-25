@@ -37,14 +37,14 @@ main:
 	mov		[matrix], eax
 
 	ALIGN_STACK 8
+	push	dword [n]
 	push 	dword [matrix]
-	push 	dword [n]
 	call	scanf_matrix
 	UNALIGN_STACK 8
 
 	ALIGN_STACK 8
-	push 	dword [matrix]
 	push 	dword [n]
+	push 	dword [matrix]
 	call	printf_matrix
 	UNALIGN_STACK 8
 
