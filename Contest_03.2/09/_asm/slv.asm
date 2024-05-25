@@ -7,13 +7,13 @@ extern scanf, printf
 
 section .text
 
-%macro ALIGN_STACK 1.nolist
+%macro ALIGN_STACKK 1.nolist
     sub     esp, %1
     and     esp, 0xfffffff0
     add     esp, %1
 %endmacro
 
-%macro UNALIGN_STACK 1.nolist
+%macro UNALIGN_STACKK 1.nolist
     add     esp, %1
 %endmacro
 
@@ -24,35 +24,35 @@ main:
 
 	push	ebx
 
-	ALIGN_STACK 8
+	ALIGN_STACKK 8
 	push 	n	
 	push 	format
 	call	scanf
-	UNALIGN_STACK 8
+	UNALIGN_STACKK 8
 
-	ALIGN_STACK 4	
+	ALIGN_STACKK 4	
 	push	dword [n]
 	call	allocate_matrix
-	UNALIGN_STACK 4
+	UNALIGN_STACKK 4
 
 	mov		[matrix], eax
 
-	ALIGN_STACK 8
+	ALIGN_STACKK 8
 	push	dword [n]
 	push 	dword [matrix]
 	call	scanf_matrix
-	UNALIGN_STACK 8
+	UNALIGN_STACKK 8
 
-	ALIGN_STACK 8
+	ALIGN_STACKK 8
 	push 	dword [n]
 	push 	dword [matrix]
 	call	printf_matrix
-	UNALIGN_STACK 8
+	UNALIGN_STACKK 8
 
-	ALIGN_STACK 4
+	ALIGN_STACKK 4
 	push	dword [matrix]
 	call	deallocate_matrix
-	UNALIGN_STACK 4
+	UNALIGN_STACKK 4
 
 	pop		ebx
 
@@ -76,10 +76,10 @@ allocate_matrix:
 	mov		ebx, DWORD_SIZE
 	mul		ebx
 
-	ALIGN_STACK 4
+	ALIGN_STACKK 4
 	push 	eax
 	call	malloc
-	UNALIGN_STACK 4
+	UNALIGN_STACKK 4
 
 	pop  	ebx
 
@@ -97,10 +97,10 @@ deallocate_matrix:
 	push	ebp
 	mov 	ebp, esp
 
-	ALIGN_STACK 4
+	ALIGN_STACKK 4
 	push 	matrix_ptr
 	call	free
-	UNALIGN_STACK 4
+	UNALIGN_STACKK 4
 
 	mov		esp, ebp
 	pop		ebp
@@ -133,11 +133,11 @@ scanf_matrix:
 
 		PRINT_CHAR `w`
 
-		ALIGN_STACK 8
+		ALIGN_STACKK 8
 		push 	ebx
 		push 	format
 		call	scanf
-		UNALIGN_STACK 8
+		UNALIGN_STACKK 8
 
 		add		ebx, DWORD_SIZE
 		dec 	ecx
@@ -182,11 +182,11 @@ printf_matrix:
 		mov		eax, matrix_ptr
 		add 	eax, ebx
 
-		ALIGN_STACK 8
+		ALIGN_STACKK 8
 		push 	dword [eax]
 		push 	format
 		call	printf
-		UNALIGN_STACK 8
+		UNALIGN_STACKK 8
 
 		add		ebx, DWORD_SIZE
 		dec 	ecx
