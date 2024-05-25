@@ -1,5 +1,7 @@
 bits 32
 
+%include "io.inc"
+
 extern malloc, free
 extern scanf, printf
 
@@ -129,6 +131,8 @@ scanf_matrix:
 		cmp  	ecx, 0
 		jle		scanf_matrix.exit_func
 
+		PRINT_CHAR `w`
+
 		ALIGN_STACK 8
 		push 	ebx
 		push 	format
@@ -186,7 +190,7 @@ printf_matrix:
 
 		add		ebx, DWORD_SIZE
 		dec 	ecx
-		
+
 		jmp 	printf_matrix.loop_printf
 
 .exit_func:
