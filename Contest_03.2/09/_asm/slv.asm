@@ -5,8 +5,6 @@ extern scanf, printf
 
 section .text
 
-global main
-
 %macro ALIGN_STACK 1.nolist
     sub     esp, %1
     and     esp, 0xfffffff0
@@ -17,6 +15,7 @@ global main
     add     esp, %1
 %endmacro
 
+global main
 main:
 	push 	ebp
 	mov 	ebp, esp
@@ -52,6 +51,8 @@ main:
 	push	dword [matrix]
 	call	deallocate_matrix
 	UNALIGN_STACK 4
+
+	pop		ebx
 
 	mov		esp, ebp
 	pop		ebp
@@ -114,8 +115,6 @@ scanf_matrix:
 	push	ebp
 	mov 	ebp, esp
 
-	sub 	esp, 8
-
 	push	eax
 	push	ebx
 	push	ecx
@@ -145,8 +144,6 @@ scanf_matrix:
 	pop 	ebx
 	pop 	eax
 
-	add		esp, 8
-
 	mov		esp, ebp
 	pop		ebp
 
@@ -162,8 +159,6 @@ global printf_matrix
 printf_matrix:
 	push	ebp
 	mov 	ebp, esp
-
-	sub 	esp, 8
 
 	push	eax
 	push	ebx
@@ -196,8 +191,6 @@ printf_matrix:
 	pop 	ecx
 	pop 	ebx
 	pop 	eax
-
-	add		esp, 8
 
 	mov		esp, ebp
 	pop		ebp
