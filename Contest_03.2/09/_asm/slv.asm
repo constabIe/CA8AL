@@ -136,6 +136,7 @@ scanf_matrix:
 		UNALIGN_STACK 8
 
 		add		ebx, DWORD_SIZE
+		dec 	ecx
 
 		jmp 	scanf_matrix.loop_scanf
 
@@ -184,7 +185,8 @@ printf_matrix:
 		UNALIGN_STACK 8
 
 		add		ebx, DWORD_SIZE
-
+		dec 	ecx
+		
 		jmp 	printf_matrix.loop_printf
 
 .exit_func:
