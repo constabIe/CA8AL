@@ -128,7 +128,7 @@ scanf_matrix:
 
 	.input_loop:
 		cmp		ecx, 0
-		jle		scanf_matrix.exit_function
+		je		scanf_matrix.exit_function
 
 		ALIGN_STACK 8
 		push	ebx
