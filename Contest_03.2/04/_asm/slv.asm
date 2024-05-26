@@ -16,11 +16,14 @@ section .text
 
 global main
 main:
-	ALIGN_STACK 8
+	enter 0, 0
+
+	ALIGN_STACK 4
 	push	message
-	push	format
 	call	printf
-	UNALIGN_STACK 8
+	UNALIGN_STACK 4
+
+	leave
 
 	xor 	eax, eax
 	ret
