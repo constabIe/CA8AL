@@ -16,19 +16,23 @@ section .text
 
 global main
 main:
-	enter 0, 0
+	push	ebp
+	mov		ebp, esp
 
-	ALIGN_STACK 4
-	push	message
+	ALIGN_STACK 8
+	push	dword [n]
+	push	format_int32_t
 	call	printf
-	UNALIGN_STACK 4
+	UNALIGN_STACK 8
 
-	leave
+	mov		esp, ebp
+	pop 	ebp
 
 	xor 	eax, eax
 	ret
 
 section .data
-	format 		db		"%s", 0
-	message		db		`qwerty`, 0
-	n			dd		0
+	format_int32_t	db		"%d\n", 0
+	format_string 	db		"%s", 0
+	message			db		`qwerty`, 0
+	n				dd		32
