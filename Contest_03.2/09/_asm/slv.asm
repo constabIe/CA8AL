@@ -26,6 +26,12 @@ main:
 	call 	scanf
 	UNALIGN_STACK 8	
 
+	ALIGN_STACK 8
+	push	eax
+	push	o_format
+	call	printf
+	UNALIGN_STACK 8	
+
 	ALIGN_STACK 4
 	push	dword [n]
 	call	allocate_matrix
@@ -34,26 +40,22 @@ main:
 	mov	[matrix_base], eax
 
 	ALIGN_STACK 8
-	push	dword [n]
-	push	dword [matrix_base]
-	call	scanf
-	UNALIGN_STACK 8	
-
-	ALIGN_STACK 4
-	push	newline
-	call	printf
-	UNALIGN_STACK 4	
-
-	ALIGN_STACK 8
-	push	dword [n]
-	push	dword [matrix_base]
+	push	eax
+	push	o_format
 	call	printf
 	UNALIGN_STACK 8	
 
-	ALIGN_STACK 4
-	push	newline
-	call	printf
-	UNALIGN_STACK 4	
+	; ALIGN_STACK 8
+	; push	dword [n]
+	; push	dword [matrix_base]
+	; call	scanf
+	; UNALIGN_STACK 8	
+
+	; ALIGN_STACK 8
+	; push	dword [n]
+	; push	dword [matrix_base]
+	; call	printf
+	; UNALIGN_STACK 8	
 
 	ALIGN_STACK 4
 	push	dword [matrix_base]
@@ -205,7 +207,7 @@ section .data
 	DWORD_SIZE	equ 	4
 
 	i_format	db		`%d`, 0
-	o_format	db		`%d `, 0
+	o_format	db		`_%d_`, 0
 	newline		db		`\n`, 0
 
 section .bss
