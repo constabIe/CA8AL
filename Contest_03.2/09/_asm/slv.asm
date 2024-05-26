@@ -67,10 +67,10 @@ allocate_matrix:
 	push	ecx
 
 	mov		eax, matrix_order
-	mul		matrix_order
+	imul	matrix_order
 
 	mov		ebx, DWORD_SIZE	
-	mul		ebx
+	imul	ebx
 
 	ALIGN_STACK 4
 	push	eax
@@ -115,7 +115,7 @@ scanf_matrix:
 	push	ecx
 
 	mov		eax, matrix_order
-	mul		matrix_order
+	imul	matrix_order
 
 	mov		ecx, eax
 	mov		ebx, matrix_ptr
@@ -132,14 +132,14 @@ scanf_matrix:
 		call	printf
 		UNALIGN_STACK 4
 
-		cmp		ecx, -1
-		je		scanf_matrix.exit_function
+		cmp		ecx, 0
+		jle		scanf_matrix.exit_function
 
-		; ALIGN_STACK 8
-		; push	ebx
-		; push	i_format 
-		; call	scanf
-		; UNALIGN_STACK 8
+		ALIGN_STACK 8
+		push	ebx
+		push	i_format 
+		call	scanf
+		UNALIGN_STACK 8
 
 		dec		ecx
 		add		ebx, 4
@@ -170,14 +170,14 @@ printf_matrix:
 	push	ecx
 
 	mov		eax, matrix_order
-	mul		matrix_order
+	imul	matrix_order
 
 	mov		ecx, eax
 	mov		ebx, matrix_ptr
 
 	.output_loop:
 		cmp		ecx, -1
-		je		printf_matrix.exit_function
+		jle		printf_matrix.exit_function
 
 		ALIGN_STACK 8
 		push	dword [ebx]
