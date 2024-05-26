@@ -73,8 +73,18 @@ allocate_matrix:
 	mul		ebx
 
 	ALIGN_STACK 4
+	push	w
+	call	printf
+	UNALIGN_STACK 4
+
+	ALIGN_STACK 4
 	push	eax
 	call	malloc
+	UNALIGN_STACK 4
+
+	ALIGN_STACK 4
+	push	w
+	call	printf
 	UNALIGN_STACK 4
 
 	pop		ecx
@@ -120,11 +130,11 @@ scanf_matrix:
 	mov		ecx, eax
 	mov		ebx, matrix_ptr
 
-	ALIGN_STACK 8
-	push	ecx
-	push 	o_format
-	call	printf
-	UNALIGN_STACK 8
+	; ALIGN_STACK 8
+	; push	ecx
+	; push 	o_format
+	; call	printf
+	; UNALIGN_STACK 8
 
 	.input_loop:
 		ALIGN_STACK 4
