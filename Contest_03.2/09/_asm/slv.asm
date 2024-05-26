@@ -26,12 +26,6 @@ main:
 	call 	scanf
 	UNALIGN_STACK 8	
 
-	ALIGN_STACK 8
-	push	dword [n]
-	push	o_format
-	call	printf
-	UNALIGN_STACK 8	
-
 	ALIGN_STACK 4
 	push	dword [n]
 	call	allocate_matrix
@@ -132,9 +126,14 @@ scanf_matrix:
 
 		ALIGN_STACK 8
 		push	ebx
-		push	i_format ; i_format	= `%d`, 0
+		push	i_format 
 		call	scanf
 		UNALIGN_STACK 8
+
+		ALIGN_STACK 4
+		push	w
+		call	printf
+		UNALIGN_STACK 4
 
 		dec		ecx
 		add		ebx, 4
