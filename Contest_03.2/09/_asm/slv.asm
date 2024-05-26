@@ -31,6 +31,8 @@ main:
 	call	allocate_matrix
 	UNALIGN_STACK 4	
 
+	mov	[matrix_base], eax
+
 	ALIGN_STACK 8
 	push	dword [n]
 	push	dword [matrix_base]
@@ -53,6 +55,11 @@ main:
 	call	printf
 	UNALIGN_STACK 4	
 
+	ALIGN_STACK 4
+	push	dword [matrix_base]
+	call	deallocate_matrix
+	UNALIGN_STACK 4	
+
 	leave
 
 	xor		eax, eax
@@ -70,7 +77,7 @@ allocate_matrix:
 	push	ecx
 
 	mov		eax, matrix_order
-	mul	matrix_order
+	mul		matrix_order
 
 	mov		ebx, DWORD_SIZE	
 	mul		ebx
