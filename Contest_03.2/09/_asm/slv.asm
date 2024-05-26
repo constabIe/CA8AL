@@ -130,11 +130,11 @@ scanf_matrix:
 		cmp		ecx, 0
 		jle		scanf_matrix.exit_function
 
-		; ALIGN_STACK 8
-		; push	ebx
-		; push	i_format 
-		; call	scanf
-		; UNALIGN_STACK 8
+		ALIGN_STACK 8
+		push	ebx
+		push	i_format 
+		call	scanf
+		UNALIGN_STACK 8
 
 		ALIGN_STACK 4
 		push	w
