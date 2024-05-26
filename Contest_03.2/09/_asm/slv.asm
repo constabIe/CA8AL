@@ -127,6 +127,11 @@ scanf_matrix:
 	UNALIGN_STACK 8
 
 	.input_loop:
+		ALIGN_STACK 4
+		push	w
+		call	printf
+		UNALIGN_STACK 4
+		
 		cmp		ecx, 0
 		je		scanf_matrix.exit_function
 
@@ -135,11 +140,6 @@ scanf_matrix:
 		push	i_format 
 		call	scanf
 		UNALIGN_STACK 8
-
-		ALIGN_STACK 4
-		push	w
-		call	printf
-		UNALIGN_STACK 4
 
 		dec		ecx
 		add		ebx, 4
