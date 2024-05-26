@@ -120,15 +120,21 @@ scanf_matrix:
 	mov		ecx, eax
 	mov		ebx, matrix_ptr
 
+	ALIGN_STACK 8
+	push	ecx
+	push 	o_format
+	call	printf
+	UNALIGN_STACK 8
+
 	.input_loop:
 		cmp		ecx, 0
 		jle		scanf_matrix.exit_function
 
-		ALIGN_STACK 8
-		push	ebx
-		push	i_format 
-		call	scanf
-		UNALIGN_STACK 8
+		; ALIGN_STACK 8
+		; push	ebx
+		; push	i_format 
+		; call	scanf
+		; UNALIGN_STACK 8
 
 		ALIGN_STACK 4
 		push	w
