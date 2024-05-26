@@ -26,11 +26,11 @@ main:
 	call 	scanf
 	UNALIGN_STACK 8	
 
-	; ALIGN_STACK 8
-	; push	eax
-	; push	o_format
-	; call	printf
-	; UNALIGN_STACK 8	
+	ALIGN_STACK 8
+	push	dword [n]
+	push	o_format
+	call	printf
+	UNALIGN_STACK 8	
 
 	ALIGN_STACK 4
 	push	dword [n]
