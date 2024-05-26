@@ -20,10 +20,21 @@ main:
 	mov		ebp, esp
 
 	ALIGN_STACK 8
+	push	n
+	push	format_int32_t
+	call	scanf
+	UNALIGN_STACK 8	
+
+	ALIGN_STACK 8
 	push	dword [n]
 	push	format_int32_t
 	call	printf
 	UNALIGN_STACK 8
+
+	ALIGN_STACK 4
+	push	message
+	call	printf
+	UNALIGN_STACK 4	
 
 	mov		esp, ebp
 	pop 	ebp
@@ -32,7 +43,7 @@ main:
 	ret
 
 section .data
-	format_int32_t	db		"%d\n", 0
+	format_int32_t	db		"%d", 0
 	format_string 	db		"%s", 0
-	message			db		`qwerty`, 0
-	n				dd		32
+	message			db		`\n`, 0
+	n				dd		0
