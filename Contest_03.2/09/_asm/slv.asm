@@ -39,23 +39,17 @@ main:
 
 	mov	[matrix_base], eax
 
-	; ALIGN_STACK 8
-	; push	eax
-	; push	o_format
-	; call	printf
-	; UNALIGN_STACK 8	
+	ALIGN_STACK 8
+	push	dword [n]
+	push	dword [matrix_base]
+	call	scanf_matrix
+	UNALIGN_STACK 8	
 
 	ALIGN_STACK 8
 	push	dword [n]
 	push	dword [matrix_base]
-	call	scanf
+	call	printf_matrix
 	UNALIGN_STACK 8	
-
-	; ALIGN_STACK 8
-	; push	dword [n]
-	; push	dword [matrix_base]
-	; call	printf
-	; UNALIGN_STACK 8	
 
 	ALIGN_STACK 4
 	push	dword [matrix_base]
@@ -136,19 +130,9 @@ scanf_matrix:
 		cmp		ecx, 0
 		jle		scanf_matrix.exit_function
 
-		ALIGN_STACK 8		;
-		push	w			;
-		call	printf		;
-		UNALIGN_STACK 8		;
-
-		ALIGN_STACK 8		;
-		push	newline		;
-		call	printf		;
-		UNALIGN_STACK 8		;
-
 		ALIGN_STACK 8
 		push	ebx
-		push	i_format
+		push	i_format ; i_format	= `%d`, 0
 		call	scanf
 		UNALIGN_STACK 8
 
