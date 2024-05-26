@@ -36,7 +36,7 @@ main:
 	xor		eax, eax
 	ret
 
-; ===================================
+; ==================================
 
 %define	matrix_order 	dword [ebp + 8]
 
@@ -71,3 +71,6 @@ section .data
 	i_format	db		`%d`, 0
 	o_format	db		`%d `, 0
 	newlinw		db		`\n`, 0
+
+section .bss
+	n			resd	1	
