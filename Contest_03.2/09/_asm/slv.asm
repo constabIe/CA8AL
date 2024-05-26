@@ -67,10 +67,10 @@ allocate_matrix:
 	push	ecx
 
 	mov		eax, matrix_order
-	imul	matrix_order
+	mul		matrix_order
 
 	mov		ebx, DWORD_SIZE	
-	imul	ebx
+	mul		ebx
 
 	ALIGN_STACK 4
 	push	eax
@@ -115,7 +115,7 @@ scanf_matrix:
 	push	ecx
 
 	mov		eax, matrix_order
-	imul	matrix_order
+	mul		matrix_order
 
 	mov		ecx, eax
 	mov		ebx, matrix_ptr
@@ -170,7 +170,7 @@ printf_matrix:
 	push	ecx
 
 	mov		eax, matrix_order
-	imul	matrix_order
+	mul		matrix_order
 
 	mov		ecx, eax
 	mov		ebx, matrix_ptr
