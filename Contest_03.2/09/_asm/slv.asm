@@ -20,6 +20,11 @@ global main
 main:
 	enter 0, 0
 
+	ALIGN_STACK 4
+	push	w
+	call	printf
+	UNALIGN_STACK 4
+
 	ALIGN_STACK 8
 	push	n
 	push	i_format
