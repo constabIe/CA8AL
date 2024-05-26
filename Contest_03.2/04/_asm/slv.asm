@@ -16,32 +16,16 @@ section .text
 
 global main
 main:
-	push	ebp
-	mov 	ebp, esp
-
-	push	eax
-
-	xor		eax, eax
-
 	ALIGN_STACK 8
-	push	n
-	push	format
-	call	scanf
-	UNALIGN_STACK 8
-
-	ALIGN_STACK 8
-	push	eax
+	push	message
 	push	format
 	call	printf
 	UNALIGN_STACK 8
 
-	pop 	eax
-
 	xor 	eax, eax
 	ret
 
-section .bss
-	n	resd	1
-
 section .data
-	format 	db "%d", 0
+	format 		db		"%s", 0
+	message		db		`qwerty`, 0
+	n			dd		0
