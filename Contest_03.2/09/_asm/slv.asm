@@ -1,218 +1,72 @@
 bits 32
 
-%include "io.inc"
-
-extern malloc, free
-extern scanf, printf
+extern	malloc, free
+extern	scanf, printf
 
 section .text
 
-%macro ALIGN_STACKK 1.nolist
-    sub     esp, %1
-    and     esp, 0xfffffff0
-    add     esp, %1
+%macro ALIGN_STACK 1.nolist
+	sub		esp, %1
+	and		esp, 0xfffffff0
+	add		esp, %1
 %endmacro
 
-%macro UNALIGN_STACKK 1.nolist
-    add     esp, %1
-%endmacro
+%macro UNALIGN_STACK 1.nolist
+	add		esp, %1
 
+; ==================================
 global main
 main:
-	push 	ebp
-	mov 	ebp, esp
+	enter 0, 0
 
-	push	ebx
+	ALIGN_STACK 8
+	push	n
+	push	i_format
+	call 	scanf
+	UNALIGN_STACK 8	
 
-	ALIGN_STACKK 8
-	push 	n	
-	push 	format
-	call	scanf
-	UNALIGN_STACKK 8
-
-	ALIGN_STACKK 4	
+	ALIGN_STACK 4
 	push	dword [n]
 	call	allocate_matrix
-	UNALIGN_STACKK 4
+	UNALIGN_STACK 4	
 
-	mov		[matrix], eax
-
-	ALIGN_STACKK 8
-	push	dword [n]
-	push 	dword [matrix]
-	call	scanf_matrix
-	UNALIGN_STACKK 8
-
-	ALIGN_STACKK 8
-	push 	dword [n]
-	push 	dword [matrix]
-	call	printf_matrix
-	UNALIGN_STACKK 8
-
-	ALIGN_STACKK 4
-	push	dword [matrix]
-	call	deallocate_matrix
-	UNALIGN_STACKK 4
-
-	pop		ebx
-
-	mov		esp, ebp
-	pop		ebp
+	leave
 
 	xor		eax, eax
 	ret
 
-%define dimension	dword [ebp +  8]
+; ==================================
+
+%define	matrix_order 	dword [ebp + 8]
 
 global allocate_matrix
 allocate_matrix:
-	push	ebp
-	mov 	ebp, esp
+	enter 	0, 0
 
 	push	ebx
+	push	ecx
 
-	mov 	eax, dimension
-	mul		dimension
-	mov		ebx, DWORD_SIZE
-	mul		ebx
+	mov		eax, matrix_order
+	imul	matrix_order
 
-	ALIGN_STACKK 4
-	push 	eax
+	mov		ebx, DWORD_SIZE	
+	imul	ebx
+
+	ALIGN_STACK 4
+	push	eax
 	call	malloc
-	UNALIGN_STACKK 4
+	UNALIGN_STACK 4
 
-	pop  	ebx
+	pop		ecx
+	pop		ebx
 
-	mov		esp, ebp
-	pop		ebp
-
-	ret
-
-%undef dimension
-
-%define matrix_ptr	dword [ebp +  8]
-
-global deallocate_matrix
-deallocate_matrix:
-	push	ebp
-	mov 	ebp, esp
-
-	ALIGN_STACKK 4
-	push 	matrix_ptr
-	call	free
-	UNALIGN_STACKK 4
-
-	mov		esp, ebp
-	pop		ebp
+	leave
 
 	ret
-
-%undef matrix_ptr
-
-%define dimension 		dword [ebp + 12]
-%define matrix_ptr		dword [ebp +  8]
-
-global scanf_matrix
-scanf_matrix:
-	push	ebp
-	mov 	ebp, esp
-
-	push	eax
-	push	ebx
-	push	ecx
-
-	mov		eax, dimension
-	mul		dimension
-
-	mov		ecx, eax
-	mov		ebx, matrix_ptr
-
-	.loop_scanf:
-		cmp  	ecx, 0
-		jle		scanf_matrix.exit_func
-
-		PRINT_CHAR `w`
-
-		ALIGN_STACKK 8
-		push 	ebx
-		push 	format
-		call	scanf
-		UNALIGN_STACKK 8
-
-		add		ebx, DWORD_SIZE
-		dec 	ecx
-
-		jmp 	scanf_matrix.loop_scanf
-
-.exit_func:
-	pop 	ecx
-	pop 	ebx
-	pop 	eax
-
-	mov		esp, ebp
-	pop		ebp
-
-	ret
-
-%undef dimension
-%undef matrix_ptr
-
-%define dimension 		dword [ebp + 12]
-%define matrix_ptr 		dword [ebp +  8]
-
-global printf_matrix
-printf_matrix:
-	push	ebp
-	mov 	ebp, esp
-
-	push	eax
-	push	ebx
-	push	ecx
-
-	mov		eax, dimension
-	mul		dimension
-
-	mov		ecx, eax
-	xor		ebx, ebx
-
-	.loop_printf:
-		cmp  	ecx, 0
-		jle		printf_matrix.exit_func
-
-		mov		eax, matrix_ptr
-		add 	eax, ebx
-
-		ALIGN_STACKK 8
-		push 	dword [eax]
-		push 	format
-		call	printf
-		UNALIGN_STACKK 8
-
-		add		ebx, DWORD_SIZE
-		dec 	ecx
-
-		jmp 	printf_matrix.loop_printf
-
-.exit_func:
-	pop 	ecx
-	pop 	ebx
-	pop 	eax
-
-	mov		esp, ebp
-	pop		ebp
-
-	ret
-
-%undef dimension
-%undef matrix_ptr
 
 section .data
-	DWORD_SIZE 	equ		4
-	format		db 		`%d`, 0
+	DWORD_SIZE	equ 	4
 
-section .bss
-	n 		resd 	1
-	matrix	resd	1
-
-
-
+	i_format	db		`%d`, 0
+	o_format	db		`%d `, 0
+	newlinw		db		`\n`, 0
