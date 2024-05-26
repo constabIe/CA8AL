@@ -27,6 +27,11 @@ main:
 	UNALIGN_STACK 8	
 
 	ALIGN_STACK 4
+	push	w
+	call	printf
+	UNALIGN_STACK 4
+
+	ALIGN_STACK 4
 	push	dword [n]
 	call	allocate_matrix
 	UNALIGN_STACK 4	
