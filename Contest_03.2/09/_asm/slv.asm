@@ -1,19 +1,17 @@
 bits 32
 
-%include "io.inc"
-
 extern	malloc, free
 extern	scanf, printf
 
 section .text
 
-%macro ALIGN_STACKK 1.nolist
+%macro ALIGN_STACK 1.nolist
 	sub		esp, %1
 	and		esp, 0xfffffff0
 	add		esp, %1
 %endmacro
 
-%macro UNALIGN_STACKK 1.nolist
+%macro UNALIGN_STACK 1.nolist
 	add		esp, %1
 %endmacro
 
@@ -22,47 +20,47 @@ global main
 main:
 	enter 0, 0
 
-	ALIGN_STACKK 8
+	ALIGN_STACK 8
 	push	n
 	push	i_format
 	call 	scanf
-	UNALIGN_STACKK 8	
+	UNALIGN_STACK 8	
 
-	; ALIGN_STACKK 8
+	; ALIGN_STACK 8
 	; push	eax
 	; push	o_format
 	; call	printf
-	; UNALIGN_STACKK 8	
+	; UNALIGN_STACK 8	
 
-	ALIGN_STACKK 4
+	ALIGN_STACK 4
 	push	dword [n]
 	call	allocate_matrix
-	UNALIGN_STACKK 4	
+	UNALIGN_STACK 4	
 
 	mov	[matrix_base], eax
 
-	; ALIGN_STACKK 8
+	; ALIGN_STACK 8
 	; push	eax
 	; push	o_format
 	; call	printf
-	; UNALIGN_STACKK 8	
+	; UNALIGN_STACK 8	
 
-	ALIGN_STACKK 8
+	ALIGN_STACK 8
 	push	dword [n]
 	push	dword [matrix_base]
 	call	scanf
-	UNALIGN_STACKK 8	
+	UNALIGN_STACK 8	
 
-	; ALIGN_STACKK 8
+	; ALIGN_STACK 8
 	; push	dword [n]
 	; push	dword [matrix_base]
 	; call	printf
-	; UNALIGN_STACKK 8	
+	; UNALIGN_STACK 8	
 
-	ALIGN_STACKK 4
+	ALIGN_STACK 4
 	push	dword [matrix_base]
 	call	deallocate_matrix
-	UNALIGN_STACKK 4	
+	UNALIGN_STACK 4	
 
 	leave
 
@@ -86,10 +84,10 @@ allocate_matrix:
 	mov		ebx, DWORD_SIZE	
 	mul		ebx
 
-	ALIGN_STACKK 4
+	ALIGN_STACK 4
 	push	eax
 	call	malloc
-	UNALIGN_STACKK 4
+	UNALIGN_STACK 4
 
 	pop		ecx
 	pop		ebx
@@ -106,10 +104,10 @@ global deallocate_matrix
 deallocate_matrix:
 	enter 	0, 0
 
-	ALIGN_STACKK 4
+	ALIGN_STACK 4
 	push	matrix_ptr
 	call	free
-	UNALIGN_STACKK 4
+	UNALIGN_STACK 4
 
 	leave
 
@@ -138,14 +136,21 @@ scanf_matrix:
 		cmp		ecx, 0
 		jle		scanf_matrix.exit_function
 
-		PRINT_CHAR `w`
-		NEWLINE
+		ALIGN_STACK 8		;
+		push	w			;
+		call	printf		;
+		UNALIGN_STACK 8		;
 
-		ALIGN_STACKK 8
+		ALIGN_STACK 8		;
+		push	newline		;
+		call	printf		;
+		UNALIGN_STACK 8		;
+
+		ALIGN_STACK 8
 		push	ebx
 		push	i_format
 		call	scanf
-		UNALIGN_STACKK 8
+		UNALIGN_STACK 8
 
 		dec		ecx
 		add		ebx, 4
@@ -185,11 +190,11 @@ printf_matrix:
 		cmp		ecx, 0
 		jle		printf_matrix.exit_function
 
-		ALIGN_STACKK 8
+		ALIGN_STACK 8
 		push	dword [ebx]
 		push	o_format
 		call	scanf
-		UNALIGN_STACKK 8
+		UNALIGN_STACK 8
 
 		dec		ecx
 		add		ebx, 4
@@ -214,6 +219,7 @@ section .data
 	i_format	db		`%d`, 0
 	o_format	db		`_%d_`, 0
 	newline		db		`\n`, 0
+	w			db		`w`, 0
 
 section .bss
 	n			resd	1
