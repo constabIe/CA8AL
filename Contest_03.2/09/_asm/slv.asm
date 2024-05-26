@@ -115,7 +115,7 @@ scanf_matrix:
 	push	ecx
 
 	mov		eax, matrix_order
-	mul		matrix_order
+	imul	matrix_order
 
 	mov		ecx, eax
 	mov		ebx, matrix_ptr
