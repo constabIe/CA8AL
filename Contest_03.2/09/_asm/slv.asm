@@ -131,8 +131,8 @@ scanf_matrix:
 		push	w
 		call	printf
 		UNALIGN_STACK 4
-		
-		cmp		ecx, 0
+
+		cmp		ecx, -1
 		je		scanf_matrix.exit_function
 
 		; ALIGN_STACK 8
@@ -176,8 +176,8 @@ printf_matrix:
 	mov		ebx, matrix_ptr
 
 	.output_loop:
-		cmp		ecx, 0
-		jle		printf_matrix.exit_function
+		cmp		ecx, -1
+		je		printf_matrix.exit_function
 
 		ALIGN_STACK 8
 		push	dword [ebx]
