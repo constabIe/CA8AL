@@ -13,6 +13,7 @@ section .text
 
 %macro UNALIGN_STACK 1.nolist
 	add		esp, %1
+%endmacro
 
 ; ==================================
 global main
@@ -35,7 +36,7 @@ main:
 	xor		eax, eax
 	ret
 
-; ==================================
+; ===================================
 
 %define	matrix_order 	dword [ebp + 8]
 
