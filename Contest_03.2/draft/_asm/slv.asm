@@ -49,22 +49,24 @@ main:
 	ret
 ; ==============================
 
-%define arr_ptr dword [ebp + 8]
+%define arr_base 	dword [ebp + 8]
 
 global scanf_arr
 scanf_arr:
-	FUNCTION_PROLOGUE 0
+	FUNCTION_PROLOGUE 4
 
 	push	eax
 	push	ebx
 	push	ecx	
 
 	mov		ecx, 0
-	mov		ebx, arr_ptr
+	mov		ebx, arr_base
 
 	.L:
 		cmp		ecx, 10
 		jae		scanf_arr.exit_func
+
+		push	ecx
 
 		ALIGN_STACK 8
 		push	ebx	
@@ -72,10 +74,7 @@ scanf_arr:
 		call	scanf
 		UNALIGN_STACK 8
 
-		ALIGN_STACK 4
-		push	w	
-		call	printf
-		UNALIGN_STACK 4		
+		pop		ecx	
 
 		inc		ecx
 		add		ebx, 4
@@ -91,9 +90,9 @@ scanf_arr:
 
 	ret
 
-%undef arr_ptr
+%undef arr_base
 
-%define arr_ptr dword [ebp + 8]
+%define arr_base dword [ebp + 8]
 
 global printf_arr
 printf_arr:
@@ -104,17 +103,21 @@ printf_arr:
 	push	ecx	
 
 	mov		ecx, 0
-	mov		ebx, arr_ptr
+	mov		ebx, arr_base
 
 	.L:
 		cmp		ecx, 10
 		jae		printf_arr.exit_func
+
+		push	ecx
 
 		ALIGN_STACK 8
 		push	dword [ebx]	
 		push	o_format	
 		call	printf
 		UNALIGN_STACK 8
+
+		pop		ecx
 
 		inc		ecx
 		add		ebx, 4
@@ -130,13 +133,13 @@ printf_arr:
 
 	ret
 
-%undef arr_ptr
+%undef arr_base
 
 section .bss
 	arr		resd	10
 
 section .data
-	i_format	db	"%d ", 0
+	i_format	db	"%d", 0
 	o_format	db	"%d ", 0
 	newline		db	"\n", 0
 	w  			db	"w", 0
