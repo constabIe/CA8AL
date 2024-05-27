@@ -52,6 +52,11 @@ main:
 	call	scanf_matrix
 	UNALIGN_STACK 8
 
+	ALIGN_STACK 4	;
+	push	debug	;
+	call 	printf	;
+	UNALIGN_STACK 4	;
+
 	ALIGN_STACK 8
 	push	dword [n]
 	push	dword [matrix_ptr]
@@ -209,9 +214,10 @@ section	.data
 	DWORD_SIZE	equ		4
 	i_format	db		"%d", 0
 	o_format	db		"%d "
+	debug		db 		"_debug_", 0
 
 section .bss
-	n 		resd	1
+	n 			resd	1
 	matrix_ptr 	resd	1
 
 
