@@ -41,7 +41,7 @@ arr_out:
 		jae		arr_out.exit_func
 
 		ALIGN_STACK 8
-		push	[ebx]
+		push	dword [ebx]
 		push	o_format
 		call	printf
 		UNALIGN_STACK 8
@@ -51,6 +51,7 @@ arr_out:
 
 		jmp		arr_out.L
 
+.exit_func:
 	pop		ebx
 
 	FUNCTION_EPILOGUE 4
