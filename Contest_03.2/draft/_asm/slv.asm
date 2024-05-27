@@ -50,12 +50,12 @@ scanf_arr:
 	push	ebx
 	push	ecx	
 
-	mov		ecx, 10
+	mov		ecx, 0
 	mov		ebx, arr_ptr
 
 	.L:
-		cmp		ecx, 0
-		jbe		scanf_arr.exit_func
+		cmp		ecx, 10
+		jae		scanf_arr.exit_func
 
 		ALIGN_STACK 8
 		push	ebx	
@@ -63,7 +63,12 @@ scanf_arr:
 		call	scanf
 		UNALIGN_STACK 8
 
-		dec		ecx
+		ALIGN_STACK 4
+		push	w	
+		call	printf
+		UNALIGN_STACK 4		
+
+		inc		ecx
 		add		ebx, 4
 
 		jmp		scanf_arr.L
@@ -89,12 +94,12 @@ printf_arr:
 	push	ebx
 	push	ecx	
 
-	mov		ecx, 10
+	mov		ecx, 0
 	mov		ebx, arr_ptr
 
 	.L:
-		cmp		ecx, 0
-		jbe		printf_arr.exit_func
+		cmp		ecx, 10
+		jae		printf_arr.exit_func
 
 		ALIGN_STACK 8
 		push	dword [ebx]	
@@ -102,7 +107,7 @@ printf_arr:
 		call	printf
 		UNALIGN_STACK 8
 
-		dec		ecx
+		inc		ecx
 		add		ebx, 4
 
 		jmp		printf_arr.L
@@ -125,3 +130,4 @@ section .data
 	i_format	db	"%d ", 0
 	o_format	db	"%d ", 0
 	newline		db	"\n", 0
+	w  			db	"w", 0
