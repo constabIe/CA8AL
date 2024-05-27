@@ -31,7 +31,7 @@ main:
 	FUNCTION_PROLOGUE 0
 
 	ALIGN_STACK 4
-	push	arr_base
+	push	arr
 	call	arr_out
 	UNALIGN_STACK 4
 
