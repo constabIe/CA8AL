@@ -66,6 +66,7 @@ main:
 	push	ebx
 	push	dword [n]
 	push	matrix_ptr
+	call	trace
 	UNALIGN_STACK 12
 
 	ALIGN_STACK 8
@@ -161,12 +162,6 @@ scanf_matrix:
 		call 	scanf
 		UNALIGN_STACK 8
 
-		; ALIGN_STACK 8			;
-		; push	iterator		;
-		; push	debug_o_format	;
-		; call 	printf			;
-		; UNALIGN_STACK 8			;
-
 		dec		iterator
 		add		ebx, 4
 
@@ -255,7 +250,7 @@ trace:
 		jmp		.continue_trace_loop
 
 		.overflow_true:
-			inc	overflow_counter
+			inc		overflow_counter
 			jmp		.continue_trace_loop
 
 	.continue_trace_loop:		
