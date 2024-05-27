@@ -314,6 +314,13 @@ get_cell_base:
 	mov		eax, matrix_order
 	mul		line
 
+	push	eax
+	ALIGN_STACK 4
+	push	debug
+	call	printf
+	UNALIGN_STACK 4
+	pop		eax
+
 	add		eax, row
 
 	mov		ebx, DWORD_SIZE
