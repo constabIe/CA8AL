@@ -41,6 +41,11 @@ main:
 	call	scanf
 	UNALIGN_STACK 8
 
+	; ALIGN_STACK 4
+	; push	debug
+	; call	printf
+	; UNALIGN_STACK 4
+
 	ALIGN_STACK 4
 	push	dword [n]
 	call	allocate_matrix
@@ -48,41 +53,36 @@ main:
 
 	mov		[matrix_ptr], eax
 
-	ALIGN_STACK 4
-	push	debug
-	call	printf
-	UNALIGN_STACK 4
-
 	ALIGN_STACK 8
 	push	dword [n]
 	push	dword [matrix_ptr]
 	call	scanf_matrix
 	UNALIGN_STACK 8
 
-	ALIGN_STACK 4
-	push	debug
-	call	printf
-	UNALIGN_STACK 4
-
-	; ALIGN_STACK 8
-	; push	dword [n]
-	; push	dword [matrix_ptr]
-	; call	printf_matrix
-	; UNALIGN_STACK 8	
-
-	ALIGN_STACK 16
-	push	dword [n]
-	push	dword [matrix_ptr]
-	push	1
-	push	1
-	call	get_cell_base
-	UNALIGN_STACK 16
+	; ALIGN_STACK 4
+	; push	debug
+	; call	printf
+	; UNALIGN_STACK 4
 
 	ALIGN_STACK 8
-	push	dword [eax]
-	push	debug_o_format
-	call	printf
-	UNALIGN_STACK 8
+	push	dword [n]
+	push	dword [matrix_ptr]
+	call	printf_matrix
+	UNALIGN_STACK 8	
+
+	; ALIGN_STACK 16
+	; push	dword [n]
+	; push	dword [matrix_ptr]
+	; push	1
+	; push	1
+	; call	get_cell_base
+	; UNALIGN_STACK 16
+
+	; ALIGN_STACK 8
+	; push	dword [eax]
+	; push	debug_o_format
+	; call	printf
+	; UNALIGN_STACK 8
 
 	; xor  	ebx, ebx
 
