@@ -55,7 +55,7 @@ scanf_arr:
 
 	.L:
 		cmp		ecx, 0
-		jae		.exit_func
+		jae		scanf_arr.exit_func
 
 		ALIGN_STACK 8
 		push	ebx	
@@ -68,6 +68,7 @@ scanf_arr:
 
 		jmp		scanf.L
 
+.exit_func:
 	pop		ecx
 	pop		ebx
 	pop		eax
@@ -93,7 +94,7 @@ printf_arr:
 
 	.L:
 		cmp		ecx, 0
-		jae		.exit_func
+		jae		printf_arr.exit_func
 
 		ALIGN_STACK 8
 		push	dword [ebx]	
@@ -106,6 +107,7 @@ printf_arr:
 
 		jmp		printf.L
 
+.exit_func:
 	pop		ecx
 	pop		ebx
 	pop		eax
