@@ -301,8 +301,8 @@ trace:
 
 %define	matrix_order	dword [ebp + 20]
 %define	matrix_base		dword [ebp + 16]
-%define	j				dword [ebp + 12]
-%define	i				dword [ebp +  8]
+%define	row				dword [ebp + 12]
+%define	line			dword [ebp +  8]
 
 global get_cell_base
 ; matrix[y][x] = matrix + 4 * (MATRIX_SIZE * y + x)
@@ -312,9 +312,9 @@ get_cell_base:
 	push	ebx
 
 	mov		eax, matrix_order
-	mul		i
+	mul		line
 
-	add		eax, j
+	add		eax, row
 
 	mov		ebx, DWORD_SIZE
 	mul		ebx
@@ -329,8 +329,8 @@ get_cell_base:
 
 %undef	matrix_order
 %undef	matrix_base
-%undef	j
-%undef	i
+%undef	row
+%undef	line
 
 section	.data
 	DWORD_SIZE	equ		4
