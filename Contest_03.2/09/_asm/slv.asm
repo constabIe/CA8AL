@@ -267,7 +267,7 @@ trace_overflow:
 
 	.trace_overflow_loop:
 		cmp		esi, matrix_order
-		jae		trace.exit_function
+		jae		trace_overflow.exit_function
 
 		add		edi, [ebx]
 		jo		.overflow_true
