@@ -48,6 +48,11 @@ main:
 
 	mov		[matrix_ptr], eax
 
+	ALIGN_STACK 4
+	push	debug
+	call	printf
+	UNALIGN_STACK 4
+
 	ALIGN_STACK 8
 	push	dword [n]
 	push	dword [matrix_ptr]
