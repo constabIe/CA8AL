@@ -4,6 +4,15 @@ extern	scanf, printf
 
 section .text
 
+%macro FUNCTION_PROLOGUE 1.nolist
+    enter   %1, 0
+    and     esp, 0xfffffff0
+%endmacro
+
+%macro FUNCTION_EPILOGUE 0.nolist
+    leave
+%endmacro
+
 %macro ALIGN_STACK 1.nolist
 	sub		esp, %1
 	and		esp, 0xfffffff0
@@ -17,7 +26,7 @@ section .text
 ; ==============================
 global main
 main:	
-	enter 	0, 0
+	FUNCTION_PROLOGUE 0
 
 	ALIGN_STACK 4
 	push	arr
@@ -34,7 +43,7 @@ main:
 	call	printf
 	UNALIGN_STACK 4
 
-	leave
+	FUNCTION_EPILOGUE
 
 	xor		eax, eax
 	ret
@@ -44,7 +53,7 @@ main:
 
 global scanf_arr
 scanf_arr:
-	enter	0, 0
+	FUNCTION_PROLOGUE 0
 
 	push	eax
 	push	ebx
@@ -54,7 +63,7 @@ scanf_arr:
 	mov		ebx, arr_ptr
 
 	.L:
-		cmp		ecx, 11
+		cmp		ecx, 10
 		jae		scanf_arr.exit_func
 
 		ALIGN_STACK 8
@@ -78,7 +87,7 @@ scanf_arr:
 	pop		ebx
 	pop		eax
 
-	leave
+	FUNCTION_EPILOGUE
 
 	ret
 
@@ -88,7 +97,7 @@ scanf_arr:
 
 global printf_arr
 printf_arr:
-	enter	0, 0
+	FUNCTION_PROLOGUE 0
 
 	push	eax
 	push	ebx
@@ -98,7 +107,7 @@ printf_arr:
 	mov		ebx, arr_ptr
 
 	.L:
-		cmp		ecx, 11
+		cmp		ecx, 10
 		jae		printf_arr.exit_func
 
 		ALIGN_STACK 8
@@ -117,7 +126,7 @@ printf_arr:
 	pop		ebx
 	pop		eax
 
-	leave
+	FUNCTION_EPILOGUE
 
 	ret
 
