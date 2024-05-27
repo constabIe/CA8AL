@@ -90,11 +90,11 @@ main:
 	push	ebx
 	push	dword [n]
 	push	dword [matrix_ptr]
-	call	trace
+	call	trace_overflow
 	UNALIGN_STACK 12
 
 	ALIGN_STACK 8
-	push	eax
+	push	ebx
 	push	debug_o_format
 	call	printf
 	UNALIGN_STACK 8
@@ -252,8 +252,8 @@ printf_matrix:
 %define	matrix_order		dword [ebp + 12]
 %define matrix_base			dword [ebp +  8]
 
-global trace
-trace:
+global trace_overflow
+trace_overflow:
 	FUNCTION_PROLOGUE 0
 
 	push	ebx
@@ -265,25 +265,19 @@ trace:
 	mov		edi, 0
 	mov		overflow_counter, 0
 
-	.trace_loop:
+	.trace_overflow_loop:
 		cmp		esi, matrix_order
 		jae		trace.exit_function
 
-		ALIGN_STACK 8
-		push	dword [ebx]
-		push	debug_o_format
-		call	printf
-		UNALIGN_STACK 8
-
 		add		edi, [ebx]
 		jo		.overflow_true
-		jmp		.continue_trace_loop
+		jmp		.continue_trace_overflow_loop
 
 		.overflow_true:
 			inc		overflow_counter
-			jmp		.continue_trace_loop
+			jmp		.continue_trace_overflow_loop
 
-	.continue_trace_loop:		
+	.continue_trace_overflow_loop:		
 		inc		esi
 
 		ALIGN_STACK 16
@@ -296,7 +290,7 @@ trace:
 
 		mov		ebx, eax
 
-		jmp		.trace_loop
+		jmp		.trace_overflow_loop
 
 .exit_function:
 	mov		eax, edi
