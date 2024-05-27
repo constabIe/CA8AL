@@ -54,6 +54,11 @@ main:
 	call	scanf_matrix
 	UNALIGN_STACK 8
 
+	ALIGN_STACK 4
+	push	debug
+	call	printf
+	UNALIGN_STACK 4
+
 	; ALIGN_STACK 8
 	; push	dword [n]
 	; push	dword [matrix_ptr]
@@ -310,13 +315,6 @@ get_cell_base:
 	FUNCTION_PROLOGUE 0
 
 	push	ebx
-
-	push	eax
-	ALIGN_STACK 4
-	push	debug
-	call	printf
-	UNALIGN_STACK 4
-	pop		eax
 
 	mov		eax, matrix_order
 	mul		line
