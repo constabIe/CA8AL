@@ -33,6 +33,8 @@ global main
 main:
 	FUNCTION_PROLOGUE 0
 
+	push	ebx
+
 	ALIGN_STACK 8
 	push	n
 	push	i_format
@@ -52,16 +54,32 @@ main:
 	call	scanf_matrix
 	UNALIGN_STACK 8
 
-	ALIGN_STACK 8
+	; ALIGN_STACK 8
+	; push	dword [n]
+	; push	dword [matrix_ptr]
+	; call	printf_matrix
+	; UNALIGN_STACK 8	
+
+	xor  	ebx, ebx
+
+	ALIGN_STACK 12
+	push	ebx
 	push	dword [n]
-	push	dword [matrix_ptr]
-	call	printf_matrix
-	UNALIGN_STACK 8	
+	push	matrix_ptr
+	UNALIGN_STACK 12
+
+	ALIGN_STACK 8
+	push	eax
+	push	debug_o_format
+	call	printf
+	UNALIGN_STACK 8
 
 	ALIGN_STACK 4
 	push	dword [matrix_ptr]
 	call	deallocate_matrix
 	UNALIGN_STACK 4	
+
+	pop		ebx
 
 	FUNCTION_EPILOGUE 0
 
@@ -128,7 +146,7 @@ scanf_matrix:
 	push	ebx
 
 	mov		eax, matrix_order
-	imul		matrix_order
+	mul		matrix_order
 
 	mov		iterator, eax
 	mov		ebx, matrix_base
@@ -178,7 +196,7 @@ printf_matrix:
 	push	ebx
 
 	mov		eax, matrix_order
-	imul		matrix_order
+	mul		matrix_order
 
 	mov		iterator, eax
 	mov		ebx, matrix_base
@@ -208,6 +226,102 @@ printf_matrix:
 %undef	matrix_order
 %undef	matrix_base
 %undef	iterator
+
+; ---------------------------------------
+
+%define	overflow_counter	dword [ebp + 16]
+%define	matrix_order		dword [ebp + 12]
+%define matrix_base			dword [ebp +  8]
+
+global trace
+trace:
+	FUNCTION_PROLOGUE 0
+
+	push	ebx
+	push	edi
+	push	esi
+
+	mov		esi, 0
+	mov		ebx, matrix_base
+	xor		edi, edi
+	mov		overflow_counter, 0
+
+	.trace_loop:
+		cmp		esi, matrix_order
+		jle		trace.exit_function
+
+		add		edi, [ebx]
+		jo		.overflow_true
+		jmp		.continue_trace_loop
+
+		.overflow_true:
+			inc	overflow_counter
+			jmp		.continue_trace_loop
+
+	.continue_trace_loop:		
+		inc		esi
+
+		ALIGN_STACK 16
+		push	matrix_order
+		push	matrix_base
+		push	esi
+		push	esi
+		call	get_cell_base
+		UNALIGN_STACK 16
+
+		mov		ebx, eax
+
+		jmp		.trace_loop
+
+.exit_function:
+	mov		eax, edi
+
+	pop		esi	
+	pop		edi
+	pop		ebx
+
+	FUNCTION_EPILOGUE 0
+
+	ret
+
+%undef	matrix_order
+%undef 	matrix_base
+%undef	iterator
+
+; ---------------------------------------
+
+%define	matrix_order	dword [ebp + 20]
+%define	matrix_base		dword [ebp + 16]
+%define	j				dword [ebp + 12]
+%define	i				dword [ebp +  8]
+
+global get_cell_base
+; matrix[y][x] = matrix + 4 * (MATRIX_SIZE * y + x)
+get_cell_base:
+	FUNCTION_PROLOGUE 0
+
+	push	ebx
+
+	mov		eax, matrix_order
+	mul		i
+
+	add		eax, j
+
+	mov		ebx, DWORD_SIZE
+	mul		ebx
+
+	add		eax, matrix_order
+
+	pop		ebx
+
+	FUNCTION_EPILOGUE 0
+
+	ret
+
+%undef	matrix_order
+%undef	matrix_base
+%undef	j
+%undef	i
 
 section	.data
 	DWORD_SIZE	equ		4
