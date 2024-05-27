@@ -54,7 +54,7 @@ scanf_arr:
 	mov		ebx, arr_ptr
 
 	.L:
-		cmp		ecx, 10
+		cmp		ecx, 11
 		jae		scanf_arr.exit_func
 
 		ALIGN_STACK 8
@@ -98,7 +98,7 @@ printf_arr:
 	mov		ebx, arr_ptr
 
 	.L:
-		cmp		ecx, 10
+		cmp		ecx, 11
 		jae		printf_arr.exit_func
 
 		ALIGN_STACK 8
