@@ -128,7 +128,7 @@ scanf_matrix:
 	push	ebx
 
 	mov		eax, matrix_order
-	mul		matrix_order
+	imul		matrix_order
 
 	mov		iterator, eax
 	mov		ebx, matrix_base
@@ -178,7 +178,7 @@ printf_matrix:
 	push	ebx
 
 	mov		eax, matrix_order
-	mul		matrix_order
+	imul		matrix_order
 
 	mov		iterator, eax
 	mov		ebx, matrix_base
