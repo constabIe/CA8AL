@@ -78,7 +78,11 @@ main:
 	call	get_cell_base
 	UNALIGN_STACK 16
 
-
+	ALIGN_STACK 8
+	push	eax
+	push	debug_o_format
+	call	printf
+	UNALIGN_STACK 8
 
 	; xor  	ebx, ebx
 
