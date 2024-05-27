@@ -66,7 +66,7 @@ scanf_arr:
 		dec		ecx
 		add		ebx, 4
 
-		jmp		scanf.L
+		jmp		scanf_arr.L
 
 .exit_func:
 	pop		ecx
@@ -105,7 +105,7 @@ printf_arr:
 		dec		ecx
 		add		ebx, 4
 
-		jmp		printf.L
+		jmp		printf_arr.L
 
 .exit_func:
 	pop		ecx
