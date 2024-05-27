@@ -24,6 +24,24 @@ section .text
 	add		esp, %1
 %endmacro
 
+; ================================
+
+global main
+main:
+	FUNCTION_PROLOGUE 0
+
+	ALIGN_STACK 4
+	push	arr_base
+	call	arr_out
+	UNALIGN_STACK 4
+
+	FUNCTION_EPILOGUE 0
+
+	xor		eax, eax
+	ret
+
+; ================================
+
 %define	arr_base 	dword [ebp + 8]
 %define	iterator	dword [ebp - 4]
 
@@ -57,6 +75,9 @@ arr_out:
 	FUNCTION_EPILOGUE 4
 
 	ret
+
+%undef	arr_base
+%undef	iterator
 
 section .data
 	arr 		dd		0, 1, 2, 3, 4, 5, 6, 7, 8, 9
