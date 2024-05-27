@@ -52,11 +52,11 @@ arr_out:
 	push	ebx
 
 	mov		ebx, arr_base
-	mov		iterator, 0
+	mov		iterator, 10
 
 	.L:
-		cmp		iterator, 10
-		jae		arr_out.exit_func
+		cmp		iterator, 0
+		jle		arr_out.exit_func
 
 		ALIGN_STACK 8
 		push	dword [ebx]
@@ -65,7 +65,7 @@ arr_out:
 		UNALIGN_STACK 8
 
 		add		ebx, 4
-		add		iterator, 1
+		dec		iterator
 
 		jmp		arr_out.L
 
