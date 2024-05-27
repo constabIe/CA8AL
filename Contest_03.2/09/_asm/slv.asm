@@ -262,12 +262,18 @@ trace:
 
 	mov		esi, 0
 	mov		ebx, matrix_base
-	xor		edi, edi
+	mov		edi, 0
 	mov		overflow_counter, 0
 
 	.trace_loop:
 		cmp		esi, matrix_order
 		jae		trace.exit_function
+
+		ALIGN_STACK 8
+		push	dword [ebx]
+		push	debug_o_format
+		call	printf
+		UNALIGN_STACK 8
 
 		add		edi, [ebx]
 		jo		.overflow_true
