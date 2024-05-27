@@ -97,6 +97,12 @@ main:
 	call	printf
 	UNALIGN_STACK 8
 
+	ALIGN_STACK 8
+	push	eax
+	push	debug_o_format
+	call	printf
+	UNALIGN_STACK 8
+
 	ALIGN_STACK 4
 	push	dword [matrix_ptr]
 	call	deallocate_matrix
