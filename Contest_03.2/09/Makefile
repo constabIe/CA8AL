@@ -3,10 +3,12 @@ RESET   = \033[0m
 
 BRANCH	= main
 TARGET 	= ./_asm
-MESSAGE = 04-9: Матрица с максимальным следом. Sample 24
+MESSAGE = 04-9: Матрица с максимальным следом. Sample 25
+
+all: assign_local push_remote
 
 machine_control_sign:
-	printf	"${BCYAN}>>>${RESET} "
+	@printf	"${BCYAN}>>>${RESET} "
 
 assign_local:
 	@make machine_control_sign
