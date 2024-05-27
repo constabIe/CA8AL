@@ -89,7 +89,7 @@ main:
 	ALIGN_STACK 12
 	push	ebx
 	push	dword [n]
-	push	matrix_ptr
+	push	dword [matrix_ptr]
 	call	trace
 	UNALIGN_STACK 12
 
