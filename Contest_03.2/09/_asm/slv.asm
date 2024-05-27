@@ -70,19 +70,15 @@ main:
 	call	printf_matrix
 	UNALIGN_STACK 8	
 
-	; ALIGN_STACK 16
-	; push	dword [n]
-	; push	dword [matrix_ptr]
-	; push	1
-	; push	1
-	; call	get_cell_base
-	; UNALIGN_STACK 16
+	ALIGN_STACK 16
+	push	dword [n]
+	push	dword [matrix_ptr]
+	push	1
+	push	1
+	call	get_cell_base
+	UNALIGN_STACK 16
 
-	; ALIGN_STACK 8
-	; push	dword [eax]
-	; push	debug_o_format
-	; call	printf
-	; UNALIGN_STACK 8
+
 
 	; xor  	ebx, ebx
 
@@ -93,11 +89,6 @@ main:
 	; call	trace
 	; UNALIGN_STACK 12
 
-	; ALIGN_STACK 8
-	; push	eax
-	; push	debug_o_format
-	; call	printf
-	; UNALIGN_STACK 8
 
 	ALIGN_STACK 4
 	push	dword [matrix_ptr]
