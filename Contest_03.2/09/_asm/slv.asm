@@ -144,10 +144,11 @@ scanf_matrix:
 		call 	scanf
 		UNALIGN_STACK 8
 
-		ALIGN_STACK 4	;
-		push	debug	;
-		call 	printf	;
-		UNALIGN_STACK 4	;
+		ALIGN_STACK 8			;
+		push	iterator		;
+		push	debug_o_format	;
+		call 	printf			;
+		UNALIGN_STACK 8			;
 
 		dec		iterator
 		add		ebx, 4
@@ -213,8 +214,11 @@ printf_matrix:
 section	.data
 	DWORD_SIZE	equ		4
 	i_format	db		"%d", 0
-	o_format	db		"%d "
-	debug		db 		"_debug_", 0
+	o_format	db		"%d ",0
+
+
+	debug			db 		"_debug_", 0
+	debug_o_format	db		"_%d_",0
 
 section .bss
 	n 			resd	1
