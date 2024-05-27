@@ -31,7 +31,7 @@ section .text
 
 global main
 main:
-	FUNCTION_PROLOGUE 0
+	FUNCTION_PROLOGUE 4
 
 	push	ebx
 
@@ -84,17 +84,15 @@ main:
 	; call	printf
 	; UNALIGN_STACK 8
 
-	xor  	ebx, ebx
-
 	ALIGN_STACK 12
-	push	ebx
+	push	of_cntr
 	push	dword [n]
 	push	dword [matrix_ptr]
 	call	trace_overflow
 	UNALIGN_STACK 12
 
 	ALIGN_STACK 8
-	push	ebx
+	push	dword [of_cntr]
 	push	debug_o_format
 	call	printf
 	UNALIGN_STACK 8
@@ -106,9 +104,10 @@ main:
 
 	pop		ebx
 
-	FUNCTION_EPILOGUE 0
+	FUNCTION_EPILOGUE 4
 
 	ret
+
 
 ; --------functions_implementation--------
 
@@ -248,9 +247,9 @@ printf_matrix:
 
 ; ---------------------------------------
 
-%define	overflow_counter	dword [ebp + 16]
-%define	matrix_order		dword [ebp + 12]
-%define matrix_base			dword [ebp +  8]
+%define	overflow_counter_base	dword [ebp + 16]
+%define	matrix_order			dword [ebp + 12]
+%define matrix_base				dword [ebp +  8]
 
 global trace_overflow
 trace_overflow:
@@ -260,10 +259,13 @@ trace_overflow:
 	push	edi
 	push	esi
 
+	push	ecx
+	push	edx
+
 	mov		esi, 0
 	mov		ebx, matrix_base
 	mov		edi, 0
-	mov		overflow_counter, 0
+	mov		ecx, 0
 
 	.trace_overflow_loop:
 		cmp		esi, matrix_order
@@ -274,7 +276,7 @@ trace_overflow:
 		jmp		.continue_trace_overflow_loop
 
 		.overflow_true:
-			inc		overflow_counter
+			inc		ecx
 			jmp		.continue_trace_overflow_loop
 
 	.continue_trace_overflow_loop:		
@@ -293,7 +295,11 @@ trace_overflow:
 		jmp		.trace_overflow_loop
 
 .exit_function:
-	mov		eax, edi
+	mov		edx, overflow_counter_base
+	mov		dword [edx], ecx
+
+	pop		edx
+	pop		ecx
 
 	pop		esi	
 	pop		edi
@@ -354,5 +360,6 @@ section	.data
 section .bss
 	n 			resd	1
 	matrix_ptr 	resd	1
+	of_cntr 	resd 	1
 
 
