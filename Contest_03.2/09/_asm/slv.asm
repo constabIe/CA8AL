@@ -63,8 +63,8 @@ main:
 	ALIGN_STACK 16
 	push	dword [n]
 	push	dword [matrix_ptr]
-	push	2
-	push	2
+	push	1
+	push	1
 	call	get_cell_base
 	UNALIGN_STACK 16
 
@@ -311,15 +311,15 @@ get_cell_base:
 
 	push	ebx
 
-	mov		eax, matrix_order
-	mul		line
-
 	push	eax
 	ALIGN_STACK 4
 	push	debug
 	call	printf
 	UNALIGN_STACK 4
 	pop		eax
+
+	mov		eax, matrix_order
+	mul		line
 
 	add		eax, row
 
