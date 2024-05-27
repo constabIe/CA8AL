@@ -143,11 +143,11 @@ scanf_matrix:
 		call 	scanf
 		UNALIGN_STACK 8
 
-		ALIGN_STACK 8			;
-		push	iterator		;
-		push	debug_o_format	;
-		call 	printf			;
-		UNALIGN_STACK 8			;
+		; ALIGN_STACK 8			;
+		; push	iterator		;
+		; push	debug_o_format	;
+		; call 	printf			;
+		; UNALIGN_STACK 8			;
 
 		dec		iterator
 		add		ebx, 4
@@ -190,7 +190,7 @@ printf_matrix:
 		ALIGN_STACK 8
 		push	dword [ebx]
 		push	o_format
-		call 	scanf
+		call 	printf
 		UNALIGN_STACK 8
 
 		dec		iterator
