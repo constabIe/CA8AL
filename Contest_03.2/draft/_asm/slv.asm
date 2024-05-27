@@ -66,6 +66,7 @@ scanf_arr:
 		cmp		ecx, 10
 		jae		scanf_arr.exit_func
 
+		push	ebx
 		push	ecx
 
 		ALIGN_STACK 8
@@ -75,6 +76,7 @@ scanf_arr:
 		UNALIGN_STACK 8
 
 		pop		ecx	
+		pop		ebx
 
 		inc		ecx
 		add		ebx, 4
@@ -109,6 +111,7 @@ printf_arr:
 		cmp		ecx, 10
 		jae		printf_arr.exit_func
 
+		push	ebx
 		push	ecx
 
 		ALIGN_STACK 8
@@ -118,7 +121,8 @@ printf_arr:
 		UNALIGN_STACK 8
 
 		pop		ecx
-
+		pop		ebx
+		
 		inc		ecx
 		add		ebx, 4
 
