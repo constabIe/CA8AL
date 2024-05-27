@@ -79,7 +79,7 @@ main:
 	UNALIGN_STACK 16
 
 	ALIGN_STACK 8
-	push	eax
+	push	dword [eax]
 	push	debug_o_format
 	call	printf
 	UNALIGN_STACK 8
@@ -324,7 +324,7 @@ get_cell_base:
 	mov		ebx, DWORD_SIZE
 	mul		ebx
 
-	add		eax, matrix_order
+	add		eax, matrix_base
 
 	pop		ebx
 
