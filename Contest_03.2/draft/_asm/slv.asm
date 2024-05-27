@@ -5,8 +5,8 @@ extern	scanf, printf
 section .text
 
 %macro FUNCTION_PROLOGUE 1.nolist
-    enter   %1, 0
     and     esp, 0xfffffff0
+    enter   %1, 0
 %endmacro
 
 %macro FUNCTION_EPILOGUE 0.nolist
@@ -53,7 +53,7 @@ main:
 
 global scanf_arr
 scanf_arr:
-	FUNCTION_PROLOGUE 4
+	FUNCTION_PROLOGUE 0
 
 	push	eax
 	push	ebx
@@ -122,7 +122,7 @@ printf_arr:
 
 		pop		ecx
 		pop		ebx
-		
+
 		inc		ecx
 		add		ebx, 4
 
