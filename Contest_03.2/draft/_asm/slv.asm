@@ -32,6 +32,11 @@ main:
 
 	ALIGN_STACK 4
 	push	arr
+	call	arr_in
+	UNALIGN_STACK 4
+
+	ALIGN_STACK 4
+	push	arr
 	call	arr_out
 	UNALIGN_STACK 4
 
@@ -41,6 +46,43 @@ main:
 	ret
 
 ; ================================
+
+%define	arr_base 	dword [ebp + 8]
+%define	iterator	dword [ebp - 4]
+
+global	arr_in
+arr_in:
+	FUNCTION_PROLOGUE 4
+
+	push	ebx
+
+	mov		ebx, arr_base
+	mov		iterator, 10
+
+	.L:
+		cmp		iterator, 0
+		jle		arr_in.exit_func
+
+		ALIGN_STACK 8
+		push	ebx
+		push	i_format
+		call	scanf
+		UNALIGN_STACK 8
+
+		add		ebx, 4
+		dec		iterator
+
+		jmp		arr_in.L
+
+.exit_func:
+	pop		ebx
+
+	FUNCTION_EPILOGUE 4
+
+	ret
+
+%undef	arr_base
+%undef	iterator
 
 %define	arr_base 	dword [ebp + 8]
 %define	iterator	dword [ebp - 4]
@@ -80,5 +122,9 @@ arr_out:
 %undef	iterator
 
 section .data
-	arr 		dd		0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+	i_format	db		"%d", 0
 	o_format	db		"%d ", 0
+
+section .bss
+	arr 		resd	10
+
