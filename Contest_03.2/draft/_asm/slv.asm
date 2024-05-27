@@ -122,6 +122,6 @@ section .bss
 	arr		resd	10
 
 section .data
-	i_format	db	"%d", 0
+	i_format	db	"%d ", 0
 	o_format	db	"%d ", 0
 	newline		db	"\n", 0
