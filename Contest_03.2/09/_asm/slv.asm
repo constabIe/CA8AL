@@ -94,7 +94,7 @@ main:
 		mov		ebx, dword [overflow_i]
 
 		cmp		ebx, dword [overflow_max]
-		jae		if_overflow
+		jge		if_overflow
 		jmp		else
 
 		if_overflow:
@@ -107,7 +107,7 @@ main:
 			UNALIGN_STACK 8			
 
 			cmp		ebx, dword [trace_max]
-			ja		if_trace
+			jg		if_trace
 			jmp		else
 
 			if_trace:	
