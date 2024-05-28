@@ -61,6 +61,11 @@ main:
 		call	scanf
 		UNALIGN_STACK 8	
 
+		ALIGN_STACK 4	;
+		push	debug	;
+		call	printf	;
+		UNALIGN_STACK 4	;
+
 		ALIGN_STACK 4
 		push	dword [matrix_order_i]
 		call	allocate_matrix
@@ -123,8 +128,11 @@ main:
 			call	deallocate_matrix
 			UNALIGN_STACK 4	
 
+			jmp 	L_continue
+
 	L_continue:	
 		inc		edi
+
 		jmp		L
 
 result_out:
