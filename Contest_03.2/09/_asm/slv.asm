@@ -29,7 +29,7 @@ section .text
 
 ; ----------implement_main----------
 
-%define	itterator dword [ebp - 4]
+%define	iterator dword [ebp - 4]
 
 global main
 main:
