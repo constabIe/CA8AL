@@ -82,9 +82,22 @@ main:
 		call	trace_overflow
 		UNALIGN_STACK 12
 
-		; +
-
 		mov		dword [trace_i], eax
+
+				
+		ALIGN_STACK 8			;
+		push	eax				;
+		push	debug_o_format	;
+		call	printf			;
+		UNALIGN_STACK 8			;
+
+		ALIGN_STACK 8			;
+		push	dword [overflow_i]				;
+		push	debug_o_format	;
+		call	printf			;
+		UNALIGN_STACK 8			;
+
+		; +
 
 		mov		ebx, dword [overflow_i]
 
