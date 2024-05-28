@@ -56,6 +56,12 @@ main:
 		jae		result_out
 
 		ALIGN_STACK 8
+		push	edi
+		push 	debug_o_format 
+		call 	printf
+		UNALIGN_STACK 8	
+
+		ALIGN_STACK 8
 		push	matrix_order_i
 		push	i_format
 		call	scanf
@@ -92,13 +98,7 @@ main:
 		jmp		else
 
 		if_overflow:
-			mov		ebx, dword [trace_i]
-
-			ALIGN_STACK 8
-			push	ebx
-			push 	debug_o_format 
-			call 	printf
-			UNALIGN_STACK 8			
+			mov		ebx, dword [trace_i]		
 
 			cmp		ebx, dword [trace_max]
 			jg		if_trace
@@ -128,7 +128,8 @@ main:
 			ALIGN_STACK 4
 			push	dword [matrix_ptr_i]
 			call	deallocate_matrix
-			UNALIGN_STACK 4			
+			UNALIGN_STACK 4	
+
 			jmp 	L_continue
 
 	L_continue:	
