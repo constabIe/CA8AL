@@ -61,8 +61,6 @@ main:
 		call	scanf
 		UNALIGN_STACK 8	
 
-		; +
-
 		ALIGN_STACK 4
 		push	dword [matrix_order_i]
 		call	allocate_matrix
@@ -70,21 +68,11 @@ main:
 
 		mov		[matrix_ptr_i], eax
 
-		ALIGN_STACK 4	;
-		push	debug	;
-		call	printf	;
-		UNALIGN_STACK 4	;
-
 		ALIGN_STACK 8
 		push	dword [matrix_order_i]
 		push	dword [matrix_ptr_i]
 		call 	scanf_matrix
 		UNALIGN_STACK 8
-
-		ALIGN_STACK 4	;
-		push	debug	;
-		call	printf	;
-		UNALIGN_STACK 4	;
 
 		mov		dword [overflow_i], 0
 		ALIGN_STACK 12
@@ -94,10 +82,7 @@ main:
 		call	trace_overflow
 		UNALIGN_STACK 12
 
-		ALIGN_STACK 4	;
-		push	debug	;
-		call	printf	;
-		UNALIGN_STACK 4	;
+		; +
 
 		mov		dword [trace_i], eax
 
@@ -123,14 +108,38 @@ main:
 				mov		ebx, dword [matrix_ptr_i]
 				mov		dword [matrix_ptr_max], ebx
 
+				ALIGN_STACK 8			;
+				push	ebx				;
+				push	debug_o_format	;
+				call	printf			;
+				UNALIGN_STACK 8			;
+
 				mov		ebx, dword [matrix_order_i]
 				mov		dword [matrix_order_max], ebx
+
+				ALIGN_STACK 8			;
+				push	ebx				;
+				push	debug_o_format	;
+				call	printf			;
+				UNALIGN_STACK 8			;
 
 				mov		ebx, dword [overflow_i]
 				mov		dword [overflow_max], ebx
 
+				ALIGN_STACK 8			;
+				push	ebx				;
+				push	debug_o_format	;
+				call	printf			;
+				UNALIGN_STACK 8			;
+
 				mov		ebx, dword [trace_i]
-				mov		dword [trace_max], ebx	
+				mov		dword [trace_max], ebx
+
+				ALIGN_STACK 8			;
+				push	ebx				;
+				push	debug_o_format	;
+				call	printf			;
+				UNALIGN_STACK 8			;	
 
 				jmp		L_continue
 
