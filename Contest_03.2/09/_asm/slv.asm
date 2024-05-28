@@ -53,7 +53,7 @@ main:
 
 	L:
 		cmp		edi, [matrix_input_quantity]
-		jge		result_out
+		jae		result_out
 
 		ALIGN_STACK 8
 		push	edi
@@ -101,6 +101,13 @@ main:
 			mov		ebx, dword [trace_i]		
 
 			cmp		ebx, dword [trace_max]
+
+			ALIGN_STACK 8
+			push	edi
+			push 	debug_o_format 
+			call 	printf
+			UNALIGN_STACK 8	
+
 			jg		if_trace
 			jmp		else
 
@@ -109,6 +116,12 @@ main:
 				push	dword [matrix_ptr_max]
 				call	deallocate_matrix
 				UNALIGN_STACK 4
+
+				ALIGN_STACK 8
+				push	edi
+				push 	debug_o_format 
+				call 	printf
+				UNALIGN_STACK 8
 
 				mov		ebx, dword [matrix_ptr_i]
 				mov		dword [matrix_ptr_max], ebx
@@ -130,11 +143,23 @@ main:
 			call	deallocate_matrix
 			UNALIGN_STACK 4	
 
+			ALIGN_STACK 8
+			push	edi
+			push 	debug_o_format 
+			call 	printf
+			UNALIGN_STACK 8
+
 			jmp 	L_continue
 
 	L_continue:	
 		inc		edi
 
+		ALIGN_STACK 8
+		push	edi
+		push 	debug_o_format 
+		call 	printf
+		UNALIGN_STACK 8
+		
 		jmp		L
 
 result_out:
@@ -401,8 +426,8 @@ section	.data
 	i_format				db		"%d", 0
 	o_format				db		"%d ", 0
 	
-	debug					db 		"\033[1;32m_debug_\033[0m", 0
-	debug_o_format			db		"\033[1;32m_%d_\033[0m", 0
+	debug					db 		"_debug_", 0
+	debug_o_format			db		"_%d_", 0
 
 	matrix_input_quantity 	dd		0
 	
@@ -415,20 +440,6 @@ section	.data
 	matrix_order_max 		dd		0
 	trace_max				dd		-1
 	overflow_max			dd		-1
-
-; section .bss
-; 	matrix_input_quantity 	resd	1
-
-; 	matrix_order_i 			resd	1
-; 	matrix_ptr_i			resd	1
-; 	overflow_i				resd	1
-; 	trace_i					resd	1
-	
-; 	matrix_ptr_max 			resd	1
-; 	matrix_order_max		resd	1
-; 	overflow_max			resd 	1
-; 	trace_max				resd	1
-
 
 
 
