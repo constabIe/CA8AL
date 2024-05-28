@@ -29,9 +29,11 @@ section .text
 
 ; ----------implement_main----------
 
+%define	itterator dword [ebp - 4]
+
 global main
 main:
-	FUNCTION_PROLOGUE 0
+	FUNCTION_PROLOGUE 4
 
 	push	ebx
 	push	edi
@@ -49,17 +51,18 @@ main:
 
 	mov		[matrix_ptr_max], eax
 
-	mov		edi, 0
+	mov		iterator, 0
 
 	L:
+		mov		edi, iterator
 		cmp		edi, [matrix_input_quantity]
 		jae		result_out
 
-		ALIGN_STACK 8
-		push	edi
-		push 	debug_o_format 
-		call 	printf
-		UNALIGN_STACK 8	
+		ALIGN_STACK 8			;
+		push	edi				;
+		push 	debug_o_format	; 
+		call 	printf			;
+		UNALIGN_STACK 8			;
 
 		ALIGN_STACK 8
 		push	matrix_order_i
@@ -67,10 +70,22 @@ main:
 		call	scanf
 		UNALIGN_STACK 8	
 
+		ALIGN_STACK 8			;
+		push	edi				;
+		push 	debug_o_format	; 
+		call 	printf			;
+		UNALIGN_STACK 8			;		
+
 		ALIGN_STACK 4
 		push	dword [matrix_order_i]
 		call	allocate_matrix
 		UNALIGN_STACK 4
+
+		ALIGN_STACK 8			;
+		push	edi				;
+		push 	debug_o_format	; 
+		call 	printf			;
+		UNALIGN_STACK 8			;
 
 		mov		[matrix_ptr_i], eax
 
@@ -80,6 +95,12 @@ main:
 		call 	scanf_matrix
 		UNALIGN_STACK 8
 
+		ALIGN_STACK 8			;
+		push	edi				;
+		push 	debug_o_format	; 
+		call 	printf			;
+		UNALIGN_STACK 8			;
+
 		mov		dword [overflow_i], 0
 
 		ALIGN_STACK 12
@@ -88,6 +109,12 @@ main:
 		push	dword [matrix_ptr_i]
 		call	trace_overflow
 		UNALIGN_STACK 12
+
+		ALIGN_STACK 8			;
+		push	edi				;
+		push 	debug_o_format	; 
+		call 	printf			;
+		UNALIGN_STACK 8			;
 
 		mov		dword [trace_i], eax
 
@@ -159,7 +186,7 @@ main:
 		push 	debug_o_format 
 		call 	printf
 		UNALIGN_STACK 8
-		
+
 		jmp		L
 
 result_out:
@@ -170,10 +197,10 @@ result_out:
 	UNALIGN_STACK 8
 
 exit_main:
-	pop		edi
+	pop		iterator
 	pop		ebx
 
-	FUNCTION_EPILOGUE 0
+	FUNCTION_EPILOGUE 4
 
 	xor		eax, eax
 	ret
