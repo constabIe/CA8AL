@@ -53,7 +53,7 @@ main:
 
 	L:
 		cmp		edi, [matrix_input_quantity]
-		jae		result_out
+		jge		result_out
 
 		ALIGN_STACK 8
 		push	edi
@@ -401,8 +401,8 @@ section	.data
 	i_format				db		"%d", 0
 	o_format				db		"%d ", 0
 	
-	debug					db 		"_debug_", 0
-	debug_o_format			db		"_%d_", 0
+	debug					db 		"\033[1;32m_debug_\033[0m", 0
+	debug_o_format			db		"\033[1;32m_%d_\033[0m", 0
 
 	matrix_input_quantity 	dd		0
 	
