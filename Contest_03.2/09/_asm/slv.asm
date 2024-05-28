@@ -149,9 +149,20 @@ main:
 			call	deallocate_matrix
 			UNALIGN_STACK 4	
 
+			ALIGN_STACK 4		;
+			push	debug		;
+			call	printf		;
+			UNALIGN_STACK 4		;			
+
 			jmp 	L_continue
 
 	L_continue:	
+
+		ALIGN_STACK 4		;
+		push	debug		;
+		call	printf		;
+		UNALIGN_STACK 4		;	
+
 		inc		edi
 
 		jmp		L
