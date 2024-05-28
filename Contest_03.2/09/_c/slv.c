@@ -4,5 +4,9 @@
 
 int main(void) 
 {
-	
+	int n = INT32_MIN;
+
+	printf("%X", n);
+
+	return 0;
 }

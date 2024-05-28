@@ -405,13 +405,13 @@ section	.data
 	
 	matrix_ptr_i			dd		0
 	matrix_order_i 			dd		0
-	trace_i					dd		-1
-	overflow_i				dd		-1
+	trace_i					dd		0x80000000
+	overflow_i				dd		0x80000000
 
 	matrix_ptr_max			dd		0
 	matrix_order_max 		dd		0
-	trace_max				dd		-1
-	overflow_max			dd		-1
+	trace_max				dd		0x80000000
+	overflow_max			dd		0x80000000
 
 
 

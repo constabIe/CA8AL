@@ -19,9 +19,9 @@ build: ${SOURCES}
 	${CC} ${CFLAGS} $< -o ${EXECUTABLE}
 
 run:
-	@./${EXECUTABLE}
+	./${EXECUTABLE}
 
 clean:
-	@rm -rf build
+	rm -rf build
 
 .PHONY: run clean
