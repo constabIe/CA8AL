@@ -271,6 +271,8 @@ trace_overflow:
 	mov		edx, overflow_counter_base
 	mov		dword [edx], ecx
 
+	mov		eax, edi
+
 	pop		edx
 	pop		ecx
 
