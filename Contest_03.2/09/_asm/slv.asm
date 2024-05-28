@@ -75,13 +75,19 @@ main:
 		UNALIGN_STACK 8
 
 		mov		dword [overflow_i], 0
-		
+
 		ALIGN_STACK 12
 		push	overflow_i
 		push	dword [matrix_order_i]
 		push	dword [matrix_ptr_i]
 		call	trace_overflow
 		UNALIGN_STACK 12
+
+		ALIGN_STACK 8
+		push	eax
+		push 	debug_o_format 
+		call 	printf
+		UNALIGN_STACK 8
 
 		mov		dword [trace_i], eax
 
@@ -93,6 +99,12 @@ main:
 
 		if_overflow:
 			mov		ebx, dword [trace_i]
+
+			ALIGN_STACK 8
+			push	ebx
+			push 	debug_o_format 
+			call 	printf
+			UNALIGN_STACK 8			
 
 			cmp		ebx, dword [trace_max]
 			ja		if_trace
