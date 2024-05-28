@@ -61,10 +61,7 @@ main:
 		call	scanf
 		UNALIGN_STACK 8	
 
-		ALIGN_STACK 4	;
-		push	debug	;
-		call	printf	;
-		UNALIGN_STACK 4	;
+		; +
 
 		ALIGN_STACK 4
 		push	dword [matrix_order_i]
@@ -73,11 +70,21 @@ main:
 
 		mov		[matrix_ptr_i], eax
 
+		ALIGN_STACK 4	;
+		push	debug	;
+		call	printf	;
+		UNALIGN_STACK 4	;
+
 		ALIGN_STACK 8
 		push	dword [matrix_order_i]
 		push	dword [matrix_ptr_i]
 		call 	scanf_matrix
 		UNALIGN_STACK 8
+
+		ALIGN_STACK 4	;
+		push	debug	;
+		call	printf	;
+		UNALIGN_STACK 4	;
 
 		mov		dword [overflow_i], 0
 		ALIGN_STACK 12
@@ -86,6 +93,11 @@ main:
 		push	dword [matrix_ptr_i]
 		call	trace_overflow
 		UNALIGN_STACK 12
+
+		ALIGN_STACK 4	;
+		push	debug	;
+		call	printf	;
+		UNALIGN_STACK 4	;
 
 		mov		dword [trace_i], eax
 
