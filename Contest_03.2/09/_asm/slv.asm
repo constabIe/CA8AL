@@ -31,87 +31,116 @@ section .text
 
 global main
 main:
-	FUNCTION_PROLOGUE 4
+	FUNCTION_PROLOGUE 0
 
 	push	ebx
+	push	edi
 
 	ALIGN_STACK 8
-	push	n
+	push	matrix_input_quantity
 	push	i_format
 	call	scanf
 	UNALIGN_STACK 8
 
-	; ALIGN_STACK 4
-	; push	debug
-	; call	printf
-	; UNALIGN_STACK 4
-
 	ALIGN_STACK 4
-	push	dword [n]
+	push	1
 	call	allocate_matrix
 	UNALIGN_STACK 4
 
-	mov		[matrix_ptr], eax
+	mov		[matrix_ptr_max], eax
 
+	mov		edi, 0
+
+	L:
+		cmp		edi, [matrix_input_quantity]
+		jae		result_out
+
+		ALIGN_STACK 8
+		push	matrix_order_i
+		push	i_format
+		call	scanf
+		UNALIGN_STACK 8	
+
+		ALIGN_STACK 4
+		push	dword [matrix_order_i]
+		call	allocate_matrix
+		UNALIGN_STACK 4
+
+		mov		[matrix_ptr_i], eax
+
+		ALIGN_STACK 8
+		push	dword [matrix_order_i]
+		push	dword [matrix_ptr_i]
+		call 	scanf_matrix
+		UNALIGN_STACK 8
+
+		mov		dword [overflow_i], 0
+		ALIGN_STACK 12
+		push	overflow_i
+		push	dword [matrix_order_i]
+		push	dword [matrix_ptr_i]
+		call	trace_overflow
+		UNALIGN_STACK 12
+
+		mov		dword [trace_i], eax
+
+		mov		ebx, dword [overflow_i]
+
+		cmp		ebx, dword [overflow_max]
+		jae		if_overflow
+		jmp		else
+
+		if_overflow:
+			mov		ebx, dword [trace_i]
+
+			cmp		ebx, dword [trace_max]
+			ja		if_trace
+			jmp		else
+
+			if_trace:	
+				ALIGN_STACK 4
+				push	dword [matrix_ptr_max]
+				call	deallocate_matrix
+				UNALIGN_STACK 4
+
+				mov		ebx, dword [matrix_ptr_i]
+				mov		dword [matrix_ptr_max], ebx
+
+				mov		ebx, dword [matrix_order_i]
+				mov		dword [matrix_order_max], ebx
+
+				mov		ebx, dword [overflow_i]
+				mov		dword [overflow_max], ebx
+
+				mov		ebx, dword [trace_i]
+				mov		dword [trace_max], ebx	
+
+				jmp		L_continue
+
+		else:
+			ALIGN_STACK 4
+			push	dword [matrix_ptr_i]
+			call	deallocate_matrix
+			UNALIGN_STACK 4	
+
+	L_continue:	
+		inc		edi
+		jmp		L
+
+result_out:
 	ALIGN_STACK 8
-	push	dword [n]
-	push	dword [matrix_ptr]
-	call	scanf_matrix
-	UNALIGN_STACK 8
-
-	; ALIGN_STACK 4
-	; push	debug
-	; call	printf
-	; UNALIGN_STACK 4
-
-	ALIGN_STACK 8
-	push	dword [n]
-	push	dword [matrix_ptr]
+	push	dword [matrix_order_max]
+	push	dword [matrix_ptr_max]
 	call	printf_matrix
-	UNALIGN_STACK 8	
-
-	; ALIGN_STACK 16
-	; push	dword [n]
-	; push	dword [matrix_ptr]
-	; push	1
-	; push	1
-	; call	get_cell_base
-	; UNALIGN_STACK 16
-
-	; ALIGN_STACK 8
-	; push	dword [eax]
-	; push	debug_o_format
-	; call	printf
-	; UNALIGN_STACK 8
-
-	ALIGN_STACK 12
-	push	of_cntr
-	push	dword [n]
-	push	dword [matrix_ptr]
-	call	trace_overflow
-	UNALIGN_STACK 12
-
-	ALIGN_STACK 8
-	push	dword [of_cntr]
-	push	debug_o_format
-	call	printf
 	UNALIGN_STACK 8
 
-	ALIGN_STACK 8
-	push	eax
-	push	debug_o_format
-	call	printf
-	UNALIGN_STACK 8
-
-	ALIGN_STACK 4
-	push	dword [matrix_ptr]
-	call	deallocate_matrix
-	UNALIGN_STACK 4	
-
+exit_main:
+	pop		edi
 	pop		ebx
 
-	FUNCTION_EPILOGUE 4
+	FUNCTION_EPILOGUE 0
 
+	xor		eax, eax
 	ret
 
 
@@ -355,17 +384,39 @@ get_cell_base:
 %undef	line
 
 section	.data
-	DWORD_SIZE	equ		4
-	i_format	db		"%d", 0
-	o_format	db		"%d ",0
+	DWORD_SIZE				equ		4
+	
+	i_format				db		"%d", 0
+	o_format				db		"%d ", 0
+	
+	debug					db 		"_debug_", 0
+	debug_o_format			db		"_%d_", 0
+
+	matrix_input_quantity 	dd		0
+	
+	matrix_ptr_i			dd		0
+	matrix_order_i 			dd		0
+	trace_i					dd		-1
+	overflow_i				dd		-1
+
+	matrix_ptr_max			dd		0
+	matrix_order_max 		dd		0
+	trace_max				dd		-1
+	overflow_max			dd		-1
+
+; section .bss
+; 	matrix_input_quantity 	resd	1
+
+; 	matrix_order_i 			resd	1
+; 	matrix_ptr_i			resd	1
+; 	overflow_i				resd	1
+; 	trace_i					resd	1
+	
+; 	matrix_ptr_max 			resd	1
+; 	matrix_order_max		resd	1
+; 	overflow_max			resd 	1
+; 	trace_max				resd	1
 
 
-	debug			db 		"_debug_", 0
-	debug_o_format	db		"_%d_",0
-
-section .bss
-	n 			resd	1
-	matrix_ptr 	resd	1
-	of_cntr 	resd 	1
 
 
