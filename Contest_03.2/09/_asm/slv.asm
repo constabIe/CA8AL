@@ -5,7 +5,7 @@ extern	scanf, printf
 
 section .text
 
-; -----------define_macro-----------
+; -------------------------macro-------------------------
 
 %macro ALIGN_STACK 1.nolist
 	sub		esp, %1
@@ -27,7 +27,9 @@ section .text
 	leave
 %endmacro	
 
-; ----------implement_main----------
+; -----------------------endmacro------------------------
+
+; -------------------------main--------------------------
 
 %define	iterator dword [ebp - 4]
 
@@ -87,6 +89,18 @@ main:
 		UNALIGN_STACK 12
 
 		mov		dword [trace_i], eax
+
+		ALIGN_STACK 8
+		push	eax
+		push	debug_o_format
+		call	printf
+		UNALIGN_STACK 8
+
+		ALIGN_STACK 8
+		push	dword [overflow_i]
+		push	debug_o_format
+		call	printf
+		UNALIGN_STACK 8		
 
 		mov		ebx, dword [overflow_i]
 		cmp		ebx, dword [overflow_max]
@@ -150,8 +164,11 @@ exit_main:
 	xor		eax, eax
 	ret
 
+%undef	iterator
 
-; --------functions_implementation--------
+; ------------------------endmain------------------------
+
+; -----------------------functions-----------------------
 
 %define matrix_order 	dword [ebp + 8]
 
@@ -180,7 +197,7 @@ allocate_matrix:
 
 %undef	matrix_order
 
-; ---------------------------------------
+; -------------------------------------------------------
 
 %define	matrix_base		dword [ebp + 8]
 
@@ -199,7 +216,7 @@ deallocate_matrix:
 
 %undef	matrix_base
 
-; ---------------------------------------
+; -------------------------------------------------------
 
 %define	matrix_order	dword [ebp + 12]
 %define	matrix_base 	dword [ebp +  8]
@@ -239,11 +256,11 @@ scanf_matrix:
 
 	ret		
 
-%undef	matrix_order
+%undef	iterator 
 %undef	matrix_base
-%undef	iterator
+%undef	matrix_order
 
-; ---------------------------------------
+; -------------------------------------------------------
 
 %define	matrix_order	dword [ebp + 12]
 %define	matrix_base 	dword [ebp +  8]
@@ -283,11 +300,11 @@ printf_matrix:
 
 	ret		
 
-%undef	matrix_order
+%undef	iterator 
 %undef	matrix_base
-%undef	iterator
+%undef	matrix_order
 
-; ---------------------------------------
+; -------------------------------------------------------
 
 %define	overflow_counter_base	dword [ebp + 16]
 %define	matrix_order			dword [ebp + 12]
@@ -353,11 +370,11 @@ trace_overflow:
 
 	ret
 
+%undef	matrix_base 
 %undef	matrix_order
-%undef 	matrix_base
-%undef	iterator
+%undef 	overflow_counter_base
 
-; ---------------------------------------
+; -------------------------------------------------------
 
 %define	matrix_order	dword [ebp + 20]
 %define	matrix_base		dword [ebp + 16]
@@ -365,7 +382,6 @@ trace_overflow:
 %define	line			dword [ebp +  8]
 
 global get_cell_base
-; matrix[y][x] = matrix + 4 * (MATRIX_SIZE * y + x)
 get_cell_base:
 	FUNCTION_PROLOGUE 0
 
@@ -387,10 +403,12 @@ get_cell_base:
 
 	ret
 
-%undef	matrix_order
-%undef	matrix_base
-%undef	row
 %undef	line
+%undef	row
+%undef	matrix_base
+%undef	matrix_order
+
+; ---------------------end_functions---------------------
 
 section	.data
 	DWORD_SIZE				equ		4
@@ -398,9 +416,6 @@ section	.data
 	i_format				db		"%d", 0
 	o_format				db		"%d ", 0
 	
-	debug					db 		"_debug_", 0
-	debug_o_format			db		"_%d_", 0
-
 	matrix_input_quantity 	dd		0
 	
 	matrix_ptr_i			dd		0
@@ -412,6 +427,9 @@ section	.data
 	matrix_order_max 		dd		0
 	trace_max				dd		0x80000000
 	overflow_max			dd		0x80000000
+
+section .data
+	debug_o_format 			db		"_%d_", 0
 
 
 
