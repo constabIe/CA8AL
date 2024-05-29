@@ -38,6 +38,11 @@ main:
 	push	ebx
 	push	edi
 
+	ALIGN_STACK 4			;
+	push	debug_message	;
+	call	printf			;
+	UNALIGN_STACK 4			;
+
 	ALIGN_STACK 8
 	push	mode
 	push	src_path
