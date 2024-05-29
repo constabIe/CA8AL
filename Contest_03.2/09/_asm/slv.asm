@@ -367,7 +367,7 @@ trace_overflow:
 .exit_function:
 	mov		eax, edi
 	
-	mov		edx, overflow_counter_base
+	mov		edx, overflow_flag_base
 	mov		dword [edx], ecx
 
 	pop		edx
