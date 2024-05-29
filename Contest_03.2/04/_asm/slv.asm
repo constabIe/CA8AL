@@ -51,7 +51,7 @@ main:
 		ALIGN_STACK 12
 		push	cell
 		push	format
-		push	dword [stdin]
+		push	stdin
 		call	fscanf
 		UNALIGN_STACK 12
 
