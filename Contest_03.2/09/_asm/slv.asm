@@ -79,10 +79,10 @@ main:
 		call 	scanf_matrix
 		UNALIGN_STACK 8
 
-		mov		dword [overflow_i], 0
+		mov		dword [overflow_flag_i], 0
 
 		ALIGN_STACK 12
-		push	overflow_i
+		push	overflow_flag_i
 		push	dword [matrix_order_i]
 		push	dword [matrix_ptr_i]
 		call	trace_overflow
@@ -90,31 +90,42 @@ main:
 
 		mov		dword [trace_i], eax
 
-		ALIGN_STACK 8
-		push	eax
-		push	debug_o_format
-		call	printf
-		UNALIGN_STACK 8
+		; ALIGN_STACK 8
+		; push	eax
+		; push	debug_o_format
+		; call	printf
+		; UNALIGN_STACK 8
 
-		ALIGN_STACK 8
-		push	dword [overflow_i]
-		push	debug_o_format
-		call	printf
-		UNALIGN_STACK 8		
+		; ALIGN_STACK 8
+		; push	dword [overflow_i]
+		; push	debug_o_format
+		; call	printf
+		; UNALIGN_STACK 8		
 
-		mov		ebx, dword [overflow_i]
-		cmp		ebx, dword [overflow_max]
+		mov		ebx, dword [overflow_flag_i]
+		cmp		ebx, dword [overflow_flag_max]
 		jge		if_overflow
 		jmp		else
 
 		if_overflow:
-			mov		ebx, dword [trace_i]		
+			cmp		dword [virginity_flag], 1
+			je		virginity_flag_true
+			jne 	virginity_flag_false
 
-			cmp		ebx, dword [trace_max]
+			virginity_flag_true:
+				mov		ebx, dword [trace_i]		
+				cmp		ebx, dword [trace_max]
+				jg		if_trace
+				jmp		else
 
-			jg		if_trace
-			jmp		else
+			virginity_flag_false:
+				mov		dword [virginity_flag], 1
 
+				mov		ebx, dword [trace_i]		
+				cmp		ebx, dword [trace_max]
+				jge		if_trace
+				jmp		else
+				
 			if_trace:	
 				ALIGN_STACK 4
 				push	dword [matrix_ptr_max]
@@ -127,8 +138,8 @@ main:
 				mov		ebx, dword [matrix_order_i]
 				mov		dword [matrix_order_max], ebx
 
-				mov		ebx, dword [overflow_i]
-				mov		dword [overflow_max], ebx
+				mov		ebx, dword [overflow_flag_i]
+				mov		dword [overflow_flag_max], ebx
 
 				mov		ebx, dword [trace_i]
 				mov		dword [trace_max], ebx
@@ -306,7 +317,7 @@ printf_matrix:
 
 ; -------------------------------------------------------
 
-%define	overflow_counter_base	dword [ebp + 16]
+%define	overflow_flag_base		dword [ebp + 16]
 %define	matrix_order			dword [ebp + 12]
 %define matrix_base				dword [ebp +  8]
 
@@ -372,7 +383,7 @@ trace_overflow:
 
 %undef	matrix_base 
 %undef	matrix_order
-%undef 	overflow_counter_base
+%undef 	overflow_flag_base
 
 ; -------------------------------------------------------
 
@@ -412,6 +423,7 @@ get_cell_base:
 
 section	.data
 	DWORD_SIZE				equ		4
+	INT32_MIN				equ		0x80000000
 	
 	i_format				db		"%d", 0
 	o_format				db		"%d ", 0
@@ -420,16 +432,18 @@ section	.data
 	
 	matrix_ptr_i			dd		0
 	matrix_order_i 			dd		0
-	trace_i					dd		0x80000000
-	overflow_i				dd		0x80000000
+	trace_i					dd		INT32_MIN
+	overflow_flag_i			dd		INT32_MIN
 
 	matrix_ptr_max			dd		0
 	matrix_order_max 		dd		0
-	trace_max				dd		0x80000000
-	overflow_max			dd		0x80000000
+	trace_max				dd		INT32_MIN
+	overflow_flag_max		dd		INT32_MIN
 
-section .data
-	debug_o_format 			db		"_%d_", 0
+	virginity_flag			dd 		0
+
+; section .data
+; 	debug_o_format 			db		"_%d_", 0
 
 
 
