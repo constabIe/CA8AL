@@ -90,18 +90,6 @@ main:
 
 		mov		dword [trace_i], eax
 
-		; ALIGN_STACK 8
-		; push	eax
-		; push	debug_o_format
-		; call	printf
-		; UNALIGN_STACK 8
-
-		; ALIGN_STACK 8
-		; push	dword [overflow_i]
-		; push	debug_o_format
-		; call	printf
-		; UNALIGN_STACK 8		
-
 		mov		ebx, dword [overflow_flag_i]
 		cmp		ebx, dword [overflow_flag_max]
 		jge		if_overflow
@@ -125,7 +113,7 @@ main:
 				cmp		ebx, dword [trace_max]
 				jge		if_trace
 				jmp		else
-				
+
 			if_trace:	
 				ALIGN_STACK 4
 				push	dword [matrix_ptr_max]
@@ -441,9 +429,6 @@ section	.data
 	overflow_flag_max		dd		INT32_MIN
 
 	virginity_flag			dd 		0
-
-; section .data
-; 	debug_o_format 			db		"_%d_", 0
 
 
 
