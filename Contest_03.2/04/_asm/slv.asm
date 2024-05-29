@@ -44,6 +44,11 @@ main:
 	call	fopen
 	UNALIGN_STACK 8
 
+	ALIGN_STACK 4			;
+	push	debug_message	;
+	call	printf			;
+	UNALIGN_STACK 4			;
+
 	mov		[stream], eax
 
 	xor 	ebx, ebx
@@ -92,3 +97,7 @@ section .data
 	stream		dd  0
 
 	EOF			equ 	-1
+
+; DEBUG
+section .data
+	debug_message 	db	"_debug_", 0
