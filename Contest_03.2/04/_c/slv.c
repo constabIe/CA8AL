@@ -1,13 +1,11 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <limits.h>
+#include <stdlib.h>
 
 int main(void) 
 {
-	float n, m;
-	scanf("%f %f", &n, &m);
-
-	printf("%d\n", n == m);
+	printf("%d", EOF);
 
 	return 0;
-}
+} 
