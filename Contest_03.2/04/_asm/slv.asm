@@ -38,8 +38,6 @@ main:
 	push	ebx
 	push	edi
 
-
-
 	ALIGN_STACK 8
 	push	dword mode
 	push	dword src_path
@@ -51,8 +49,8 @@ main:
 	xor 	ebx, ebx
 	L:	
 		ALIGN_STACK 12
-		push	cell
-		push	format
+		push	dword cell
+		push	dword format
 		push	dword [stream]
 		call	fscanf
 		UNALIGN_STACK 12
@@ -66,8 +64,8 @@ main:
 
 exit_main:
 	ALIGN_STACK 8
-	push	ebx
-	push	format
+	push	dword ebx
+	push	dword format
 	call	printf
 	UNALIGN_STACK 8
 
