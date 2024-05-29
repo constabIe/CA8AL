@@ -38,21 +38,13 @@ main:
 	push	ebx
 	push	edi
 
-	ALIGN_STACK 4			;
-	push	debug_message	;
-	call	printf			;
-	UNALIGN_STACK 4			;
+
 
 	ALIGN_STACK 8
-	push	mode
-	push	src_path
+	push	dword mode
+	push	dword src_path
 	call	fopen
 	UNALIGN_STACK 8
-
-	ALIGN_STACK 4			;
-	push	debug_message	;
-	call	printf			;
-	UNALIGN_STACK 4			;
 
 	mov		[stream], eax
 
@@ -94,15 +86,15 @@ exit_main:
 ; ------------------------endmain------------------------
 
 section .data
-	mode		db	"r", 0
-	src_path 	db	"~/Downloads/Assembly/CA8AL/Contest_03.2/04/data.in", 0
-
-	cell		dd  0 
-	format		db	"%d", 0
-	stream		dd  0
-
-	EOF			equ 	-1
+	mode			db		"r", 0
+	src_path 		db		"~/Downloads/Assembly/CA8AL/Contest_03.2/04/data.in", 0
+		
+	cell			dd  	0 
+	format			db		"%d", 0
+	stream			dd  	0
+	
+	EOF				equ 	-1
 
 ; DEBUG
 section .data
-	debug_message 	db	"_debug_", 0
+	debug_message 	db		"_debug_", 0
