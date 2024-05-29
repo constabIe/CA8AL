@@ -44,14 +44,14 @@ main:
 	call	fopen
 	UNALIGN_STACK 8
 
-	mov		[stdin], eax
+	mov		[stream], eax
 
 	xor 	ebx, ebx
 	L:	
 		ALIGN_STACK 12
 		push	cell
 		push	format
-		push	stdin
+		push	dword [stream]
 		call	fscanf
 		UNALIGN_STACK 12
 
@@ -70,7 +70,7 @@ exit_main:
 	UNALIGN_STACK 8
 
 	ALIGN_STACK 4
-	push	stdin
+	push	dword [stream]
 	call	fclose
 	UNALIGN_STACK 4
 
@@ -84,10 +84,11 @@ exit_main:
 ; ------------------------endmain------------------------
 
 section .data
-	format		db	"%d", 0
 	mode		db	"r", 0
 	src_path 	db	"~/Downloads/Assembly/CA8AL/Contest_03.2/04/data.in", 0
-	stdin		dd  0
+
 	cell		dd  0 
+	format		db	"%d", 0
+	stream		dd  0
 
 	EOF			equ 	-1
