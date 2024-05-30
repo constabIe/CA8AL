@@ -81,6 +81,7 @@ main:
 global get_str
 get_str:
 	FUNCTION_PROLOGUE 8
+	
 	push	ebx
 	push	edi
 	push	esi
@@ -96,7 +97,6 @@ get_str:
 	mov		str_size, 1
 
 	.L:	
-
 		ALIGN_STACK 8
 		push	ebx
 		push	i_format
@@ -123,11 +123,11 @@ get_str:
 
 	mov		eax, str_base
 
-	FUNCTION_EPILOGUE 8
-
 	pop		esi
 	pop		edi
 	pop		ebx
+
+	FUNCTION_EPILOGUE 8
 
 	ret
 
