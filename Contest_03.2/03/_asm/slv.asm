@@ -63,12 +63,6 @@ main:
 
 	mov		base_str_2, eax
 
-	ALIGN_STACK 8
-	push	base_str_2
-	push	str_o_format
-	call	printf
-	UNALIGN_STACK 8
-
 	ALIGN_STACK 4
 	push	base_str_2
 	call	strlen
@@ -82,6 +76,7 @@ main:
 	push	base_str_2
 	push	len_str_1
 	push 	base_str_1
+	call	issubstr
 	UNALIGN_STACK 16
 
 	mov		struct_data, eax
@@ -125,8 +120,6 @@ main:
 	push	int_o_format
 	call	printf
 	UNALIGN_STACK 8
-
-
 
 	; ALIGN_STACK 4			;
 	; push	debug_message	;
@@ -242,7 +235,7 @@ get_str:
 
 %define	cmp_string				dword [ebp -  4]
 %define	boundary_iterator_val	dword [ebp -  8]
-%define	res_struct_data			dword [ebp -  12]
+%define	res_struct_data			dword [ebp - 12]
 
 global issubstr
 issubstr:
