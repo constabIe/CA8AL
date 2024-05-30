@@ -83,13 +83,13 @@ main:
 	; out
 	ALIGN_STACK 8
 	push	base_str_1
-	push	o_format
+	push	str_o_format
 	call	printf
 	UNALIGN_STACK 8
 
 	ALIGN_STACK 8
 	push	base_str_2
-	push	o_format
+	push	str_o_format
 	call	printf
 	UNALIGN_STACK 8
 
@@ -128,12 +128,12 @@ main:
 	; UNALIGN_STACK 4			;
 
 	ALIGN_STACK 4
-	push	str_base_1
+	push	base_str_1
 	call	free
 	UNALIGN_STACK 4
 
 	ALIGN_STACK 4
-	push	str_base_2
+	push	base_str_2
 	call	free
 	UNALIGN_STACK 4
 
