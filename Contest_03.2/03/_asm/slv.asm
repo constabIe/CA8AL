@@ -35,10 +35,6 @@ section .text
 %define	base_str_2		dword [ebp - 12]
 %define	len_str_2		dword [ebp - 16]
 %define	struct_data		dword [ebp - 12]
-; %define	issubstr		dword [ebp - 8]
-; %define	start			dword [ebp - 12]				
-; %define	end				dword [ebp - 16]	
-
 
 global main
 main:
@@ -88,11 +84,6 @@ main:
 	call	printf
 	UNALIGN_STACK 8
 
-	ALIGN_STACK 4			;
-	push	debug_message	;
-	call	printf			;
-	UNALIGN_STACK 4			;
-
 	ALIGN_STACK 8
 	push	base_str_2
 	push	str_o_format
@@ -121,16 +112,6 @@ main:
 	call	printf
 	UNALIGN_STACK 8
 
-	; ALIGN_STACK 4			;
-	; push	debug_message	;
-	; call	printf			;
-	; UNALIGN_STACK 4			;	
-
-	; ALIGN_STACK 4			;
-	; push	debug_message	;
-	; call	printf			;
-	; UNALIGN_STACK 4			;
-
 	; free
 	ALIGN_STACK 4
 	push	base_str_1
@@ -147,18 +128,10 @@ main:
 	call	free
 	UNALIGN_STACK 4
 
-	; ALIGN_STACK 4			;
-	; push	debug_message	;
-	; call	printf			;
-	; UNALIGN_STACK 4			;
-
 	FUNCTION_EPILOGUE 20
 
 	ret
 
-; %undef	end 
-; %undef	start 
-; %undef	issubstr
 %undef	struct_data
 %undef	str_base_2
 %undef	str_base_1
@@ -245,11 +218,6 @@ issubstr:
 	push	edi	; iterator
 	push	esi
 
-	ALIGN_STACK 4			;
-	push	debug_message	;
-	call	printf			;
-	UNALIGN_STACK 4			;
-	
 	; res_struct_data 
 	ALIGN_STACK 4
 	push	12
@@ -263,10 +231,10 @@ issubstr:
 	mov		dword [ebx + 4], -1
 	mov		dword [ebx + 12], -1
 
-	ALIGN_STACK 4			;
-	push	debug_message	;
-	call	printf			;
-	UNALIGN_STACK 4			;
+	; ALIGN_STACK 4			;
+	; push	debug_message	;
+	; call	printf			;
+	; UNALIGN_STACK 4			;
 
 	; cmp_string
 	mov		edi, len_substring
@@ -281,10 +249,10 @@ issubstr:
 	mov 	ebx, cmp_string
 	mov		dword [ebx + 1], 0
 
-	ALIGN_STACK 4			;
-	push	debug_message	;
-	call	printf			;
-	UNALIGN_STACK 4			;
+	; ALIGN_STACK 4			;
+	; push	debug_message	;
+	; call	printf			;
+	; UNALIGN_STACK 4			;
 
 	ALIGN_STACK 8
 	push	string
