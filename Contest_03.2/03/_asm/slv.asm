@@ -63,8 +63,7 @@ main:
 
 global get_str
 get_str:
-	FUNCTION_PROLOGUE 4
-
+	FUNCTION_PROLOGUE 8
 	push	ebx
 	push	edi
 	push	esi
@@ -109,9 +108,14 @@ get_str:
 .exit_func:
 	mov		dword [ebx], 0
 
+	ALIGN_STACK 4			;
+	push	debug_message	;
+	call	printf			;
+	UNALIGN_STACK 4			;
+
 	mov		eax, str_base
 
-	FUNCTION_EPILOGUE 4
+	FUNCTION_EPILOGUE 8
 
 	pop		esi
 	pop		edi
