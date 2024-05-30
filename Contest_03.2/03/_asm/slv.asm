@@ -181,6 +181,11 @@ get_str:
 	mov		edi, [newline]
 
 	.L:
+		ALIGN_STACK 8
+		push	ebx
+		push  	char_i_format
+		call 	scanf
+		UNALIGN_STACK 8
 
 		;_debug_
 		ALIGN_STACK 4			;
@@ -188,12 +193,6 @@ get_str:
 		call	printf			;
 		UNALIGN_STACK 4			;
 		;_debug_
-
-		ALIGN_STACK 8
-		push	ebx
-		push  	char_i_format
-		call 	scanf
-		UNALIGN_STACK 8
 
 		cmp		[ebx], edi
 		je		.exit_func
