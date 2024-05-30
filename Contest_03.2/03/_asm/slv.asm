@@ -47,10 +47,10 @@ main:
 	call	printf
 	UNALIGN_STACK 8
 
-	; ALIGN_STACK 4
-	; push	str_base
-	; call	free
-	; UNALIGN_STACK 4
+	ALIGN_STACK 4
+	push	str_base
+	call	free
+	UNALIGN_STACK 4
 
 	FUNCTION_EPILOGUE 4
 
@@ -59,6 +59,7 @@ main:
 ; ------------------------endmain-------------------------
 
 %define	str_base	dword [ebp - 4]
+%define	str_size	dword [ebp - 8]
 
 global get_str
 get_str:
@@ -76,6 +77,7 @@ get_str:
 	mov		str_base, eax
 
 	mov		ebx, eax
+	mov		str_size, 1
 
 	.L:	
 		ALIGN_STACK 8
@@ -89,9 +91,10 @@ get_str:
 		je		get_str.exit_func
 
 		add		ebx, BYTE_SIZE
+		add		str_size, BYTE_SIZE
 
 		ALIGN_STACK 8
-		push	ebx
+		push	str_size
 		push	str_base
 		call	realloc
 		UNALIGN_STACK 8
@@ -111,6 +114,7 @@ get_str:
 
 	ret
 
+%undef	str_size
 %undef	str_base
 
 section .data
