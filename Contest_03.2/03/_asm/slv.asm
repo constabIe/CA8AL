@@ -199,7 +199,7 @@ get_str:
 
 		ALIGN_STACK 8
 		push	dword [ebx]
-		push	debug_int_o_format
+		push	debug_char_o_format
 		call	printf
 		UNALIGN_STACK 8
 
@@ -409,15 +409,17 @@ section .data
 	newline				dd 		0x0000000A		
 	
 	char_i_format		db		`%c`, 0
+
 	str_o_format		db 		`%s\n`, 0
 	
 	int_o_format		db		`%d `, 0
 
 
 section .data
-	debug_message		db		`_debug_\n`, 0
-	debug_o_format 		db		`_%s_%d_\n`, 0
-	debug_int_o_format	db 		`_%d_\n`, 0
+	debug_message			db		`_debug_\n`, 0
+	debug_o_format 			db		`_%s_%d_\n`, 0
+	debug_int_o_format		db 		`_%d_\n`, 0
+	debug_char_o_format		db		`_%c_`, 0
 
 
 ; ALIGN_STACK 4			;
