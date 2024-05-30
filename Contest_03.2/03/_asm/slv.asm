@@ -283,7 +283,7 @@ issubstr:
 	;_debug_	
 
 	ALIGN_STACK 4
-	push	4
+	push	1
 	call	malloc
 	UNALIGN_STACK 4
 
