@@ -236,12 +236,12 @@ issubstr:
 	push	edi	; iterator
 	push	esi
 
-	;_debug_
-	ALIGN_STACK 4			;
-	push	debug_message	;
-	call	printf			;
-	UNALIGN_STACK 4			;
-	;_debug_
+	; ;_debug_
+	; ALIGN_STACK 4			;
+	; push	debug_message	;
+	; call	printf			;
+	; UNALIGN_STACK 4			;
+	; ;_debug_
 
 	; res_struct_data 
 	ALIGN_STACK 4
@@ -252,59 +252,59 @@ issubstr:
 	mov		res_struct_data, eax
 	mov		ebx, eax
 
-	;_debug_
-	ALIGN_STACK 4			;
-	push	debug_message	;
-	call	printf			;
-	UNALIGN_STACK 4			;
-	;_debug_
+	; ;_debug_
+	; ALIGN_STACK 4			;
+	; push	debug_message	;
+	; call	printf			;
+	; UNALIGN_STACK 4			;
+	; ;_debug_
 
 	mov		dword [ebx], 0
 	mov		dword [ebx + 4], -1
 	mov		dword [ebx + 12], -1
 
-	;_debug_
-	ALIGN_STACK 4			;
-	push	debug_message	;
-	call	printf			;
-	UNALIGN_STACK 4			;
-	;_debug_
+	; ;_debug_
+	; ALIGN_STACK 4			;
+	; push	debug_message	;
+	; call	printf			;
+	; UNALIGN_STACK 4			;
+	; ;_debug_
 
 	; cmp_string
 	mov		edi, len_substring
 	add		edi, 1
 
-	;_debug_
-	ALIGN_STACK 8				;
-	push	edi					;
-	push	debug_int_o_format 	;
-	call	printf				;
-	UNALIGN_STACK 8				;
-	;_debug_	
+	; ;_debug_
+	; ALIGN_STACK 8				;
+	; push	edi					;
+	; push	debug_int_o_format 	;
+	; call	printf				;
+	; UNALIGN_STACK 8				;
+	; ;_debug_	
 
 	ALIGN_STACK 4
-	push	1
+	push	edi
 	call	malloc
 	UNALIGN_STACK 4
 
-	; _debug_
-	ALIGN_STACK 4			;
-	push	debug_message	;
-	call	printf			;
-	UNALIGN_STACK 4			;
-	; _debug_
+	; ; _debug_
+	; ALIGN_STACK 4			;
+	; push	debug_message	;
+	; call	printf			;
+	; UNALIGN_STACK 4			;
+	; ; _debug_
 
 	mov		cmp_string, eax
 
 	mov 	ebx, cmp_string
-	mov		dword [ebx + 1], 0
+	mov		dword [ebx + edi], 0
 
-	; _debug_
-	ALIGN_STACK 4			;
-	push	debug_message	;
-	call	printf			;
-	UNALIGN_STACK 4			;
-	; _debug_
+	; ; _debug_
+	; ALIGN_STACK 4			;
+	; push	debug_message	;
+	; call	printf			;
+	; UNALIGN_STACK 4			;
+	; ; _debug_
 
 	ALIGN_STACK 8
 	push	string
@@ -312,12 +312,12 @@ issubstr:
 	call	strcpy
 	UNALIGN_STACK 8		
 
-	; _debug_
-	ALIGN_STACK 4			;
-	push	debug_message	;
-	call	printf			;
-	UNALIGN_STACK 4			;
-	; _debug_
+	; ; _debug_
+	; ALIGN_STACK 4			;
+	; push	debug_message	;
+	; call	printf			;
+	; UNALIGN_STACK 4			;
+	; ; _debug_
 
 	; loop
 	mov		edi, len_string
