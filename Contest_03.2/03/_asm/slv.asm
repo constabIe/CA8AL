@@ -187,12 +187,12 @@ get_str:
 		call 	scanf
 		UNALIGN_STACK 8
 
-		;_debug_
-		ALIGN_STACK 4			;
-		push	debug_message	;
-		call	printf			;
-		UNALIGN_STACK 4			;
-		;_debug_
+		; ;_debug_
+		; ALIGN_STACK 4			;
+		; push	debug_message	;
+		; call	printf			;
+		; UNALIGN_STACK 4			;
+		; ;_debug_
 
 		cmp		[ebx], edi
 		je		.exit_func
