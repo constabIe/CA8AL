@@ -177,7 +177,7 @@ get_str:
 	mov		string, eax
 
 	mov		ebx, string
-	mov		string_len, 0
+	mov		string_len, 1
 	mov		edi, [newline]
 
 	.L:
@@ -187,7 +187,7 @@ get_str:
 		call 	scanf
 		UNALIGN_STACK 8
 
-		cmp		dword [ebx], edi
+		cmp		[ebx], edi
 		je		.exit_func
 
 		inc		string_len
