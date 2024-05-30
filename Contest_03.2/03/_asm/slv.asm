@@ -236,6 +236,13 @@ issubstr:
 	push	edi	; iterator
 	push	esi
 
+	;_debug_
+	ALIGN_STACK 4			;
+	push	debug_message	;
+	call	printf			;
+	UNALIGN_STACK 4			;
+	;_debug_
+
 	; res_struct_data 
 	ALIGN_STACK 4
 	push	12
@@ -244,6 +251,13 @@ issubstr:
 
 	mov		res_struct_data, eax
 	mov		ebx, eax
+
+	;_debug_
+	ALIGN_STACK 4			;
+	push	debug_message	;
+	call	printf			;
+	UNALIGN_STACK 4			;
+	;_debug_
 
 	mov		dword [ebx], 0
 	mov		dword [ebx + 4], -1
