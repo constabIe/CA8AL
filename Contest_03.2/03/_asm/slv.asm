@@ -273,6 +273,13 @@ issubstr:
 	call	malloc
 	UNALIGN_STACK 4
 
+	; _debug_
+	ALIGN_STACK 4			;
+	push	debug_message	;
+	call	printf			;
+	UNALIGN_STACK 4			;
+	; _debug_
+
 	mov		cmp_string, eax
 
 	mov 	ebx, cmp_string
