@@ -229,6 +229,14 @@ get_str:
 
 	mov		eax, string
 
+	mov		ebx, string
+
+	ALIGN_STACK 8
+	push	dword [ebx + 1]
+	push	debug_int_o_format
+	call	printf
+	UNALIGN_STACK 8	
+
 	pop		esi
 	pop		edi
 	pop		ebx
