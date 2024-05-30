@@ -199,7 +199,7 @@ get_str:
 		call	realloc
 		UNALIGN_STACK 8
 
-		jmp		get_str.L
+		jmp		.L
 
 .exit_func:
 	mov		dword [ebx], 0
@@ -330,7 +330,7 @@ issubstr:
 
 	.L:
 		cmp		edi, boundary_iterator_val
-		jae		issubstr.exit_func 
+		jae		.exit_func 
 
 		ALIGN_STACK 12
 		push	len_substring
@@ -340,12 +340,12 @@ issubstr:
 		UNALIGN_STACK 12
 
 		cmp		eax, 0
-		je		issubstr.substr_true
+		je		.substr_true
 
 		add		ebx, BYTE_SIZE
 		inc		edi
 
-		jmp		issubstr.L
+		jmp		.L
 
 	.substr_true:
 		mov		ebx, res_struct_data
@@ -359,7 +359,7 @@ issubstr:
 
 		mov		dword [ebx + 8], esi
 
-		jmp		issubstr.exit_func
+		jmp		.exit_func
 
 .exit_func:
 	ALIGN_STACK 4
