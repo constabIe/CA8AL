@@ -81,7 +81,7 @@ main:
 global get_str
 get_str:
 	FUNCTION_PROLOGUE 8
-	
+
 	push	ebx
 	push	edi
 	push	esi
@@ -139,7 +139,7 @@ section .data
 	newline		dd 		0x0000000A		
 
 	i_format	db		"%c", 0
-	o_format	db 		"%s\n", 0
+	o_format	db 		"%s 0x0000000A", 0
 
 section .data
 	debug_message		db		"_debug_", 0
