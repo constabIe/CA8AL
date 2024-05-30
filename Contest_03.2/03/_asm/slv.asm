@@ -41,20 +41,37 @@ main:
 
 	mov		str_base, eax
 
+	ALIGN_STACK 4			;
+	push	debug_message	;
+	call	printf			;
+	UNALIGN_STACK 4			;	
+
 	ALIGN_STACK 8
 	push	str_base
 	push	o_format
 	call	printf
 	UNALIGN_STACK 8
 
+	ALIGN_STACK 4			;
+	push	debug_message	;
+	call	printf			;
+	UNALIGN_STACK 4			;
+
 	ALIGN_STACK 4
 	push	str_base
 	call	free
 	UNALIGN_STACK 4
 
+	ALIGN_STACK 4			;
+	push	debug_message	;
+	call	printf			;
+	UNALIGN_STACK 4			;
+
 	FUNCTION_EPILOGUE 4
 
 	ret
+
+%undef	str_base
 
 ; ------------------------endmain-------------------------
 
@@ -79,10 +96,6 @@ get_str:
 	mov		str_size, 1
 
 	.L:	
-		ALIGN_STACK 4			;
-		push	debug_message	;
-		call	printf			;
-		UNALIGN_STACK 4			;
 
 		ALIGN_STACK 8
 		push	ebx
@@ -107,11 +120,6 @@ get_str:
 
 .exit_func:
 	mov		dword [ebx], 0
-
-	ALIGN_STACK 4			;
-	push	debug_message	;
-	call	printf			;
-	UNALIGN_STACK 4			;
 
 	mov		eax, str_base
 
