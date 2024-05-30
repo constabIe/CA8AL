@@ -263,7 +263,7 @@ issubstr:
 	call	malloc
 	UNALIGN_STACK 8
 
-	lea 	ebx, cmp_string
+	mov 	ebx, cmp_string
 	mov		dword [ebx + 1], 0
 
 	ALIGN_STACK 8
