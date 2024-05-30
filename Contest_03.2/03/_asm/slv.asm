@@ -87,6 +87,11 @@ main:
 	call	printf
 	UNALIGN_STACK 8
 
+	ALIGN_STACK 4			;
+	push	debug_message	;
+	call	printf			;
+	UNALIGN_STACK 4			;
+
 	ALIGN_STACK 8
 	push	base_str_2
 	push	str_o_format
