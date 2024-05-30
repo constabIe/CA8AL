@@ -177,7 +177,7 @@ get_str:
 	mov		string, eax
 
 	mov		ebx, string
-	mov		string_len, 1
+	mov		string_len, 0
 	mov		edi, [newline]
 
 	.L:
