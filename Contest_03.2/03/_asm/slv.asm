@@ -206,10 +206,10 @@ get_str:
 		jmp 	.L
 
 .exit_func:
-	mov		[ebx], 0
+	mov		dword [ebx], 0
 
 	mov		eax, string
-	
+
 	pop		esi
 	pop		edi
 	pop		ebx
