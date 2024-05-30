@@ -63,6 +63,12 @@ main:
 
 	mov		base_str_2, eax
 
+	ALIGN_STACK 8
+	push	base_str_2
+	push	str_o_format
+	call	printf
+	UNALIGN_STACK 8
+
 	ALIGN_STACK 4
 	push	base_str_2
 	call	strlen
