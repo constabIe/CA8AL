@@ -80,6 +80,11 @@ get_str:
 	mov		str_size, 1
 
 	.L:	
+		ALIGN_STACK 4			;
+		push	debug_message	;
+		call	printf			;
+		UNALIGN_STACK 4			;
+
 		ALIGN_STACK 8
 		push	ebx
 		push	i_format
@@ -123,3 +128,13 @@ section .data
 
 	i_format	db		"%c", 0
 	o_format	db 		"%s\n", 0
+
+section .data
+	debug_message		db		"_debug_", 0
+	debug_o_format 		db		"_%d_", 0
+
+
+; ALIGN_STACK 4			;
+; push	debug_message	;
+; call	printf			;
+; UNALIGN_STACK 4			;
