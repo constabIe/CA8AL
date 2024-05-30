@@ -188,10 +188,10 @@ get_str:
 
 		mov		edi, [newline]
 		cmp		[ebx], edi
-		je		get_str.exit_func
+		je		.exit_func
 
 		add		ebx, BYTE_SIZE
-		add		str_size, BYTE_SIZE
+		inc		str_size
 
 		ALIGN_STACK 8
 		push	str_size
