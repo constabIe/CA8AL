@@ -274,13 +274,13 @@ issubstr:
 	mov		edi, len_substring
 	add		edi, 1
 
-	; ;_debug_
-	; ALIGN_STACK 8				;
-	; push	edi					;
-	; push	debug_int_o_format 	;
-	; call	printf				;
-	; UNALIGN_STACK 8				;
-	; ;_debug_	
+	;_debug_
+	ALIGN_STACK 8				;
+	push	edi					;
+	push	debug_int_o_format 	;
+	call	printf				;
+	UNALIGN_STACK 8				;
+	;_debug_	
 
 	ALIGN_STACK 4
 	push	edi
@@ -299,12 +299,12 @@ issubstr:
 	mov 	ebx, cmp_string
 	mov		dword [ebx + edi], 0
 
-	; ; _debug_
-	; ALIGN_STACK 4			;
-	; push	debug_message	;
-	; call	printf			;
-	; UNALIGN_STACK 4			;
-	; ; _debug_
+	; _debug_
+	ALIGN_STACK 4			;
+	push	debug_message	;
+	call	printf			;
+	UNALIGN_STACK 4			;
+	; _debug_
 
 	ALIGN_STACK 8
 	push	string
@@ -362,6 +362,11 @@ issubstr:
 		jmp		issubstr.exit_func
 
 .exit_func:
+	ALIGN_STACK 4
+	push	cmp_string
+	call	free
+	UNALIGN_STACK 4
+
 	mov		eax, res_struct_data
 
 	pop		esi
