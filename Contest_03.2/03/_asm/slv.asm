@@ -118,7 +118,7 @@ get_str:
 %undef	str_base
 
 section .data
-	BYTE_SIZE	equ		4
+	BYTE_SIZE	equ		1
 	newline		dd 		0x0000000A		
 
 	i_format	db		"%c", 0
