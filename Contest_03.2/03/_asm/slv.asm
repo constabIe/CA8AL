@@ -240,19 +240,20 @@ issubstr:
 	mov		edi, len_substring
 	add		edi, 1
 
-	ALIGN_STACK 8
+	ALIGN_STACK 4
 	push	edi
-	push	cmp_string
 	call	malloc
-	UNALIGN_STACK 8
+	UNALIGN_STACK 4
+
+	mov		cmp_string, eax
 
 	mov 	ebx, cmp_string
 	mov		dword [ebx + 1], 0
 
-	; ALIGN_STACK 4			;
-	; push	debug_message	;
-	; call	printf			;
-	; UNALIGN_STACK 4			;
+	ALIGN_STACK 4			;
+	push	debug_message	;
+	call	printf			;
+	UNALIGN_STACK 4			;
 
 	ALIGN_STACK 8
 	push	string
