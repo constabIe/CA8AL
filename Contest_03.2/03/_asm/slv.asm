@@ -91,8 +91,8 @@ get_str:
 		add		ebx, BYTE_SIZE
 
 		ALIGN_STACK 8
-		push	str_base
 		push	ebx
+		push	str_base
 		call	realloc
 		UNALIGN_STACK 8
 
