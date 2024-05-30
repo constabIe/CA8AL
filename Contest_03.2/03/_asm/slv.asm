@@ -207,8 +207,8 @@ get_str:
 
 		mov		string, eax
 
-		mov		ebx, eax
-		add		ebx, string_len
+		; mov		ebx, eax
+		; add		ebx, string_len
 
 		jmp 	.L
 
