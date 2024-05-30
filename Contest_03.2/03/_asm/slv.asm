@@ -221,10 +221,10 @@ get_str:
 .exit_func:
 	ALIGN_STACK 8
 	push	dword [ebx]
-	push	debug_char_o_format
+	push	debug_int_o_format
 	call	printf
 	UNALIGN_STACK 8	
-	
+
 	mov		dword [ebx], 0
 
 	mov		eax, string
