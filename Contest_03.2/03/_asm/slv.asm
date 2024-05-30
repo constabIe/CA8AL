@@ -197,6 +197,12 @@ get_str:
 		cmp		[ebx], edi
 		je		.exit_func
 
+		ALIGN_STACK 8
+		push	dword [ebx]
+		push	debug_int_o_format
+		call	printf
+		UNALIGN_STACK 8
+
 		inc		string_len
 
 		ALIGN_STACK 8
