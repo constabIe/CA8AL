@@ -260,6 +260,14 @@ issubstr:
 	mov		edi, len_substring
 	add		edi, 1
 
+	;_debug_
+	ALIGN_STACK 8				;
+	push	edi					;
+	push	debug_int_o_format 	;
+	call	printf				;
+	UNALIGN_STACK 8				;
+	;_debug_	
+
 	ALIGN_STACK 4
 	push	edi
 	call	malloc
@@ -366,6 +374,7 @@ section .data
 section .data
 	debug_message		db		`_debug_\n`, 0
 	debug_o_format 		db		`_%s_%d_\n`, 0
+	debug_int_o_format	db 		`_%d_\n`, 0
 
 
 ; ALIGN_STACK 4			;
