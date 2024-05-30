@@ -52,7 +52,16 @@ main:
 	UNALIGN_STACK 2
 
 	mov		len_str_1, eax
-
+	
+	; _debug_
+	ALIGN_STACK 12
+	push	len_str_1
+	push	base_str_1
+	push	debug_o_format
+	call	printf
+	UNALIGN_STACK 12
+	; _debug_
+	
 	ALIGN_STACK 0
 	call	get_str
 	UNALIGN_STACK 0
@@ -65,6 +74,15 @@ main:
 	UNALIGN_STACK 2
 
 	mov		len_str_2, eax
+
+	; _debug_
+	ALIGN_STACK 12
+	push	len_str_2
+	push	base_str_2
+	push	debug_o_format
+	call	printf
+	UNALIGN_STACK 12
+	; _debug_
 
 	; substr
 	ALIGN_STACK 16
@@ -340,8 +358,8 @@ section .data
 
 
 section .data
-	debug_message		db		`_debug_`, 0
-	debug_o_format 		db		`_%d_`, 0
+	debug_message		db		`_debug_\n`, 0
+	debug_o_format 		db		`_%s_%d_\n`, 0
 
 
 ; ALIGN_STACK 4			;
