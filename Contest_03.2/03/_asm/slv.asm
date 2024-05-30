@@ -199,6 +199,11 @@ get_str:
 		call	realloc
 		UNALIGN_STACK 8
 
+		mov		str_base, eax
+		
+		mov		ebx, str_base
+		add		ebx, str_size
+
 		jmp		.L
 
 .exit_func:
