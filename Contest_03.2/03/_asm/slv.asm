@@ -158,8 +158,8 @@ main:
 
 ; -----------------------functions-----------------------
 
-%define	str_base	dword [ebp - 4]
-%define	str_size	dword [ebp - 8]
+%define	string		dword [ebp - 4]
+%define	string_len	dword [ebp - 8]
 
 global get_str
 get_str:
@@ -170,47 +170,46 @@ get_str:
 	push	esi
 
 	ALIGN_STACK 4
-	push	BYTE_SIZE
+	push	1
 	call	malloc
 	UNALIGN_STACK 4
 
-	mov		str_base, eax
+	mov		string, eax
 
-	mov		ebx, eax
-	mov		str_size, 1
+	mov		ebx, string
+	mov		string_len, 0
+	mov		edi, [newline]
 
-	.L:	
+	.L:
 		ALIGN_STACK 8
 		push	ebx
-		push	str_i_format
-		call	scanf
+		push  	char_i_format
+		call 	scanf
 		UNALIGN_STACK 8
 
-		mov		edi, [newline]
-		cmp		[ebx], edi
+		cmp		dword [ebx], edi
 		je		.exit_func
 
-		add		ebx, BYTE_SIZE
-		inc		str_size
+		inc		string_len
 
 		ALIGN_STACK 8
-		push	str_size
-		push	str_base
+		push	string_len
+		push	string
 		call	realloc
 		UNALIGN_STACK 8
 
-		mov		str_base, eax
-		
-		mov		ebx, str_base
-		add		ebx, str_size
+		mov		string, eax
 
-		jmp		.L
+		mov		ebx, eax
+		add		ebx, string_len
+
+		jmp 	.L
 
 .exit_func:
-	mov		dword [ebx], 0
+	mov		[ebx], 0
 
-	mov		eax, str_base
-
+	mov		eax, string
+	
 	pop		esi
 	pop		edi
 	pop		ebx
@@ -219,8 +218,8 @@ get_str:
 
 	ret
 
-%undef	str_size
-%undef	str_base
+%undef	string_len
+%undef	string
 
 ; -------------------------------------------------------
 
@@ -393,13 +392,13 @@ issubstr:
 
 ; ---------------------endfunctions----------------------
 section .data
-	BYTE_SIZE	equ		1
-	newline		dd 		0x0000000A		
-
-	str_i_format	db		`%c`, 0
-	str_o_format	db 		`%s\n`, 0
-
-	int_o_format	db		`%d `, 0
+	BYTE_SIZE			equ		1
+	newline				dd 		0x0000000A		
+	
+	char_i_format		db		`%c`, 0
+	str_o_format		db 		`%s\n`, 0
+	
+	int_o_format		db		`%d `, 0
 
 
 section .data
