@@ -52,7 +52,7 @@ main:
 	UNALIGN_STACK 2
 
 	mov		len_str_1, eax
-	
+
 	; _debug_
 	ALIGN_STACK 12
 	push	len_str_1
@@ -61,7 +61,7 @@ main:
 	call	printf
 	UNALIGN_STACK 12
 	; _debug_
-	
+
 	ALIGN_STACK 0
 	call	get_str
 	UNALIGN_STACK 0
@@ -249,10 +249,12 @@ issubstr:
 	mov		dword [ebx + 4], -1
 	mov		dword [ebx + 12], -1
 
-	; ALIGN_STACK 4			;
-	; push	debug_message	;
-	; call	printf			;
-	; UNALIGN_STACK 4			;
+	;_debug_
+	ALIGN_STACK 4			;
+	push	debug_message	;
+	call	printf			;
+	UNALIGN_STACK 4			;
+	;_debug_
 
 	; cmp_string
 	mov		edi, len_substring
@@ -268,10 +270,12 @@ issubstr:
 	mov 	ebx, cmp_string
 	mov		dword [ebx + 1], 0
 
+	; _debug_
 	ALIGN_STACK 4			;
 	push	debug_message	;
 	call	printf			;
 	UNALIGN_STACK 4			;
+	; _debug_
 
 	ALIGN_STACK 8
 	push	string
@@ -279,10 +283,12 @@ issubstr:
 	call	strcpy
 	UNALIGN_STACK 8		
 
+	; _debug_
 	ALIGN_STACK 4			;
 	push	debug_message	;
 	call	printf			;
 	UNALIGN_STACK 4			;
+	; _debug_
 
 	; loop
 	mov		edi, len_string
