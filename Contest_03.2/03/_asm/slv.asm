@@ -177,10 +177,18 @@ get_str:
 	mov		string, eax
 
 	mov		ebx, string
-	mov		string_len, 0
+	mov		string_len, 1
 	mov		edi, [newline]
 
 	.L:
+
+		;_debug_
+		ALIGN_STACK 4			;
+		push	debug_message	;
+		call	printf			;
+		UNALIGN_STACK 4			;
+		;_debug_
+
 		ALIGN_STACK 8
 		push	ebx
 		push  	char_i_format
