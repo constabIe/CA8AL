@@ -245,6 +245,11 @@ issubstr:
 	push	edi	; iterator
 	push	esi
 
+	ALIGN_STACK 4			;
+	push	debug_message	;
+	call	printf			;
+	UNALIGN_STACK 4			;
+	
 	; res_struct_data 
 	ALIGN_STACK 4
 	push	12
