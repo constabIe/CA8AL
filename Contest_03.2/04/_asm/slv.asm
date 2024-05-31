@@ -29,7 +29,7 @@ section .text
 
 ; -----------------------endmacro-------------------------
 
-; -------------------------main--------------------------
+; -------------------------main---------------------------
 
 global main
 main:
@@ -47,7 +47,7 @@ main:
 	mov		[stream], eax
 
 	xor 	ebx, ebx
-	L:	
+	.L:	
 		ALIGN_STACK 12
 		push	dword cell
 		push	dword format
@@ -56,13 +56,19 @@ main:
 		UNALIGN_STACK 12
 
 		cmp		eax, EOF
-		je		exit_main
+		je		.exit_main
 
-		add		ebx, eax
+		cmp     eax, 1
+		je		.int_true
 
-		jmp		L
+		jmp		.L
 
-exit_main:
+		.int_true:
+		inc		ebx
+
+		jmp 	.L
+		
+.exit_main:
 	ALIGN_STACK 8
 	push	dword ebx
 	push	dword format
@@ -74,25 +80,25 @@ exit_main:
 	call	fclose
 	UNALIGN_STACK 4
 
-	FUNCTION_EPILOGUE 0
-
 	pop		edi
 	pop		ebx
+
+	FUNCTION_EPILOGUE 0
 
 	xor  	eax, eax
 	ret
 ; ------------------------endmain------------------------
 
 section .data
-	mode			db		"r", 0
-	src_path 		db		"~/Downloads/Assembly/CA8AL/Contest_03.2/04/data.in", 0
+	mode			db		`r`, 0
+	src_path 		db		`~/Downloads/Assembly/CA8AL/Contest_03.2/04/data.in`, 0
 		
 	cell			dd  	0 
-	format			db		"%d", 0
+	format			db		`%d`, 0
 	stream			dd  	0
 	
 	EOF				equ 	-1
 
 ; DEBUG
 section .data
-	debug_message 	db		"_debug_", 0
+	debug_message 	db		`_debug_`, 0
