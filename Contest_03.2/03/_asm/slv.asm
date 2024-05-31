@@ -30,211 +30,87 @@ section .text
 
 ; -------------------------main---------------------------
 
-%define	base_str_1		dword [ebp - 4]
-%define	len_str_1		dword [ebp - 8]
-%define	base_str_2		dword [ebp - 12]
-%define	len_str_2		dword [ebp - 16]
+%define	len_str_1		dword [ebp -  4]
+%define	len_str_2		dword [ebp -  8]
 %define	struct_data		dword [ebp - 12]
 
 global main
 main:
-	FUNCTION_PROLOGUE 20
-
-	ALIGN_STACK 0
-	call	get_str
-	UNALIGN_STACK 0
-
-	mov		base_str_1, eax
+	FUNCTION_PROLOGUE 12
 
 	ALIGN_STACK 4
-	push	base_str_1
+	push	string_1
+	call	get_str
+	UNALIGN_STACK 4
+
+	mov		[string_1], eax
+
+	ALIGN_STACK 4
+	push	string_1
 	call	strlen
-	UNALIGN_STACK 2
+	UNALIGN_STACK 4
 
-	mov		len_str_1, eax
+	mov		[len_str_1], eax
 
-	; _debug_
-	ALIGN_STACK 12
-	push	len_str_1
-	push	base_str_1
+	ALIGN_STACK 8
+	push	dword [len_str_1]
+	push	string_1
 	push	debug_o_format
 	call	printf
-	UNALIGN_STACK 12
-	; _debug_
-
-	ALIGN_STACK 0
-	call	get_str
-	UNALIGN_STACK 0
-
-	mov		base_str_2, eax
+	UNALIGN_STACK 8
 
 	ALIGN_STACK 4
-	push	base_str_2
-	call	strlen
-	UNALIGN_STACK 2
-
-	mov		len_str_2, eax
-
-	; _debug_
-	ALIGN_STACK 12
-	push	len_str_2
-	push	base_str_2
-	push	debug_o_format
-	call	printf
-	UNALIGN_STACK 12
-	; _debug_
-
-	; substr
-	ALIGN_STACK 16
-	push	len_str_2
-	push	base_str_2
-	push	len_str_1
-	push 	base_str_1
-	call	issubstr
-	UNALIGN_STACK 16
-
-	mov		struct_data, eax
-
-	; out
-	ALIGN_STACK 8
-	push	base_str_1
-	push	str_o_format
-	call	printf
-	UNALIGN_STACK 8
-
-	ALIGN_STACK 8
-	push	base_str_2
-	push	str_o_format
-	call	printf
-	UNALIGN_STACK 8
-
-	mov		ebx, struct_data
-
-	ALIGN_STACK 8
-	push	dword [ebx] 
-	push	int_o_format
-	call	printf
-	UNALIGN_STACK 8
-
-
-	ALIGN_STACK 8
-	push	dword [ebx + 4] 
-	push	int_o_format
-	call	printf
-	UNALIGN_STACK 8
-
-
-	ALIGN_STACK 8
-	push	dword [ebx + 8] 
-	push	int_o_format
-	call	printf
-	UNALIGN_STACK 8
-
-	; free
-	ALIGN_STACK 4
-	push	base_str_1
+	push	string_1
 	call	free
 	UNALIGN_STACK 4
 
-	ALIGN_STACK 4
-	push	base_str_2
-	call	free
-	UNALIGN_STACK 4
-
-	ALIGN_STACK 4
-	push	struct_data
-	call	free
-	UNALIGN_STACK 4
-
-	FUNCTION_EPILOGUE 20
+	FUNCTION_EPILOGUE 12
 
 	ret
 
 %undef	struct_data
-%undef	str_base_2
-%undef	str_base_1
+%undef	len_str_2
+%undef	len_str_1
 
 ; ------------------------endmain-------------------------
 
-; -----------------------functions-----------------------
-
-%define	string		dword [ebp - 4]
-%define	string_len	dword [ebp - 8]
+%define	dst		dword [ebp + 8]
 
 global get_str
 get_str:
-	FUNCTION_PROLOGUE 8
+	FUNCTION_PROLOGUE 0
 
 	push	ebx
 	push	edi
-	push	esi
 
-	ALIGN_STACK 4
-	push	1
-	call	malloc
-	UNALIGN_STACK 4
-
-	mov		string, eax
-
-	mov		ebx, string
-	mov		string_len, 1
+	mov		ebx, dst
 	mov		edi, [newline]
 
 	.L:
 		ALIGN_STACK 8
 		push	ebx
-		push  	char_i_format
-		call 	scanf
+		push	char_i_format
+		call	scanf
 		UNALIGN_STACK 8
 
-		; ;_debug_
-		; ALIGN_STACK 4			;
-		; push	debug_message	;
-		; call	printf			;
-		; UNALIGN_STACK 4			;
-		; ;_debug_
-
-		cmp		[ebx], edi
+		cmp		dword [ebx], edi
 		je		.exit_func
 
-		ALIGN_STACK 8
-		push	dword [ebx]
-		push	debug_char_o_format
-		call	printf
-		UNALIGN_STACK 8
-
-		inc		string_len
-
-		ALIGN_STACK 8
-		push	string_len
-		push	string
-		call	realloc
-		UNALIGN_STACK 8
-
-		mov		string, eax
-
-		mov		ebx, eax
-		add		ebx, string_len
-
-		jmp 	.L
+		add		ebx, BYTE_SIZE
 
 .exit_func:
 	mov		dword [ebx], 0
 
-	mov		eax, string
-
-	pop		esi
 	pop		edi
 	pop		ebx
 
-	FUNCTION_EPILOGUE 8
+	FUNCTION_EPILOGUE 0
 
 	ret
 
-%undef	string_len
-%undef	string
+%undef	dst
 
-; -------------------------------------------------------
+; -----------------------functions-----------------------
 
 %define	len_substring			dword [ebp + 20]
 %define substring				dword [ebp + 16]
@@ -404,15 +280,20 @@ issubstr:
 %undef	len_substring	
 
 ; ---------------------endfunctions----------------------
-section .data
-	BYTE_SIZE			equ		1
-	newline				dd 		0x0000000A		
-	
-	char_i_format		db		`%c`, 0
 
-	str_o_format		db 		`%s\n`, 0
+section .bss
+	string_1				resb	101
+	string_2				resb	101	
 	
-	int_o_format		db		`%d `, 0
+section .data	
+	BYTE_SIZE				equ		1
+	newline					dd 		0x0000000A		
+		
+	char_i_format			db		`%c`, 0
+	
+	str_o_format			db 		`%s\n`, 0
+		
+	int_o_format			db		`%d `, 0
 
 
 section .data
@@ -420,6 +301,7 @@ section .data
 	debug_o_format 			db		`_%s_%d_\n`, 0
 	debug_int_o_format		db 		`_%d_\n`, 0
 	debug_char_o_format		db		`_%c_`, 0
+
 
 
 ; ALIGN_STACK 4			;
