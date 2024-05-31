@@ -52,17 +52,17 @@ main:
 
 	mov		len_str_1, eax
 
-	ALIGN_STACK 8
+	ALIGN_STACK 12
 	push	len_str_1
 	push	string_1
 	push	debug_o_format
 	call	printf
-	UNALIGN_STACK 8
+	UNALIGN_STACK 12
 
-	ALIGN_STACK 4
-	push	string_1
-	call	free
-	UNALIGN_STACK 4
+	; ALIGN_STACK 4
+	; push	string_1
+	; call	free
+	; UNALIGN_STACK 4
 
 	FUNCTION_EPILOGUE 12
 
@@ -87,6 +87,13 @@ get_str:
 	mov		edi, [newline]
 
 	.L:
+		;_debug_
+		ALIGN_STACK 4		
+		push	debug_message
+		call	printf		
+		UNALIGN_STACK 4		
+		;_debug_		
+
 		ALIGN_STACK 8
 		push	ebx
 		push	char_i_format
