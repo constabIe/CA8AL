@@ -43,8 +43,6 @@ main:
 	call	get_str
 	UNALIGN_STACK 4
 
-	mov		[string_1], eax
-
 	ALIGN_STACK 4
 	push	string_1
 	call	strlen
@@ -87,18 +85,18 @@ get_str:
 	mov		edi, [newline]
 
 	.L:
-		;_debug_
-		ALIGN_STACK 4		
-		push	debug_message
-		call	printf		
-		UNALIGN_STACK 4		
-		;_debug_		
-
 		ALIGN_STACK 8
 		push	ebx
 		push	char_i_format
 		call	scanf
 		UNALIGN_STACK 8
+
+		;_debug_
+		ALIGN_STACK 4		
+		push	debug_message
+		call	printf		
+		UNALIGN_STACK 4		
+		;_debug_	
 
 		cmp		dword [ebx], edi
 		je		.exit_func
@@ -298,6 +296,7 @@ section .data
 		
 	char_i_format			db		`%c`, 0
 	
+	str_i_format			db		`%s\n`, 0
 	str_o_format			db 		`%s\n`, 0
 		
 	int_o_format			db		`%d `, 0
