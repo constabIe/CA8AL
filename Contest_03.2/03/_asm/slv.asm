@@ -57,6 +57,13 @@ main:
 	call	printf
 	UNALIGN_STACK 12
 
+	;_debug_
+	ALIGN_STACK 4
+	push	debug_message
+	call	printf
+	UNALIGN_STACK 4
+	;_debug_
+
 	FUNCTION_EPILOGUE 12
 
 	ret
