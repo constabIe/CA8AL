@@ -161,12 +161,12 @@ issubstr:
 	push	edi	; iterator
 	push	esi
 
-	; ;_debug_
-	; ALIGN_STACK 4			;
-	; push	debug_message	;
-	; call	printf			;
-	; UNALIGN_STACK 4			;
-	; ;_debug_
+	;_debug_
+	ALIGN_STACK 4			;
+	push	debug_message	;
+	call	printf			;
+	UNALIGN_STACK 4			;
+	;_debug_
 
 	; res_struct_data 
 	ALIGN_STACK 4
