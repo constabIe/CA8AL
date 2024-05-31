@@ -92,16 +92,18 @@ get_str:
 		UNALIGN_STACK 8
 
 		;_debug_
-		ALIGN_STACK 4		
+		ALIGN_STACK 4
 		push	debug_message
-		call	printf		
-		UNALIGN_STACK 4		
-		;_debug_	
+		call	printf
+		UNALIGN_STACK 4
+		;_debug_
 
 		cmp		dword [ebx], edi
 		je		.exit_func
 
 		add		ebx, BYTE_SIZE
+
+		jmp 	.L
 
 .exit_func:
 	mov		dword [ebx], 0
