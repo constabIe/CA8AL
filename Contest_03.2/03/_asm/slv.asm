@@ -66,9 +66,10 @@ main:
 
 	FUNCTION_EPILOGUE 12
 
+	xor		eax, eax
 	ret
 
-%undef	struct_data
+; %undef	struct_data
 %undef	len_str_2
 %undef	len_str_1
 
