@@ -50,26 +50,55 @@ main:
 
 	mov		len_str_1, eax
 
-	ALIGN_STACK 12
+	ALIGN_STACK 4
+	push	string_2
+	call	get_str
+	UNALIGN_STACK 4
+
+	ALIGN_STACK 4
+	push	string_2
+	call	strlen
+	UNALIGN_STACK 4
+
+	mov		len_str_2, eax
+
+	; ALIGN_STACK 12
+	; push	len_str_1
+	; push	string_1
+	; push	debug_o_format
+	; call	printf
+	; UNALIGN_STACK 12
+
+	; ;_debug_
+	; ALIGN_STACK 4
+	; push	debug_message
+	; call	printf
+	; UNALIGN_STACK 4
+	; ;_debug_
+
+	ALIGN_STACK 16
+	push	len_str_2
+	push	string_2
 	push	len_str_1
 	push	string_1
-	push	debug_o_format
-	call	printf
-	UNALIGN_STACK 12
+	call	issubstr
+	UNALIGN_STACK 16
 
-	;_debug_
-	ALIGN_STACK 4
-	push	debug_message
-	call	printf
-	UNALIGN_STACK 4
-	;_debug_
+	mov		struct_data, eax
+
+	ALIGN_STACK 12
+	push	dword [eax + 8]
+	push	dword [eax + 4]
+	push	dword [eax]
+	push	debug_int_o_format
+	UNALIGN_STACK 12
 
 	FUNCTION_EPILOGUE 12
 
 	xor		eax, eax
 	ret
 
-; %undef	struct_data
+%undef	struct_data
 %undef	len_str_2
 %undef	len_str_1
 
@@ -115,172 +144,172 @@ get_str:
 
 ; -----------------------functions-----------------------
 
-; %define	len_substring			dword [ebp + 20]
-; %define substring				dword [ebp + 16]
-; %define	len_string				dword [ebp + 12]
-; %define	string					dword [ebp +  8]
+%define	len_substring			dword [ebp + 20]
+%define substring				dword [ebp + 16]
+%define	len_string				dword [ebp + 12]
+%define	string					dword [ebp +  8]
 
-; %define	cmp_string				dword [ebp -  4]
-; %define	boundary_iterator_val	dword [ebp -  8]
-; %define	res_struct_data			dword [ebp - 12]
+%define	cmp_string				dword [ebp -  4]
+%define	boundary_iterator_val	dword [ebp -  8]
+%define	res_struct_data			dword [ebp - 12]
 
-; global issubstr
-; issubstr:
-; 	FUNCTION_PROLOGUE 12
+global issubstr
+issubstr:
+	FUNCTION_PROLOGUE 12
 
-; 	push	ebx
-; 	push	edi	; iterator
-; 	push	esi
+	push	ebx
+	push	edi	; iterator
+	push	esi
 
-; 	; ;_debug_
-; 	; ALIGN_STACK 4			;
-; 	; push	debug_message	;
-; 	; call	printf			;
-; 	; UNALIGN_STACK 4			;
-; 	; ;_debug_
+	; ;_debug_
+	; ALIGN_STACK 4			;
+	; push	debug_message	;
+	; call	printf			;
+	; UNALIGN_STACK 4			;
+	; ;_debug_
 
-; 	; res_struct_data 
-; 	ALIGN_STACK 4
-; 	push	12
-; 	call	malloc
-; 	UNALIGN_STACK 4
+	; res_struct_data 
+	ALIGN_STACK 4
+	push	12
+	call	malloc
+	UNALIGN_STACK 4
 
-; 	mov		res_struct_data, eax
-; 	mov		ebx, eax
+	mov		res_struct_data, eax
+	mov		ebx, eax
 
-; 	; ;_debug_
-; 	; ALIGN_STACK 4			;
-; 	; push	debug_message	;
-; 	; call	printf			;
-; 	; UNALIGN_STACK 4			;
-; 	; ;_debug_
+	; ;_debug_
+	; ALIGN_STACK 4			;
+	; push	debug_message	;
+	; call	printf			;
+	; UNALIGN_STACK 4			;
+	; ;_debug_
 
-; 	mov		dword [ebx], 0
-; 	mov		dword [ebx + 4], -1
-; 	mov		dword [ebx + 12], -1
+	mov		dword [ebx], 0
+	mov		dword [ebx + 4], -1
+	mov		dword [ebx + 12], -1
 
-; 	; ;_debug_
-; 	; ALIGN_STACK 4			;
-; 	; push	debug_message	;
-; 	; call	printf			;
-; 	; UNALIGN_STACK 4			;
-; 	; ;_debug_
+	; ;_debug_
+	; ALIGN_STACK 4			;
+	; push	debug_message	;
+	; call	printf			;
+	; UNALIGN_STACK 4			;
+	; ;_debug_
 
-; 	; cmp_string
-; 	mov		edi, len_substring
-; 	add		edi, 1
+	; cmp_string
+	mov		edi, len_substring
+	add		edi, 1
 
-; 	;_debug_
-; 	ALIGN_STACK 8				;
-; 	push	edi					;
-; 	push	debug_int_o_format 	;
-; 	call	printf				;
-; 	UNALIGN_STACK 8				;
-; 	;_debug_	
+	;_debug_
+	ALIGN_STACK 8				;
+	push	edi					;
+	push	debug_int_o_format 	;
+	call	printf				;
+	UNALIGN_STACK 8				;
+	;_debug_	
 
-; 	ALIGN_STACK 4
-; 	push	edi
-; 	call	malloc
-; 	UNALIGN_STACK 4
+	ALIGN_STACK 4
+	push	edi
+	call	malloc
+	UNALIGN_STACK 4
 
-; 	; ; _debug_
-; 	; ALIGN_STACK 4			;
-; 	; push	debug_message	;
-; 	; call	printf			;
-; 	; UNALIGN_STACK 4			;
-; 	; ; _debug_
+	; ; _debug_
+	; ALIGN_STACK 4			;
+	; push	debug_message	;
+	; call	printf			;
+	; UNALIGN_STACK 4			;
+	; ; _debug_
 
-; 	mov		cmp_string, eax
+	mov		cmp_string, eax
 
-; 	mov 	ebx, cmp_string
-; 	mov		dword [ebx + edi], 0
+	mov 	ebx, cmp_string
+	mov		dword [ebx + edi], 0
 
-; 	; _debug_
-; 	ALIGN_STACK 4			;
-; 	push	debug_message	;
-; 	call	printf			;
-; 	UNALIGN_STACK 4			;
-; 	; _debug_
+	; _debug_
+	ALIGN_STACK 4			;
+	push	debug_message	;
+	call	printf			;
+	UNALIGN_STACK 4			;
+	; _debug_
 
-; 	ALIGN_STACK 8
-; 	push	string
-; 	push	cmp_string
-; 	call	strcpy
-; 	UNALIGN_STACK 8		
+	ALIGN_STACK 8
+	push	string
+	push	cmp_string
+	call	strcpy
+	UNALIGN_STACK 8		
 
-; 	; ; _debug_
-; 	; ALIGN_STACK 4			;
-; 	; push	debug_message	;
-; 	; call	printf			;
-; 	; UNALIGN_STACK 4			;
-; 	; ; _debug_
+	; ; _debug_
+	; ALIGN_STACK 4			;
+	; push	debug_message	;
+	; call	printf			;
+	; UNALIGN_STACK 4			;
+	; ; _debug_
 
-; 	; loop
-; 	mov		edi, len_string
-; 	sub		edi, len_substring
-; 	add		edi, 1
+	; loop
+	mov		edi, len_string
+	sub		edi, len_substring
+	add		edi, 1
 
-; 	mov		boundary_iterator_val, edi
-; 	mov		edi, 0
-; 	mov		ebx, cmp_string
+	mov		boundary_iterator_val, edi
+	mov		edi, 0
+	mov		ebx, cmp_string
 
-; 	.L:
-; 		cmp		edi, boundary_iterator_val
-; 		jae		.exit_func 
+	.L:
+		cmp		edi, boundary_iterator_val
+		jae		.exit_func 
 
-; 		ALIGN_STACK 12
-; 		push	len_substring
-; 		push	ebx
-; 		push	substring
-; 		call	strncmp
-; 		UNALIGN_STACK 12
+		ALIGN_STACK 12
+		push	len_substring
+		push	ebx
+		push	substring
+		call	strncmp
+		UNALIGN_STACK 12
 
-; 		cmp		eax, 0
-; 		je		.substr_true
+		cmp		eax, 0
+		je		.substr_true
 
-; 		add		ebx, BYTE_SIZE
-; 		inc		edi
+		add		ebx, BYTE_SIZE
+		inc		edi
 
-; 		jmp		.L
+		jmp		.L
 
-; 	.substr_true:
-; 		mov		ebx, res_struct_data
+	.substr_true:
+		mov		ebx, res_struct_data
 
-; 		mov		dword [ebx], 1
-; 		mov		dword [ebx + 4], edi
+		mov		dword [ebx], 1
+		mov		dword [ebx + 4], edi
 
-; 		mov		esi, edi
-; 		add		esi, len_substring
-; 		sub		esi, 1
+		mov		esi, edi
+		add		esi, len_substring
+		sub		esi, 1
 
-; 		mov		dword [ebx + 8], esi
+		mov		dword [ebx + 8], esi
 
-; 		jmp		.exit_func
+		jmp		.exit_func
 
-; .exit_func:
-; 	ALIGN_STACK 4
-; 	push	cmp_string
-; 	call	free
-; 	UNALIGN_STACK 4
+.exit_func:
+	ALIGN_STACK 4
+	push	cmp_string
+	call	free
+	UNALIGN_STACK 4
 
-; 	mov		eax, res_struct_data
+	mov		eax, res_struct_data
 
-; 	pop		esi
-; 	pop		edi
-; 	pop		ebx
+	pop		esi
+	pop		edi
+	pop		ebx
 
-; 	FUNCTION_EPILOGUE 12
+	FUNCTION_EPILOGUE 12
 
-; 	ret
+	ret
 
-; %undef	res_struct_data
-; %undef	boundary_iterator_val
-; %undef	cmp_string
+%undef	res_struct_data
+%undef	boundary_iterator_val
+%undef	cmp_string
 
-; %undef	string
-; %undef	len_string
-; %undef	substring
-; %undef	len_substring	
+%undef	string
+%undef	len_string
+%undef	substring
+%undef	len_substring	
 
 ; ---------------------endfunctions----------------------
 
