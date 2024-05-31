@@ -50,10 +50,10 @@ main:
 	call	strlen
 	UNALIGN_STACK 4
 
-	mov		[len_str_1], eax
+	mov		len_str_1, eax
 
 	ALIGN_STACK 8
-	push	dword [len_str_1]
+	push	len_str_1
 	push	string_1
 	push	debug_o_format
 	call	printf
