@@ -57,10 +57,10 @@ main:
 	call	printf
 	UNALIGN_STACK 12
 
-	; ALIGN_STACK 4
-	; push	string_1
-	; call	free
-	; UNALIGN_STACK 4
+	ALIGN_STACK 4
+	push	string_1
+	call	free
+	UNALIGN_STACK 4
 
 	FUNCTION_EPILOGUE 12
 
