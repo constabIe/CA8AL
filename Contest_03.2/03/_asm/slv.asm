@@ -1,8 +1,8 @@
 bits 32
 
-extern malloc, realloc, free
+extern malloc, calloc, realloc, free
 extern printf, scanf 
-extern strcpy, strncmp, strlen
+extern strcpy, strncpy, strncmp, strlen
 
 section .text
 
@@ -30,15 +30,20 @@ section .text
 
 ; -------------------------main---------------------------
 
-%define	string_1		dword [ebp -  4]
-%define	len_str_1		dword [ebp -  8]
-%define	string_2		dword [ebp - 12]
-%define	len_str_2		dword [ebp - 16]
-%define struct_issubstr	dword [ebp - 20]
+%define	string_1			dword [ebp -  4]
+%define	len_str_1			dword [ebp -  8]
+%define	string_2			dword [ebp - 12]
+%define	len_str_2			dword [ebp - 16]
+%define struct_issubstr		dword [ebp - 20]
+%define	flag_swap			dword [ebp - 24]
+%define	res_string			dword [ebp - 28]
+%define	dummy_res_string	dword [ebp - 32]
+%define	dummy_string_1		dword [ebp - 36]
+
 
 global main
 main:
-	FUNCTION_PROLOGUE 20
+	FUNCTION_PROLOGUE 36
 
 	push	ebx
 	push	edi
@@ -48,6 +53,7 @@ main:
 	UNALIGN_STACK 0
 
 	mov		string_1, eax
+	mov		dummy_string_1, eax
 
 	ALIGN_STACK 4
 	push	string_1
@@ -69,12 +75,16 @@ main:
 
 	mov		len_str_2, eax
 
+	mov		flag_swap, 0
+
 	mov		edi, len_str_2
 	cmp		edi, len_str_1
 	ja 		.swap
 	jmp 	.continue_main
 
 	.swap:
+		mov		flag_swap, 1
+
 		mov		ebx, len_str_1
 		xchg	len_str_2, ebx
 		mov		len_str_1, ebx
@@ -83,36 +93,12 @@ main:
 		xchg	string_2, ebx
 		mov		string_1, ebx
 
+		mov		ebx, string_2
+		mov		dummy_string_1, ebx
+
 		jmp		.continue_main
 
 .continue_main:
-
-
-	; ;_debug_
-	; ALIGN_STACK 12
-	; push	len_str_1
-	; push	string_1
-	; push	debug_o_str_int_format
-	; call	printf
-	; UNALIGN_STACK 12
-	; ;_debug_
-
-	; ;_debug_
-	; ALIGN_STACK 12
-	; push	len_str_2
-	; push	string_2
-	; push	debug_o_str_int_format
-	; call	printf
-	; UNALIGN_STACK 12
-	; ;_debug_
-
-	; ;_debug_
-	; ALIGN_STACK 4
-	; push	debug_message
-	; call	printf
-	; UNALIGN_STACK 4
-	; ;_debug_
-
 	ALIGN_STACK 16
 	push	len_str_2
 	push	string_2
@@ -125,28 +111,134 @@ main:
 
 	mov		ebx, struct_issubstr
 
-	ALIGN_STACK 8
-	push	dword [ebx]
-	push	debug_int_o_format
-	call 	printf
-	UNALIGN_STACK 8
+	; ALIGN_STACK 8
+	; push	dword [ebx]
+	; push	debug_int_o_format
+	; call 	printf
+	; UNALIGN_STACK 8
 
-	ALIGN_STACK 8
-	push	dword [ebx + 4]
-	push	debug_int_o_format
-	call 	printf
-	UNALIGN_STACK 8
+	; ALIGN_STACK 8
+	; push	dword [ebx + 4]
+	; push	debug_int_o_format
+	; call 	printf
+	; UNALIGN_STACK 8
 
-	ALIGN_STACK 8
-	push	dword [ebx + 8]
-	push	debug_int_o_format
-	call 	printf
-	UNALIGN_STACK 8
+	; ALIGN_STACK 8
+	; push	dword [ebx + 8]
+	; push	debug_int_o_format
+	; call 	printf
+	; UNALIGN_STACK 8
+
+	cmp		dword [ebx], 1
+	je		.true_substr
+	jne		.false_substr
+
+	.true_substr:	
+		.false_substr:
+			cmp		flag_swap, 1
+			je		.true_flag_swap
+			je		.false_flag_swap
+
+			.true_flag_swap:
+				ALIGN_STACK 8
+				push	string_2
+				push	str_o_format
+				call	printf
+				UNALIGN_STACK 8
+		
+				jmp		.exit_func
+
+			.false_flag_swap:
+				ALIGN_STACK 8
+				push	string_2
+				push	str_o_format
+				call	printf
+				UNALIGN_STACK 8
+		
+				jmp		.exit_func
+
+	.false_substr:
+		ALIGN_STACK 4
+		push	103
+		call	calloc
+		UNALIGN_STACK 4
+
+		mov		res_string, eax
+		mov		dummy_res_string, eax
+
+		mov		edi, dword [ebx + 4]
+		add 	edi, 1
+
+		ALIGN_STACK 12
+		push	edi
+		push	dummy_string_1
+		push	dummy_res_string
+		call	strncpy
+		UNALIGN_STACK 12
+
+		add		dummy_res_string, edi
+		add		dummy_string_1, edi
+
+		mov		esi, dummy_res_string
+		mov		byte [esi], left_square_bracket
+
+		add		dummy_res_string, 1
+
+		mov		edi, len_str_2
+
+		ALIGN_STACK 12
+		push	edi
+		push	dummy_string_1
+		push	dummy_res_string
+		call	strncpy
+		UNALIGN_STACK 12
+
+		add		dummy_res_string, edi
+		add		dummy_string_1, edi
+
+		mov		esi, dummy_res_string
+		mov		byte [esi], right_square_bracket
+
+		add		dummy_res_string, 1
+
+		mov		edi, len_string_1
+		sub		edi, len_string_2
+		sub		edi, dword [ebx + 4]
+		add		edi, 1
+
+		ALIGN_STACK 12
+		push	edi
+		push	dummy_string_1
+		push	dummy_res_string
+		call	strncpy
+		UNALIGN_STACK 12
+
+		add		dummy_res_string, edi
+		mov		dummy_res_string, 0
+
+		ALIGN_STACK 8
+		push	res_string
+		push	str_o_format
+		call	printf
+		UNALIGN_STACK 8
+
+		ALIGN_STACK 4
+		push	res_string
+		call	free
+		UNALIGN_STACK 4
+
+		jmp		.exit_func
+
+.exit_func:
+	ALIGN_STACK 4
+	push	struct_issubstr
+	call	free
+	UNALIGN_STACK 4	
 
 	pop		edi
 	pop 	ebx
 
-	FUNCTION_EPILOGUE 20
+	FUNCTION_EPILOGUE 36
 
 	xor		eax, eax
 	ret
@@ -155,7 +247,8 @@ main:
 %undef	len_str_1
 %undef	string_2
 %undef	len_str_2
-%undef struct_issubstr
+%undef 	struct_issubstr
+%undef	flag_swap
 
 ; ------------------------endmain-------------------------
 
@@ -193,7 +286,7 @@ get_str:
 		jmp 	.L
 
 .exit_func:
-	mov		dword [ebx], 0
+	mov		byte [ebx], 0
 
 	mov		eax, dst
 
@@ -244,7 +337,7 @@ issubstr:
 	call	malloc
 	UNALIGN_STACK 4
 
-	mov		dword [eax + edi], 0
+	mov		byte [eax + edi], 0
 
 	mov		cmp_string, eax
 
@@ -331,7 +424,9 @@ issubstr:
 	
 section .data	
 	BYTE_SIZE				equ		1
-	newline					dd 		0x0000000A		
+	newline					db 		0x0A
+	left_square_bracket		db 		0x5B
+	right_square_bracket	db 		0x5D
 		
 	char_i_format			db		`%c`, 0
 	
