@@ -97,13 +97,24 @@ main:
 
 	mov		struct_data, eax
 
-	ALIGN_STACK 12
-	push	dword [eax + 8]
-	push	dword [eax + 4]
+	ALIGN_STACK 8
 	push	dword [eax]
 	push	debug_int_o_format
 	call 	printf
-	UNALIGN_STACK 12
+	UNALIGN_STACK 8
+
+	ALIGN_STACK 8
+	push	dword [eax + 4]
+	push	debug_int_o_format
+	call 	printf
+	UNALIGN_STACK 8
+
+	ALIGN_STACK 8
+	push	dword [eax + 8]
+	push	debug_int_o_format
+	call 	printf
+	UNALIGN_STACK 8
+
 
 	FUNCTION_EPILOGUE 12
 
