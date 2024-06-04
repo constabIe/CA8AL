@@ -31,9 +31,9 @@ section .text
 ; -------------------------main---------------------------
 
 %define	string_1		dword [ebp -  4]
-%define	len_string_1	dword [ebp -  8]
-%define	string_1		dword [ebp - 12]
-%define	len_string_1	dword [ebp - 16]
+%define	len_str_1		dword [ebp -  8]
+%define	string_2		dword [ebp - 12]
+%define	len_str_2		dword [ebp - 16]
 %define struct_issubstr	dword [ebp - 20]
 
 global main
@@ -121,9 +121,9 @@ main:
 	call	issubstr
 	UNALIGN_STACK 16
 
-	mov		struct_data, eax
+	mov		struct_issubstr, eax
 
-	mov		ebx, struct_data
+	mov		ebx, struct_issubstr
 
 	ALIGN_STACK 8
 	push	dword [ebx]
@@ -152,10 +152,10 @@ main:
 	ret
 
 %undef	string_1
-%undef	len_string_1
-%undef	string_1
-%undef	len_string_1
-%undef 	struct_issubstr
+%undef	len_str_1
+%undef	string_2
+%undef	len_str_2
+%undef struct_issubstr
 
 ; ------------------------endmain-------------------------
 
