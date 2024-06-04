@@ -200,8 +200,8 @@ main:
 
 		add		dummy_res_string, 1
 
-		mov		edi, len_string_1
-		sub		edi, len_string_2
+		mov		edi, len_str_1
+		sub		edi, len_str_2
 		sub		edi, dword [ebx + 4]
 		add		edi, 1
 
