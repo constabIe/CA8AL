@@ -52,7 +52,7 @@ main:
 	ALIGN_STACK 12
 	push	cell
 	push	IO_format
-	push	dword [input]
+	push	eax
 	call	fscanf
 	UNALIGN_STACK 12
 
