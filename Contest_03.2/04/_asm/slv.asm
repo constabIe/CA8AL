@@ -1,6 +1,6 @@
 bits 32
 
-extern	fopen, fclose
+extern	fopen, fclose, feof
 extern	fscanf, fprintf, printf
 
 %macro FUNCTION_PROLOGUE 1.nolist
@@ -27,12 +27,12 @@ global main
 main:
 	FUNCTION_PROLOGUE 0
 
-	;_debug_
-	ALIGN_STACK 4
-	push	debug_message
-	call	printf
-	UNALIGN_STACK 4
-	;_debug_
+	; ;_debug_
+	; ALIGN_STACK 4
+	; push	debug_message
+	; call	printf
+	; UNALIGN_STACK 4
+	; ;_debug_
 
 	ALIGN_STACK 8
 	push	mode_read
@@ -40,14 +40,27 @@ main:
 	call	fopen
 	UNALIGN_STACK 8
 
+	; ;_debug_
+	; ALIGN_STACK 4
+	; push	debug_message
+	; call	printf
+	; UNALIGN_STACK 4
+	; ;_debug_
+
+	mov	[input], eax
+
+	ALIGN_STACK 4
+	push	dword [input]
+	call	feof
+	UNALIGN_STACK 4
+
 	;_debug_
 	ALIGN_STACK 4
-	push	debug_message
+	push	eax
+	push	IO_format
 	call	printf
 	UNALIGN_STACK 4
 	;_debug_
-
-	mov	[input], eax
 
 	ALIGN_STACK 12
 	push	cell
@@ -79,5 +92,7 @@ section .data
 		
 	cell				dd 		-1
 	IO_format			db 		`%d`, 0
+
+section .data ; debug
 	debug_message		db		`_debug_\n`, 0
 
