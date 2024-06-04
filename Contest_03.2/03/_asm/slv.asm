@@ -133,29 +133,28 @@ main:
 	je		.true_substr
 	jne		.false_substr
 
-	.true_substr:	
-		.false_substr:
-			cmp		flag_swap, 1
-			je		.true_flag_swap
-			je		.false_flag_swap
+	.true_substr:
+		cmp		flag_swap, 1
+		je		.true_flag_swap
+		je		.false_flag_swap
 
-			.true_flag_swap:
-				ALIGN_STACK 8
-				push	string_2
-				push	str_o_format
-				call	printf
-				UNALIGN_STACK 8
-		
-				jmp		.exit_func
+		.true_flag_swap:
+			ALIGN_STACK 8
+			push	string_2
+			push	str_o_format
+			call	printf
+			UNALIGN_STACK 8
+	
+			jmp		.exit_func
 
-			.false_flag_swap:
-				ALIGN_STACK 8
-				push	string_2
-				push	str_o_format
-				call	printf
-				UNALIGN_STACK 8
-		
-				jmp		.exit_func
+		.false_flag_swap:
+			ALIGN_STACK 8
+			push	string_2
+			push	str_o_format
+			call	printf
+			UNALIGN_STACK 8
+	
+			jmp		.exit_func
 
 	.false_substr:
 		ALIGN_STACK 4
