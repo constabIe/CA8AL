@@ -65,7 +65,14 @@ main:
 	ALIGN_STACK 12
 	push	len_str_1
 	push	string_1
-	push	debug_o_format
+	push	debug_o_str_int_format
+	call	printf
+	UNALIGN_STACK 12
+
+	ALIGN_STACK 12
+	push	len_str_2
+	push	string_2
+	push	debug_o_str_int_format
 	call	printf
 	UNALIGN_STACK 12
 
