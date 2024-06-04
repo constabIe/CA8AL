@@ -5,22 +5,13 @@
 
 int main(void) 
 {
-	FILE *input = fopen("/Users/almiravhadiev/Downloads/HSE/Computer_Architecture_and_Assembly_Language/Assembly_Practice/Contest_03.2/04/data.in", "r");
-	int cntr_int = 0;
-	int el;
+	FILE *input = fopen("/home/aiavkhadiev/Downloads/Assembly/CA8AL/Contest_03.2/04/data.txt", "r");
+	int32_t	el;
 
-	while (1) {
-		int flag = fscanf(input, "%d", &el);
+	fscanf(input, "%d", &el);
+	printf("%d\n", el);
 
-		if (flag == 1) {
-			cntr_int++;
-		} 
-		else if (flag == -1) {
-			break;
-		}
-	}
-
-	printf("%d", cntr_int);
+	fclose(input);
 
 	return 0;
 } 
