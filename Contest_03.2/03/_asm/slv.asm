@@ -62,12 +62,12 @@ main:
 
 	mov		len_str_2, eax
 
-	; ALIGN_STACK 12
-	; push	len_str_1
-	; push	string_1
-	; push	debug_o_format
-	; call	printf
-	; UNALIGN_STACK 12
+	ALIGN_STACK 12
+	push	len_str_1
+	push	string_1
+	push	debug_o_format
+	call	printf
+	UNALIGN_STACK 12
 
 	; ;_debug_
 	; ALIGN_STACK 4
@@ -235,6 +235,7 @@ section .data
 section .data
 	debug_message			db		`_debug_\n`, 0
 	debug_o_format 			db		`_%s_\n`, 0
+	debug_o_str_int_format	db 		`_%s_%d_\n`, 0
 	debug_int_o_format		db 		`_%d_\n`, 0
 	debug_char_o_format		db		`_%c_`, 0
 
