@@ -102,6 +102,7 @@ main:
 	push	dword [eax + 4]
 	push	dword [eax]
 	push	debug_int_o_format
+	call 	printf
 	UNALIGN_STACK 12
 
 	FUNCTION_EPILOGUE 12
