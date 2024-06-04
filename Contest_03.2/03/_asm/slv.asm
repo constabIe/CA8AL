@@ -194,6 +194,7 @@ issubstr:
 	ALIGN_STACK 8
 	push	string
 	push	cmp_string
+	call	strcpy
 	UNALIGN_STACK 8
 
 	;_debug_
