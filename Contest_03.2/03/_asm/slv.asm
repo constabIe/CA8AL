@@ -62,19 +62,23 @@ main:
 
 	mov		len_str_2, eax
 
-	ALIGN_STACK 12
-	push	len_str_1
-	push	string_1
-	push	debug_o_str_int_format
-	call	printf
-	UNALIGN_STACK 12
+	; ;_debug_
+	; ALIGN_STACK 12
+	; push	len_str_1
+	; push	string_1
+	; push	debug_o_str_int_format
+	; call	printf
+	; UNALIGN_STACK 12
+	; ;_debug_
 
-	ALIGN_STACK 12
-	push	len_str_2
-	push	string_2
-	push	debug_o_str_int_format
-	call	printf
-	UNALIGN_STACK 12
+	; ;_debug_
+	; ALIGN_STACK 12
+	; push	len_str_2
+	; push	string_2
+	; push	debug_o_str_int_format
+	; call	printf
+	; UNALIGN_STACK 12
+	; ;_debug_
 
 	; ;_debug_
 	; ALIGN_STACK 4
@@ -197,13 +201,57 @@ issubstr:
 	call	strcpy
 	UNALIGN_STACK 8
 
-	;_debug_
-	ALIGN_STACK 8
+	mov		esi, len_string
+	sub		esi, len_substring
+	add		esi, 1
+
+	mov		boundary_iterator_val, esi
+	xor		esi, esi
+
+	mov		ebx, cmp_string
+
+	.L:
+		cmp		esi, boundary_iterator_val
+		jae		.exit_func
+
+		ALIGN_STACK 12
+		push	len_substring
+		push	substring
+		push	ebx
+		call 	strncmp
+		UNALIGN_STACK 12
+
+		cmp		eax, 0
+		je 		.match
+		jmp		.L_continue
+
+		.match:
+			mov 	edi, res_struct_data
+
+			mov		dword [edi], 1
+			mov		dword [edi + 4], esi
+
+			add		esi, len_substring
+			sub		esi, 1
+
+			mov		dword [edi + 8], esi
+
+			jmp 	.exit_func
+
+	.L_continue:
+		inc		esi
+
+		add		ebx, BYTE_SIZE
+
+		jmp		.L
+
+.exit_func:
+	ALIGN_STACK 4
 	push	cmp_string
-	push	debug_o_format
-	call	printf
-	UNALIGN_STACK 8
-	;_debug_
+	call	free
+	UNALIGN_STACK 4
+
+	mov		eax, res_struct_data
 
 	pop		esi
 	pop		edi
