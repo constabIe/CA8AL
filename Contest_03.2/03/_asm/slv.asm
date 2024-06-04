@@ -268,7 +268,7 @@ get_str:
 	mov		dst, eax
 
 	mov		ebx, dst
-	mov		edi, [NEWLINE]
+	mov		edi, NEWLINE
 
 	.L:
 		ALIGN_STACK 8
