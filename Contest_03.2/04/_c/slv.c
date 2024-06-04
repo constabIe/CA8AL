@@ -8,7 +8,9 @@ int main(void)
 	FILE *input = fopen("/home/aiavkhadiev/Downloads/Assembly/CA8AL/Contest_03.2/04/data.txt", "r");
 	int32_t	el;
 
-	fscanf(input, "%d", &el);
+	if (fscanf(input, "%d", &el) != 1) {
+		exit(1);
+	}
 	printf("%d\n", el);
 
 	fclose(input);
