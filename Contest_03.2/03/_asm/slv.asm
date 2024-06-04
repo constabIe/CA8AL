@@ -179,7 +179,7 @@ main:
 		add		dummy_string_1, edi
 
 		mov		esi, dummy_res_string
-		mov		byte [esi], left_square_bracket
+		mov		byte [esi], LEFT_SQUARE_BRACKET
 
 		add		dummy_res_string, 1
 
@@ -196,7 +196,7 @@ main:
 		add		dummy_string_1, edi
 
 		mov		esi, dummy_res_string
-		mov		byte [esi], right_square_bracket
+		mov		byte [esi], RIGHT_SQUARE_BRACKET
 
 		add		dummy_res_string, 1
 
@@ -423,9 +423,9 @@ issubstr:
 	
 section .data	
 	BYTE_SIZE				equ		1
-	newline					db 		0x0A
-	left_square_bracket		db 		0x5B
-	right_square_bracket	db 		0x5D
+	NEWLINE					equ 		0x0A
+	LEFT_SQUARE_BRACKET		equ 		0x5B
+	RIGHT_SQUARE_BRACKET	equ 		0x5D
 		
 	char_i_format			db		`%c`, 0
 	
