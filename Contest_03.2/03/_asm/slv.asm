@@ -195,6 +195,8 @@ get_str:
 .exit_func:
 	mov		dword [ebx], 0
 
+	mov		eax, dst
+
 	pop		edi
 	pop		ebx
 
