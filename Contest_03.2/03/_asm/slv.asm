@@ -39,6 +39,7 @@ main:
 	FUNCTION_PROLOGUE 12
 
 	push	ebx
+	push	edi
 
 	ALIGN_STACK 4
 	push	string_1
@@ -63,6 +64,25 @@ main:
 	UNALIGN_STACK 4
 
 	mov		len_str_2, eax
+
+	mov		edi, len_str_2
+	cmp		edi, len_str_1
+	ja 		.swap
+	jmp 	.continue_main
+
+	.swap:
+		mov		ebx, len_str_1
+		xchg	ebx, len_str_2
+		mov		len_str_1, ebx
+
+		mov		ebx, string_1
+		xchg	ebx, string_2
+		mov		string_1, ebx
+
+		jmp		.continue_main
+
+.continue_main:
+
 
 	; ;_debug_
 	; ALIGN_STACK 12
@@ -119,6 +139,7 @@ main:
 	call 	printf
 	UNALIGN_STACK 8
 
+	pop		edi
 	pop 	ebx
 
 	FUNCTION_EPILOGUE 12
