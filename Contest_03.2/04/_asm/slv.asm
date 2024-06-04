@@ -27,6 +27,13 @@ global main
 main:
 	FUNCTION_PROLOGUE 0
 
+	;_debug_
+	ALIGN_STACK 4
+	push	debug_message
+	call	printf
+	UNALIGN_STACK 4
+	;_debug_
+
 	ALIGN_STACK 8
 	push	mode_read
 	push	stream
@@ -59,11 +66,11 @@ main:
 	ret
 
 section .data
-	mode_read	db		`r`, 0
-	stream		db		`/home/aiavkhadiev/Downloads/Assembly/CA8AL/Contest_03.2/04/data.txt`, 0
-	input		dd 		-1
-
-	cell		dd 		-1
-	IO_format	db 		`%d`, 0
-
+	mode_read			db		`r`, 0
+	stream				db		`/home/aiavkhadiev/Downloads/Assembly/CA8AL/Contest_03.2/04/data.txt`, 0
+	input				dd 		-1
+		
+	cell				dd 		-1
+	IO_format			db 		`%d`, 0
+	debug_message		db		`_debug_\n`, 0
 
