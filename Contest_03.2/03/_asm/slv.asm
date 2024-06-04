@@ -158,141 +158,44 @@ issubstr:
 	FUNCTION_PROLOGUE 12
 
 	push	ebx
-	push	edi	; iterator
+	push	edi
 	push	esi
 
-	;_debug_
-	ALIGN_STACK 4			;
-	push	debug_message	;
-	call	printf			;
-	UNALIGN_STACK 4			;
-	;_debug_
-
-	; res_struct_data 
 	ALIGN_STACK 4
 	push	12
 	call	malloc
 	UNALIGN_STACK 4
 
+	mov 	dword [eax], 0
+	mov		dword [eax + 4], -1
+	mov		dword [eax + 8], -1	
+
 	mov		res_struct_data, eax
-	mov		ebx, eax
 
-	; ;_debug_
-	; ALIGN_STACK 4			;
-	; push	debug_message	;
-	; call	printf			;
-	; UNALIGN_STACK 4			;
-	; ;_debug_
-
-	mov		dword [ebx], 0
-	mov		dword [ebx + 4], -1
-	mov		dword [ebx + 12], -1
-
-	; ;_debug_
-	; ALIGN_STACK 4			;
-	; push	debug_message	;
-	; call	printf			;
-	; UNALIGN_STACK 4			;
-	; ;_debug_
-
-	; cmp_string
-	mov		edi, len_substring
+	mov		edi, len_string
 	add		edi, 1
-
-	;_debug_
-	ALIGN_STACK 8				;
-	push	edi					;
-	push	debug_int_o_format 	;
-	call	printf				;
-	UNALIGN_STACK 8				;
-	;_debug_	
 
 	ALIGN_STACK 4
 	push	edi
 	call	malloc
 	UNALIGN_STACK 4
 
-	; ; _debug_
-	; ALIGN_STACK 4			;
-	; push	debug_message	;
-	; call	printf			;
-	; UNALIGN_STACK 4			;
-	; ; _debug_
+	mov		dword [eax + edi], 0
 
 	mov		cmp_string, eax
-
-	mov 	ebx, cmp_string
-	mov		dword [ebx + edi], 0
-
-	; _debug_
-	ALIGN_STACK 4			;
-	push	debug_message	;
-	call	printf			;
-	UNALIGN_STACK 4			;
-	; _debug_
 
 	ALIGN_STACK 8
 	push	string
 	push	cmp_string
-	call	strcpy
-	UNALIGN_STACK 8		
+	UNALIGN_STACK 8
 
-	; ; _debug_
-	; ALIGN_STACK 4			;
-	; push	debug_message	;
-	; call	printf			;
-	; UNALIGN_STACK 4			;
-	; ; _debug_
-
-	; loop
-	mov		edi, len_string
-	sub		edi, len_substring
-	add		edi, 1
-
-	mov		boundary_iterator_val, edi
-	mov		edi, 0
-	mov		ebx, cmp_string
-
-	.L:
-		cmp		edi, boundary_iterator_val
-		jae		.exit_func 
-
-		ALIGN_STACK 12
-		push	len_substring
-		push	ebx
-		push	substring
-		call	strncmp
-		UNALIGN_STACK 12
-
-		cmp		eax, 0
-		je		.substr_true
-
-		add		ebx, BYTE_SIZE
-		inc		edi
-
-		jmp		.L
-
-	.substr_true:
-		mov		ebx, res_struct_data
-
-		mov		dword [ebx], 1
-		mov		dword [ebx + 4], edi
-
-		mov		esi, edi
-		add		esi, len_substring
-		sub		esi, 1
-
-		mov		dword [ebx + 8], esi
-
-		jmp		.exit_func
-
-.exit_func:
-	ALIGN_STACK 4
+	;_debug_
+	ALIGN_STACK 8
 	push	cmp_string
-	call	free
-	UNALIGN_STACK 4
-
-	mov		eax, res_struct_data
+	push	debug_o_format
+	call	printf
+	UNALIGN_STACK 8
+	;_debug_
 
 	pop		esi
 	pop		edi
@@ -331,7 +234,7 @@ section .data
 
 section .data
 	debug_message			db		`_debug_\n`, 0
-	debug_o_format 			db		`_%s_%d_\n`, 0
+	debug_o_format 			db		`_%s_\n`, 0
 	debug_int_o_format		db 		`_%d_\n`, 0
 	debug_char_o_format		db		`_%c_`, 0
 
