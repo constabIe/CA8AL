@@ -30,21 +30,24 @@ section .text
 
 ; -------------------------main---------------------------
 
-%define	len_str_1		dword [ebp -  4]
-%define	len_str_2		dword [ebp -  8]
-%define	struct_data		dword [ebp - 12]
+%define	string_1		dword [ebp -  4]
+%define	len_string_1	dword [ebp -  8]
+%define	string_1		dword [ebp - 12]
+%define	len_string_1	dword [ebp - 16]
+%define struct_issubstr	dword [ebp - 20]
 
 global main
 main:
-	FUNCTION_PROLOGUE 12
+	FUNCTION_PROLOGUE 20
 
 	push	ebx
 	push	edi
 
-	ALIGN_STACK 4
-	push	string_1
+	ALIGN_STACK 0
 	call	get_str
-	UNALIGN_STACK 4
+	UNALIGN_STACK 0
+
+	mov		string_1, eax
 
 	ALIGN_STACK 4
 	push	string_1
@@ -53,10 +56,11 @@ main:
 
 	mov		len_str_1, eax
 
-	ALIGN_STACK 4
-	push	string_2
+	ALIGN_STACK 0
 	call	get_str
-	UNALIGN_STACK 4
+	UNALIGN_STACK 0
+
+	mov		string_2, eax
 
 	ALIGN_STACK 4
 	push	string_2
@@ -72,11 +76,11 @@ main:
 
 	.swap:
 		mov		ebx, len_str_1
-		xchg	ebx, len_str_2
+		xchg	len_str_2, ebx
 		mov		len_str_1, ebx
 
 		mov		ebx, string_1
-		xchg	ebx, string_2
+		xchg	string_2, ebx
 		mov		string_1, ebx
 
 		jmp		.continue_main
@@ -142,25 +146,34 @@ main:
 	pop		edi
 	pop 	ebx
 
-	FUNCTION_EPILOGUE 12
+	FUNCTION_EPILOGUE 20
 
 	xor		eax, eax
 	ret
 
-%undef	struct_data
-%undef	len_str_2
-%undef	len_str_1
+%undef	string_1
+%undef	len_string_1
+%undef	string_1
+%undef	len_string_1
+%undef 	struct_issubstr
 
 ; ------------------------endmain-------------------------
 
-%define	dst		dword [ebp + 8]
+%define	dst		dword [ebp - 4]
 
 global get_str
 get_str:
-	FUNCTION_PROLOGUE 0
+	FUNCTION_PROLOGUE 4
 
 	push	ebx
 	push	edi
+
+	ALIGN_STACK 4
+	push	101
+	call	malloc
+	UNALIGN_STACK 4
+
+	mov		dst, eax
 
 	mov		ebx, dst
 	mov		edi, [newline]
@@ -185,7 +198,7 @@ get_str:
 	pop		edi
 	pop		ebx
 
-	FUNCTION_EPILOGUE 0
+	FUNCTION_EPILOGUE 4
 
 	ret
 
@@ -310,9 +323,9 @@ issubstr:
 
 ; ---------------------endfunctions----------------------
 
-section .bss
-	string_1				resb	101
-	string_2				resb	101	
+; section .bss
+; 	string_1				resb	101
+; 	string_2				resb	101	
 	
 section .data	
 	BYTE_SIZE				equ		1
