@@ -1,11 +1,17 @@
 bits 32
 
-extern 	fopen, fclose
-extern	fscanf, printf
+extern	fopen, fclose
+extern	fscanf, fprintf, printf
 
-section .text
+%macro FUNCTION_PROLOGUE 1.nolist
+	enter	%1, 0
+	and 	esp, 0xfffffff0
+%endmacro
 
-; -------------------------macro-------------------------
+%macro FUNCTION_EPILOGUE 1.nolist
+	add		esp, %1
+	leave
+%endmacro
 
 %macro ALIGN_STACK 1.nolist
 	sub		esp, %1
@@ -17,88 +23,47 @@ section .text
 	add		esp, %1
 %endmacro
 
-%macro FUNCTION_PROLOGUE 1.nolist
-	enter	%1, 0
-	and 	esp, 0xfffffff0
-%endmacro
-
-%macro FUNCTION_EPILOGUE 1.nolist
-	add		esp, %1
-	leave
-%endmacro	
-
-; -----------------------endmacro-------------------------
-
-; -------------------------main---------------------------
-
 global main
 main:
 	FUNCTION_PROLOGUE 0
 
-	push	ebx
-	push	edi
-
 	ALIGN_STACK 8
-	push	dword mode
-	push	dword src_path
+	push	mode_read
+	push	stream
 	call	fopen
 	UNALIGN_STACK 8
 
-	mov		[stream], eax
+	mov	[input], eax
 
-	xor 	ebx, ebx
-	.L:	
-		ALIGN_STACK 12
-		push	dword cell
-		push	dword format
-		push	dword [stream]
-		call	fscanf
-		UNALIGN_STACK 12
-
-		cmp		eax, EOF
-		je		.exit_main
-
-		cmp     eax, 1
-		je		.int_true
-
-		jmp		.L
-
-		.int_true:
-		inc		ebx
-
-		jmp 	.L
-		
-.exit_main:
-	ALIGN_STACK 8
-	push	dword ebx
-	push	dword format
-	call	printf
-	UNALIGN_STACK 8
+	ALIGN_STACK 12
+	push	cell
+	push	IO_format
+	push	input
+	call	fscanf
+	UNALIGN_STACK 12
 
 	ALIGN_STACK 4
-	push	dword [stream]
+	push	stream
 	call	fclose
 	UNALIGN_STACK 4
 
-	pop		edi
-	pop		ebx
+	ALIGN_STACK 8
+	push	dword [cell]
+	push	IO_format
+	call	printf
+	UNALIGN_STACK 8
 
 	FUNCTION_EPILOGUE 0
 
-	xor  	eax, eax
+	xor		eax, eax
 	ret
-; ------------------------endmain------------------------
 
 section .data
-	mode			db		`r`, 0
-	src_path 		db		`~/Downloads/Assembly/CA8AL/Contest_03.2/04/data.in`, 0
-		
-	cell			dd  	0 
-	format			db		`%d`, 0
-	stream			dd  	0
-	
-	EOF				equ 	-1
+	mode_read	db		`r`, 0
+	stream		db		`/home/aiavkhadiev/Downloads/Assembly/CA8AL/Contest_03.2/04/data.txt`, 0
+	input		dd 		-1
 
-; DEBUG
-section .data
-	debug_message 	db		`_debug_`, 0
+	cell		dd 		-1
+	IO_format	db 		`%d`, 0
+
+
