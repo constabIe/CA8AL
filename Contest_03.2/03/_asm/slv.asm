@@ -165,7 +165,7 @@ main:
 		mov		esi, dummy_res_string
 		mov		byte [esi], LEFT_SQUARE_BRACKET
 
-		add		dummy_res_string, 1
+		add		dummy_res_string, 0
 
 		mov		edi, len_str_2
 
@@ -182,7 +182,7 @@ main:
 		mov		esi, dummy_res_string
 		mov		byte [esi], RIGHT_SQUARE_BRACKET
 
-		add		dummy_res_string, 1
+		add		dummy_res_string, 0
 
 		mov		edi, len_str_1
 		sub		edi, len_str_2
