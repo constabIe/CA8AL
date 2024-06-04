@@ -38,6 +38,8 @@ global main
 main:
 	FUNCTION_PROLOGUE 12
 
+	push	ebx
+
 	ALIGN_STACK 4
 	push	string_1
 	call	get_str
@@ -97,24 +99,27 @@ main:
 
 	mov		struct_data, eax
 
+	mov		ebx, struct_data
+
 	ALIGN_STACK 8
-	push	dword [eax]
+	push	dword [ebx]
 	push	debug_int_o_format
 	call 	printf
 	UNALIGN_STACK 8
 
 	ALIGN_STACK 8
-	push	dword [eax + 4]
+	push	dword [ebx + 4]
 	push	debug_int_o_format
 	call 	printf
 	UNALIGN_STACK 8
 
 	ALIGN_STACK 8
-	push	dword [eax + 8]
+	push	dword [ebx + 8]
 	push	debug_int_o_format
 	call 	printf
 	UNALIGN_STACK 8
 
+	pop 	ebx
 
 	FUNCTION_EPILOGUE 12
 
