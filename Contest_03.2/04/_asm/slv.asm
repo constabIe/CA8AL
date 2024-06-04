@@ -40,6 +40,13 @@ main:
 	call	fopen
 	UNALIGN_STACK 8
 
+	;_debug_
+	ALIGN_STACK 4
+	push	debug_message
+	call	printf
+	UNALIGN_STACK 4
+	;_debug_
+
 	mov	[input], eax
 
 	ALIGN_STACK 12
@@ -50,7 +57,7 @@ main:
 	UNALIGN_STACK 12
 
 	ALIGN_STACK 4
-	push	stream
+	push	dword [input]
 	call	fclose
 	UNALIGN_STACK 4
 
