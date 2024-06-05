@@ -150,7 +150,6 @@ main:
 		mov		dummy_res_string, eax
 
 		mov		edi, dword [ebx + 4]
-		add 	edi, 1
 
 		ALIGN_STACK 12
 		push	edi
@@ -165,7 +164,7 @@ main:
 		mov		esi, dummy_res_string
 		mov		byte [esi], LEFT_SQUARE_BRACKET
 
-		add		dummy_res_string, 0
+		add		dummy_res_string, 1
 
 		mov		edi, len_str_2
 
@@ -182,12 +181,11 @@ main:
 		mov		esi, dummy_res_string
 		mov		byte [esi], RIGHT_SQUARE_BRACKET
 
-		add		dummy_res_string, 0
+		add		dummy_res_string, 1
 
 		mov		edi, len_str_1
 		sub		edi, len_str_2
 		sub		edi, dword [ebx + 4]
-		add		edi, 1
 
 		ALIGN_STACK 12
 		push	edi
