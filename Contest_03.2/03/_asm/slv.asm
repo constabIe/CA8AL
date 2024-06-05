@@ -37,8 +37,8 @@ section .text
 %define struct_issubstr		dword [ebp - 20]
 %define	flag_swap			dword [ebp - 24]
 %define	res_string			dword [ebp - 28]
-%define	dummy_res_string	dword [ebp - 32]
-%define	dummy_string_1		dword [ebp - 36]
+%define	cpy_res_string	dword [ebp - 32]
+%define	cpy_string_1		dword [ebp - 36]
 
 
 global main
@@ -53,7 +53,7 @@ main:
 	UNALIGN_STACK 0
 
 	mov		string_1, eax
-	mov		dummy_string_1, eax
+	mov		cpy_string_1, eax
 
 	ALIGN_STACK 4
 	push	string_1
@@ -94,7 +94,7 @@ main:
 		mov		string_1, ebx
 
 		mov		ebx, string_2
-		mov		dummy_string_1, ebx
+		mov		cpy_string_1, ebx
 
 		jmp		.continue_main
 
@@ -109,13 +109,13 @@ main:
 
 	mov		struct_issubstr, eax
 
-	; ; debug
-	; ALIGN_STACK 8
-	; push	string_1
-	; push	debug_str_o_format
-	; call	printf
-	; UNALIGN_STACK 8
-	; ; debug
+	; debug
+	ALIGN_STACK 8
+	push	cpy_string_1
+	push	debug_str_o_format
+	call	printf
+	UNALIGN_STACK 8
+	; debug
 
 	mov		ebx, struct_issubstr
 
@@ -130,41 +130,41 @@ main:
 		UNALIGN_STACK 4
 
 		mov		res_string, eax
-		mov		dummy_res_string, eax
+		mov		cpy_res_string, eax
 
 		mov		edi, dword [ebx + 4]
 
 		ALIGN_STACK 12
 		push	edi
-		push	dummy_string_1
-		push	dummy_res_string
+		push	cpy_string_1
+		push	cpy_res_string
 		call	strncpy
 		UNALIGN_STACK 12
 
-		add		dummy_res_string, edi
-		add		dummy_string_1, edi
+		add		cpy_res_string, edi
+		add		cpy_string_1, edi
 
-		mov		esi, dummy_res_string
+		mov		esi, cpy_res_string
 		mov		byte [esi], LEFT_SQUARE_BRACKET
 
-		add		dummy_res_string, 1
+		add		cpy_res_string, 1
 
 		mov		edi, len_str_2
 
 		ALIGN_STACK 12
 		push	edi
-		push	dummy_string_1
-		push	dummy_res_string
+		push	cpy_string_1
+		push	cpy_res_string
 		call	strncpy
 		UNALIGN_STACK 12
 
-		add		dummy_res_string, edi
-		add		dummy_string_1, edi
+		add		cpy_res_string, edi
+		add		cpy_string_1, edi
 
-		mov		esi, dummy_res_string
+		mov		esi, cpy_res_string
 		mov		byte [esi], RIGHT_SQUARE_BRACKET
 
-		add		dummy_res_string, 1
+		add		cpy_res_string, 1
 
 		mov		edi, len_str_1
 		sub		edi, len_str_2
@@ -172,13 +172,13 @@ main:
 
 		ALIGN_STACK 12
 		push	edi
-		push	dummy_string_1
-		push	dummy_res_string
+		push	cpy_string_1
+		push	cpy_res_string
 		call	strncpy
 		UNALIGN_STACK 12
 
-		add		dummy_res_string, edi
-		mov		dummy_res_string, 0
+		add		cpy_res_string, edi
+		mov		cpy_res_string, 0
 
 		ALIGN_STACK 8
 		push	res_string
