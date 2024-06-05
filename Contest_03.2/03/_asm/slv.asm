@@ -107,6 +107,8 @@ main:
 	call	issubstr
 	UNALIGN_STACK 16
 
+	mov		struct_issubstr, eax
+
 	; debug
 	ALIGN_STACK 8
 	push	string_1
@@ -114,8 +116,6 @@ main:
 	call	printf
 	UNALIGN_STACK 8
 	; debug
-	
-	mov		struct_issubstr, eax
 
 	mov		ebx, struct_issubstr
 
