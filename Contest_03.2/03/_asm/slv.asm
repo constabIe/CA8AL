@@ -111,36 +111,11 @@ main:
 
 	mov		ebx, struct_issubstr
 
-	; ALIGN_STACK 8
-	; push	dword [ebx]
-	; push	debug_int_o_format
-	; call 	printf
-	; UNALIGN_STACK 8
-
-	; ALIGN_STACK 8
-	; push	dword [ebx + 4]
-	; push	debug_int_o_format
-	; call 	printf
-	; UNALIGN_STACK 8
-
-	; ALIGN_STACK 8
-	; push	dword [ebx + 8]
-	; push	debug_int_o_format
-	; call 	printf
-	; UNALIGN_STACK 8
-
 	cmp		dword [ebx], 1
 	je		.true_substr
 	jne		.false_substr
 
 	.true_substr:
-		; debug
-		ALIGN_STACK 4	
-		push	debug_message
-		call	printf
-		UNALIGN_STACK 4
-		; debug
-
 		ALIGN_STACK 4
 		push	103
 		call	calloc
@@ -211,25 +186,11 @@ main:
 		jmp		.exit_func
 
 	.false_substr:
-		; debug
-		ALIGN_STACK 4	
-		push	debug_message
-		call	printf
-		UNALIGN_STACK 4
-		; debug
-
 		cmp		flag_swap, 1
 		je		.true_flag_swap
 		jne		.false_flag_swap
 
 		.true_flag_swap:
-			; debug
-			ALIGN_STACK 4	
-			push	debug_message
-			call	printf
-			UNALIGN_STACK 4
-			; debug
-
 			ALIGN_STACK 8
 			push	string_2
 			push	str_o_format
@@ -239,13 +200,6 @@ main:
 			jmp		.exit_func
 
 		.false_flag_swap:
-			; debug
-			ALIGN_STACK 4	
-			push	debug_message
-			call	printf
-			UNALIGN_STACK 4
-			; debug
-
 			ALIGN_STACK 8
 			push	string_1
 			push	str_o_format
