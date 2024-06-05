@@ -85,6 +85,9 @@ main:
 	.swap:
 		mov		flag_swap, 1
 
+		mov		ebx, string_2
+		mov		mv_string_1, ebx
+
 		mov		ebx, len_str_1
 		xchg	len_str_2, ebx
 		mov		len_str_1, ebx
