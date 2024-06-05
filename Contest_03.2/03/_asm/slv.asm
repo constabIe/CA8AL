@@ -107,6 +107,14 @@ main:
 	call	issubstr
 	UNALIGN_STACK 16
 
+	; debug
+	ALIGN_STACK 8
+	push	string_1
+	push	debug_str_o_format
+	call	printf
+	UNALIGN_STACK 8
+	; debug
+	
 	mov		struct_issubstr, eax
 
 	mov		ebx, struct_issubstr
@@ -417,7 +425,7 @@ section .data
 
 section .data
 	debug_message			db		`_debug_\n`, 0
-	debug_o_format 			db		`_%s_\n`, 0
+	debug_str_o_format 			db		`_%s_\n`, 0
 	debug_o_str_int_format	db 		`_%s_%d_\n`, 0
 	debug_int_o_format		db 		`_%d_\n`, 0
 	debug_char_o_format		db		`_%c_`, 0
