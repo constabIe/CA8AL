@@ -109,13 +109,13 @@ main:
 
 	mov		struct_issubstr, eax
 
-	; debug
-	ALIGN_STACK 8
-	push	string_1
-	push	debug_str_o_format
-	call	printf
-	UNALIGN_STACK 8
-	; debug
+	; ; debug
+	; ALIGN_STACK 8
+	; push	string_1
+	; push	debug_str_o_format
+	; call	printf
+	; UNALIGN_STACK 8
+	; ; debug
 
 	mov		ebx, struct_issubstr
 
