@@ -37,8 +37,8 @@ section .text
 %define struct_issubstr		dword [ebp - 20]
 %define	flag_swap			dword [ebp - 24]
 %define	res_string			dword [ebp - 28]
-%define	mv_res_string	dword [ebp - 32]
-%define	mv_string_1		dword [ebp - 36]
+%define	mv_res_string		dword [ebp - 32]
+%define	mv_string_1			dword [ebp - 36]
 
 
 global main
@@ -231,6 +231,8 @@ main:
 
 ; ------------------------endmain-------------------------
 
+; -----------------------functions-----------------------
+
 %define	dst		dword [ebp - 4]
 
 global get_str
@@ -277,8 +279,6 @@ get_str:
 	ret
 
 %undef	dst
-
-; -----------------------functions-----------------------
 
 %define	len_substring			dword [ebp + 20]
 %define substring				dword [ebp + 16]
@@ -397,35 +397,12 @@ issubstr:
 
 ; ---------------------endfunctions----------------------
 
-; section .bss
-; 	string_1				resb	101
-; 	string_2				resb	101	
-	
 section .data	
 	BYTE_SIZE				equ		1
-	NEWLINE					equ 		0x0A
-	LEFT_SQUARE_BRACKET		equ 		0x5B
-	RIGHT_SQUARE_BRACKET	equ 		0x5D
+	NEWLINE					equ 	0x0A
+	LEFT_SQUARE_BRACKET		equ 	0x5B
+	RIGHT_SQUARE_BRACKET	equ 	0x5D
 		
 	char_i_format			db		`%c`, 0
-	
-	str_i_format			db		`%s\n`, 0
 	str_o_format			db 		`%s\n`, 0
 		
-	int_o_format			db		`%d `, 0
-
-
-section .data
-	debug_message			db		`_debug_\n`, 0
-	debug_str_o_format 			db		`_%s_\n`, 0
-	debug_o_str_int_format	db 		`_%s_%d_\n`, 0
-	debug_int_o_format		db 		`_%d_\n`, 0
-	debug_char_o_format		db		`_%c_`, 0
-
-
-;; debug
-; ALIGN_STACK 4	
-; push	debug_message
-; call	printf
-; UNALIGN_STACK 4
-;; debug
