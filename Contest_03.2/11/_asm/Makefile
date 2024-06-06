@@ -31,13 +31,9 @@ LDFLAGS = \
 # Files
 #-------
 
-SOURCES = \
-	../../../standart_IO/src/macro.c \
-	../../../standart_IO/src/benchmark.c \
-	slv.asm
+SOURCE = slv.asm
 
-OBJECTS_HALFWAY_DONE = $(SOURCES:../../../standart_IO/src/%.c=build/%.o)
-OBJECTS              = $(OBJECTS_HALFWAY_DONE:%.asm=build/%.o)
+OBJECTS = $(SOURCE:%.asm=build/%.o)
 
 EXECUTABLE = build/slv_asm
 
@@ -49,10 +45,6 @@ all: $(EXECUTABLE) $(SOURCES)
 
 $(EXECUTABLE): $(OBJECTS) Makefile
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
-
-build/%.o: ../../../standart_IO/src/%.c
-	@mkdir -p build
-	$(CC) $(CFLAGS) -c $< -o $@
 
 build/%.o: %.asm
 	@mkdir -p build
