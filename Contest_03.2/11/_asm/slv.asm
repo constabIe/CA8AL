@@ -145,8 +145,8 @@ get_parameters:
 	push	edi
 	push	esi
 
-	mov		eax, m
-	imul	2
+	mov		eax, 2
+	imul	m
 
 	mov		edi, eax
 
