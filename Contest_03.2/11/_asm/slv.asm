@@ -1,7 +1,7 @@
 bits 32
 
 extern fopen, fclose
-extern fscanf, fprintf
+extern fscanf, fprintf, printf
 extern malloc, free
 
 %macro ALIGN_STACK 1.nolist
@@ -133,10 +133,8 @@ main:
 %undef	m
 %undef	arr_pairs
 
-
 %define	m				dword [ebp + 12]
 %define	stream			dword [ebp +  8]
-
 %define	arr_parameters	dword [ebp -  4]
 
 global get_parameters
@@ -171,7 +169,7 @@ get_parameters:
 		ALIGN_STACK 12
 		push	ebx
 		push	i_format_int
-		push	input
+		push	stream
 		call 	fscanf
 		UNALIGN_STACK 12
 
@@ -197,7 +195,6 @@ get_parameters:
 
 %define	size 	dword [ebp + 16]
 %define	src 	dword [ebp + 12]
-
 %define	dst		dword [ebp -  4]
 
 global arrcpy
@@ -252,7 +249,6 @@ arrcpy:
 
 %undef	size
 %undef	src
-
 %undef	dst	
 
 %define n			dword [ebp + 8]
