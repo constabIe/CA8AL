@@ -85,14 +85,14 @@ main:
 	mov		arr_parameters, eax
 
 	mov		ebx, arr_parameters
-	
+
 	mov		eax, 2
 	imul	m
 	mov		ecx, eax
 
 	.L:	
 		cmp		ecx, 0
-		jae		.exit_func
+		jbe		.exit_func
 
 		ALIGN_STACK 8
 		push	dword [ebx]
