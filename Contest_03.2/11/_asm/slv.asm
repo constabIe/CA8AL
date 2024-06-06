@@ -92,7 +92,7 @@ main:
 
 	.L:	
 		cmp		ecx, 0
-		jbe		.exit_func
+		jle		.exit_func
 
 		ALIGN_STACK 8
 		push	dword [ebx]
