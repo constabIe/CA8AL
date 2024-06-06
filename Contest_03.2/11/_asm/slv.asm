@@ -85,11 +85,15 @@ main:
 	mov		arr_parameters, eax
 
 	mov		ebx, arr_parameters
+	
 	mov		eax, 2
 	imul	m
 	mov		ecx, eax
 
 	.L:	
+		cmp		ecx, 0
+		jae		.exit_func
+
 		ALIGN_STACK 8
 		push	dword [ebx]
 		push	o_format_int
@@ -97,8 +101,9 @@ main:
 		UNALIGN_STACK 8
 
 		add		ebx, DWORD_SIZE
+		dec		ecx
 
-		loop	.L
+		jmp		.L
 
 .exit_func:
 	ALIGN_STACK 4
