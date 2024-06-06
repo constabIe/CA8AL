@@ -321,20 +321,22 @@ transform_sequence:
 
 	.L_1:
 		cmp		edi, size
-		ja		.continue_func
+		ja		.continue_func_1
 
 		mov		esi, [ebx]
 
 		cmp		esi, lower_bound
-		cmove	ind_lower_bound, edi
+		cmove	edx, edi
+		mov		ind_lower_bound, edx
 
 		cmp		esi, upper_bound
-		cmove	ind_upper_bound, edi
+		cmove	edx, edi
+		mov	ind_upper_bound, edx
 
 		add		ebx, DWORD_SIZE
 		inc		edi
 
-		jmp		.L
+		jmp		.L_1
 
 .continue_func_1:
 	mov		eax, DWORD_SIZE
