@@ -58,7 +58,7 @@ main:
 
 	mov		output, eax
 
-	lea 	ebx, n 
+	lea		ebx, n
 
 	ALIGN_STACK 12
 	push	ebx
@@ -67,7 +67,7 @@ main:
 	call 	fscanf
 	UNALIGN_STACK 12
 
-	lea 	ebx, m
+	lea		ebx, m
 
 	ALIGN_STACK 12
 	push	ebx
