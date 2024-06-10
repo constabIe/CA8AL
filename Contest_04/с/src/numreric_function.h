@@ -5,6 +5,7 @@
 #include <ctype.h>
 #include <math.h>
 #include <stdbool.h>
+#include <regex.h>
 #include <errno.h>
 #include <signal.h>
 #include <string.h>

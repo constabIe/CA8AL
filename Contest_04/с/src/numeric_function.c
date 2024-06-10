@@ -107,129 +107,47 @@ void deallocate_variable_t(variable_t *obj); {
 }
 
 afunc *get_rpn() {
-    const char *BINARY_OPERATORS[5] = {"pow", "+", "-", "*", "/"};
+    const char *BINARY_OPERATORS[5] = {"+", "-", "*", "/", "pow"};
     const char *UNARY_OPERATORS[6] = {"exp", "log", "sin", "cos", "tan", "ctg"};
     const char *CONSTANTS[2] = {"pi", "e"};
 
     afunc *function = allocate_afunc();
 
-    char cu;
-
     while (true) {
+        bool exit_flag = false;
+
+        char cu;
         while (true) {
             if ((cu = getchar()) != ' ') {
                 break;
             }
         }
 
-        if (cu == '\n') {
-            break;
-        }
+        char *segment = calloc(300 * sizeof(char));
+        segment[0] = cu;
 
-        if (cu == '+' || cu == '-') {
+        int ind = 1;
+        while (true) {
             cu = getchar();
 
             if (cu == ' ') {
-                operator_t *cell = allocate_operator_t();
-
-                cell->unary_flag = 0;
-
-                cell->operator = (char *) malloc(2 * sizeof(char));
-                cell->operator[0] = cu;
-                cell->operator[1] = '\0';
-
-                cell->len = 1;
+                break;
             }
-            else if (cu >= '0' && cu <= '9' ) {
 
-                char *str_double = malloc(sizeof(char));
-                str_double[0] = cu;
-
-                int ind = 1;
-                while (true) {
-                    str_double = (char *) realloc(str_double, sizeof(str_double) + sizeof(char));
-                    VERIFY_CONTRACT(str_double != NULL, "Unable to allocate memory");
-
-                    VERIFY_CONTRACT(scanf("%c", &str_double[ind]) != 0, "\nInvalid input\n");
-
-                    if (!(str_double[ind] >= '0' && str_double[ind] <= '9')) {
-                        str_double[ind] = '\0';
-                        break;
-                    }
-
-                    ++ind;
-                }
-
-                char *endptr;
-                double fpu = strtod(str_double, &endptr);
-
-                VERIFY_CONTRACT(endptr == str_double, "\nUnable to convert the string to the number\n");
-                VERIFY_CONTRACT(errno == ERANGE, "\nOverflow or unacceptably small value\n");
-
-                operand_t *cell = allocate_operand_t();
-
-                cell->operand = fpu;
-
-                increment_afunc(function);
-
-                function->rpn[size - 1][0] = 0;
-                function->rpn[size - 1][1] = cell;
-
-                free(str_double);
+            if (cu == '\n') {
+                exit_flag = true;
+                break;
             }
+
+            segment[ind] = cu;
+            ++ind;
         }
 
-         else if (cu == '+' || cu == '-' || cu == '*' || cu == '/') {
-            operator_t *cell = allocate_operator_t();
+        char *endptr;
+        double fpu = strtod(segment, &endptr);
 
-            cell->unary_flag = 0;
+        if (endptr != segment) {
 
-            cell->operator = (char *) malloc(2 * sizeof(char));
-            cell->operator[0] = cu;
-            cell->operator[1] = '\0';
-
-            cell->len = 1;
-        } else {
-            char *operator = (char *) malloc(sizeof(char));
-            operator[0] = cu;
-
-            int ind = 1;
-            while (true) {
-                operator = (char *) realloc(operator, sizeof(operator) + sizeof(char));
-                VERIFY_CONTRACT(operator != NULL, "Unable to allocate memory");
-
-                VERIFY_CONTRACT(scanf("%c", &operator[ind]) != 0, "\nInvalid input\n");
-
-                if (!(operator[ind] >= 'a' && operator[ind] <= 'z' || operator[ind] >= 'A' && operator[ind] <= 'Z')) {
-                    operator[ind] = '\0';
-                    break;
-                }
-
-                ++ind;
-            }
-
-            size_t size = ind;
-
-
-
-            if (str)
-//
-//            for (int i = 0; i < size; ++i) {
-//                operator[i] = tolower(operator[i]);
-//            }
-//
-//            operator_t *cell = (operator_t *) malloc(sizeof(operator_t));
-//            VERIFY_CONTRACT(cell != NULL, "Unable to allocate memory");
-//
-//            cell->operator = operator;
-//            cell->len = size;
-//
-//            increment_afunc(function);
-//
-//            function->rpn[size - 1][0] = 1;
-//            function->rpn[size - 1][1] = cell;
-//
-//            free(operator);
         }
     }
     return function;
