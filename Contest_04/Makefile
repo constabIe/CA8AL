@@ -52,12 +52,12 @@ SOURCEDIR = src
 
 CFLAGS += -I ${INCLUDEDIR}
 
-SOURCES = ${wildcard ${SOURCEDIR}/*.c} \
-		  ${wildcard ${SOURCEDIR}/*.asm}
+SOURCE_C   = ${wildcard ${SOURCEDIR}/*.c} 
+SOURCE_ASM = ${wildcard ${SOURCEDIR}/*.asm}
 
-OBJECTS_C =   ${patsubst ${SOURCEDIR}/%.c, 	 ${BUILDDIR}/%.o, ${SOURCES}}
-OBJECTS_ASM = ${patsubst ${SOURCEDIR}/%.asm, ${BUILDDIR}/%.o, ${SOURCES}}
-OBJECTS = 	  ${OBJECTS_C} ${OBJECTS_ASM}
+OBJECTS_C   = ${patsubst ${SOURCEDIR}/%.c, 	 ${BUILDDIR}/%.o, ${SOURCE_C}}
+OBJECTS_ASM = ${patsubst ${SOURCEDIR}/%.asm, ${BUILDDIR}/%.o, ${SOURCE_ASM}}
+OBJECTS     = ${OBJECTS_C} ${OBJECTS_ASM}
 
 EXECUTABLE = ${BUILDDIR}/main
 
@@ -71,12 +71,12 @@ ${EXECUTABLE}: ${OBJECTS}
 	@printf "${BYELLOW}Linking executable ${BCYAN}$@${RESET}\n"
 	${CC} ${OBJECTS} ${LDFLAGS} -o $@ ${LDLIBS}
 
-${OBJECTS_C}: ${SOURCEDIR}/%.c
+${BUILDDIR}/%.o: ${SOURCEDIR}/%.c
 	@printf "${BYELLOW}Building object file ${BCYAN}$@${RESET}\n"
 	@mkdir -p ${BUILDDIR}
 	${CC} -c $< ${CFLAGS} -o $@
-	
-${OBJECTS_ASM}: ${SOURCEDIR}/%.asm
+
+${BUILDDIR}/%.o: ${SOURCEDIR}/%.asm
 	@printf "${BYELLOW}Building object file ${BCYAN}$@${RESET}\n"
 	@mkdir -p ${BUILDDIR}
 	${AS} ${ASFLAGS} $< -o $@
