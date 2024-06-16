@@ -10,6 +10,8 @@
 
 #include "../include/numeric_function.h"
 
+extern double _f_subs(Function *func, double val);
+
 int main(void) {
     Function *func = init_Function("3 x +");
 
