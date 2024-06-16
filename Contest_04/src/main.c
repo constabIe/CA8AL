@@ -11,13 +11,15 @@
 #include "../include/numeric_function.h"
 
 int main(void) {
-    Function *func = init_Function("3 x * sqrt");
+    Function *func = init_Function("3 x +");
+
     set_variable(func, "y");
-    printf("%s", func->obj_rpn->rpn[1]->obj->variable->obj);
+    printf("%s\n", func->obj_rpn->rpn[1]->obj->variable->obj);
+
+    double val = _f_subs(func, 4);
+    printf("%lf\n", val);
+
     del_Function(func);
-//    for (uint32_t i = 0; i < func->obj_rpn->size; ++i) {
-//        ++func->obj_rpn->rpn;
-//    }
 
     return 0;
 }
