@@ -56,14 +56,18 @@ extern pow
 %define variable			ebp - 60	
 %define variable_obj		ebp - 64		
 %define iterator			ebp - 68
+%define	user_stack_ptr		ebp - 72
 
 global f_subs
 f_subs:
-	FUNCTION_PROLOGUE 64
+	FUNCTION_PROLOGUE 68
 
 	push	ebx
 	push	edi
 	push	esi
+
+	mov		ebx, user_stack
+	mov		[user_stack_ptr], ebx
 
 	mov		ebx, [func]
 
@@ -121,10 +125,9 @@ f_subs:
 				jmp		.pow_instr
 
 				.std_operators:
-					mov		edi, [user_stack_ptr - QWORD_SIZE]	
-					fld		qword [edi]
+					mov		edi, [user_stack_ptr]
 
-					mov		edi, [user_stack_ptr]	
+					fld		qword [edi - QWORD_SIZE]
 					fld		qword [edi]
 
 					cmp		esi, ADD_INSTR
@@ -156,6 +159,7 @@ f_subs:
 						jmp		.continue_std_operators
 
 				.continue_std_operators:
+					sub		edi, QWORD_SIZE
 					fstp	qword [user_stack_ptr]
 
 					jmp		.continue_binary
@@ -167,12 +171,13 @@ f_subs:
 					call	pow
 					UNALIGN_STACK 16
 
-					fstp	qword [user_stack_ptr]	
+					sub		edi, QWORD_SIZE
+					fstp	qword [edi]
 
 					jmp		.continue_binary
 
 			.continue_binary:
-				sub 	dword user_stack_ptr, DWORD_SIZE
+				mov		[user_stack_ptr], edi
 
 				jmp		.continue_L
 
@@ -184,7 +189,7 @@ f_subs:
 				mov		[unary_func_name], esi
 
 				mov		esi, [edi]
-				mov		[unary_func_ptr], esi		
+				mov		[unary_func_ptr], esi	
 
 				ALIGN_STACK 8
 				push	qword [user_stack_ptr]
@@ -200,17 +205,17 @@ f_subs:
 			mov		[operand], esi		
 
 			fld		qword [esi]
-			fstp	qword [user_stack_ptr]
 
-			add		dword user_stack_ptr, DWORD_SIZE
+			add		dword [user_stack_ptr], QWORD_SIZE
+			fstp	qword [user_stack_ptr]
 
 			jmp 	.continue_L
 
 		.variable:
 			fld		qword [val]
-			fstp	qword [user_stack_ptr]
 
-			add		user_stack_ptr, DWORD_SIZE
+			add		dword [user_stack_ptr], QWORD_SIZE
+			fstp	qword [user_stack_ptr]
 
 			jmp 	.continue_L				
 
@@ -227,7 +232,7 @@ f_subs:
 	pop		edi
 	pop		ebx
 
-	FUNCTION_EPILOGUE 64
+	FUNCTION_EPILOGUE 68
 
 	ret
 
@@ -237,5 +242,3 @@ section .bss
 section .data
 	DWORD_SIZE		equ		4
 	QWORD_SIZE		equ		8
-
-	user_stack_ptr	dd 		user_stack
