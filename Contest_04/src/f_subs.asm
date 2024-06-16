@@ -96,12 +96,36 @@ f_subs:
 		cmp		edi, [rpn_size]
 		jae		.continue_func
 
+		; debug
+		ALIGN_STACK 8
+		push	debug_message
+		push	debug_o_format_str
+		call	printf
+		UNALIGN_STACK 8
+		; debug
+
 		mov		edi, [rpn]
 		add		edi, ebx
 		mov		[rpn_el], edi
 
+		; debug
+		ALIGN_STACK 8
+		push	debug_message
+		push	debug_o_format_str
+		call	printf
+		UNALIGN_STACK 8
+		; debug
+
 		mov		esi, [edi + DWORD_SIZE]
 		mov		[rpn_el_type], esi
+
+		; debug
+		ALIGN_STACK 8
+		push	debug_message
+		push	debug_o_format_str
+		call	printf
+		UNALIGN_STACK 8
+		; debug
 
 		cmp		esi, OPERATOR
 		je		.operator
@@ -111,14 +135,6 @@ f_subs:
 
 		cmp		esi, VARIABLE
 		je		.variable
-
-		; debug
-		ALIGN_STACK 8
-		push	debug_message
-		push	debug_o_format_str
-		call	printf
-		UNALIGN_STACK 8
-		; debug
 
 		.operator:
 			mov		esi, [edi]
