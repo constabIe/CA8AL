@@ -82,7 +82,7 @@ f_subs:
 
 	; debug
 	ALIGN_STACK 8
-	push	eвi
+	push	edi
 	push	debug_o_format_int
 	call	printf
 	UNALIGN_STACK 8
