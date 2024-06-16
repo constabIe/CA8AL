@@ -165,11 +165,13 @@ f_subs:
 					jmp		.continue_binary
 
 				.pow_instr:
-					ALIGN_STACK 16
-					push 	qword [user_stack_ptr]
-					push 	qword [user_stack_ptr - QWORD_SIZE]
+					ALIGN_STACK 8
+					lea		esi, [user_stack_ptr]
+					push	esi
+					lea		esi, [user_stack_ptr - QWORD_SIZE]
+					push	esi
 					call	pow
-					UNALIGN_STACK 16
+					UNALIGN_STACK 8
 
 					sub		edi, QWORD_SIZE
 					fstp	qword [edi]
@@ -191,10 +193,11 @@ f_subs:
 				mov		esi, [edi]
 				mov		[unary_func_ptr], esi	
 
-				ALIGN_STACK 8
-				push	qword [user_stack_ptr]
+				ALIGN_STACK 4
+				lea		esi, [user_stack_ptr]
+				push	esi
 				call	dword [unary_func_ptr]
-				UNALIGN_STACK 8
+				UNALIGN_STACK 4
 
 				fstp	qword [user_stack_ptr]
 
