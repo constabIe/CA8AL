@@ -118,7 +118,7 @@ f_subs:
 
 				cmp		esi, DIV_INSTR
 				jbe		.std_operators
-				jmp		.pow_operator
+				jmp		.pow_instr
 
 				.std_operators:
 					mov		edi, [user_stack_ptr - QWORD_SIZE]	
@@ -138,9 +138,6 @@ f_subs:
 
 					cmp		esi, DIV_INSTR
 					je		.div_instr
-
-					cmp		esi, POW_INSTR
-					je		.pow_instr
 
 					.add_instr:
 						faddp
@@ -163,7 +160,7 @@ f_subs:
 
 					jmp		.continue_binary
 
-				.pow_operator:
+				.pow_instr:
 					ALIGN_STACK 16
 					push 	qword [user_stack_ptr]
 					push 	qword [user_stack_ptr - QWORD_SIZE]
@@ -213,7 +210,7 @@ f_subs:
 			fld		qword [val]
 			fstp	qword [user_stack_ptr]
 
-			add		dword user_stack_ptr, DWORD_SIZE
+			add		user_stack_ptr, DWORD_SIZE
 
 			jmp 	.continue_L				
 
@@ -241,4 +238,4 @@ section .data
 	DWORD_SIZE		equ		4
 	QWORD_SIZE		equ		8
 
-	user_stack_ptr	dd 		stack
+	user_stack_ptr	dd 		user_stack
