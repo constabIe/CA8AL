@@ -79,15 +79,6 @@ f_subs:
 	mov 	esi, [edi + DWORD_SIZE]
 	mov	 	[rpn_size], esi
 
-	; debug
-	ALIGN_STACK 8
-	push	esi
-	push	debug_o_format_int
-	call	printf
-	UNALIGN_STACK 8
-	; debug
-
-
 	mov		dword [iterator], 0
 	mov		ebx, DWORD_SIZE
 
@@ -114,7 +105,9 @@ f_subs:
 
 		mov		edi, [rpn]
 		add		edi, ebx
-		mov		[rpn_el], edi
+
+		mov		esi, [edi]
+		mov		[rpn_el], esi
 
 		; debug
 		ALIGN_STACK 8
@@ -124,8 +117,8 @@ f_subs:
 		UNALIGN_STACK 8
 		; debug
 
-		mov		esi, [edi + DWORD_SIZE]
-		mov		[rpn_el_type], esi
+		mov		edi, [esi + DWORD_SIZE]
+		mov		[rpn_el_type], edi
 
 		; debug
 		ALIGN_STACK 8
@@ -137,19 +130,19 @@ f_subs:
 
 		; debug
 		ALIGN_STACK 8
-		push	esi
+		push	edi
 		push	debug_o_format_int
 		call	printf
 		UNALIGN_STACK 8
 		; debug
 
-		cmp		esi, OPERATOR
+		cmp		edi, OPERATOR
 		je		.operator
 
-		cmp		esi, OPERAND
+		cmp		edi, OPERAND
 		je		.operand
 
-		cmp		esi, VARIABLE
+		cmp		edi, VARIABLE
 		je		.variable
 
 		.operator:
