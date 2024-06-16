@@ -127,6 +127,16 @@ f_subs:
 		UNALIGN_STACK 8
 		; debug
 
+		debug_o_format_int
+
+		; debug
+		ALIGN_STACK 8
+		push	esi
+		push	debug_o_format_int
+		call	printf
+		UNALIGN_STACK 8
+		; debug
+
 		cmp		esi, OPERATOR
 		je		.operator
 
@@ -281,5 +291,6 @@ section .data
 	QWORD_SIZE		equ		8
 
 section .data
+	debug_o_format_int		db		`%d\n`, 0
 	debug_o_format_str		db		`%s\n`, 0
 	debug_message			db 		`_debug_`, 0
