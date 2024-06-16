@@ -50,13 +50,12 @@ BUILDDIR = build
 INCLUDEDIR = include
 SOURCEDIR = src
 
-CFLAGS += -I ${INCLUINCLUDEDIRDE}
+CFLAGS += -I ${INCLUDEDIR}
 
 SOURCES = ${wildcard ${SOURCEDIR}/*.c} ${wildcard ${SOURCEDIR}/*.asm} 
 
-OBJECTS_C = $(patsubst $(SOURCEDIR)/%.c, $(BUILDDIR)/%.o, $(SOURCES))
-OBJECTS_ASM = $(patsubst $(SOURCEDIR)/%.asm, $(BUILDDIR)/%.o, $(SOURCES))
-OBJECTS = ${OBJECTS_C} ${OBJECTS_ASM}
+OBJECTS = ${patsubst ${SOURCEDIR}/%.c, ${BUILDDIR}/%.o, ${SOURCES}} \
+		${patsubst ${SOURCEDIR}/%.asm, ${BUILDDIR}/%.o, ${SOURCES}}
 
 EXECUTABLE = ${BUILDDIR}/main
 
