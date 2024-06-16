@@ -3,7 +3,7 @@ bits 32
 %pragma elf32 prefix _
 
 extern scanf
-extern pow
+extern _pow
 
 %macro ALIGN_STACK 1.nolist
 	sub		esp, %1
@@ -172,7 +172,7 @@ f_subs:
 					push	esi
 					lea		esi, [user_stack_ptr - QWORD_SIZE]
 					push	esi
-					; call	pow
+					call	pow
 					UNALIGN_STACK 8
 
 					sub		edi, QWORD_SIZE
