@@ -25,6 +25,8 @@ extern pow
 	leave
 %endmacro	
 
+section .text
+
 %define OPERATOR			0
 %define OPERAND				1
 %define VARIABLE			2
