@@ -172,7 +172,7 @@ f_subs:
 					push	esi
 					lea		esi, [user_stack_ptr - QWORD_SIZE]
 					push	esi
-					call	pow
+					; call	pow
 					UNALIGN_STACK 8
 
 					sub		edi, QWORD_SIZE
