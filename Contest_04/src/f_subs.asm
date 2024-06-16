@@ -59,7 +59,7 @@ extern pow
 
 global f_subs
 f_subs:
-	FUNCTION_PROLOGUE ???????
+	FUNCTION_PROLOGUE 64
 
 	push	ebx
 	push	edi
@@ -74,7 +74,7 @@ f_subs:
 	mov 	edi, [ebx]
 	mov	 	[rpn_size], edi
 
-	mov		[iterator], 0
+	mov		dword [iterator], 0
 	mov		ebx, DWORD_SIZE
 
 	.L:
@@ -121,7 +121,7 @@ f_subs:
 				jmp		.pow_operator
 
 				.std_operators:
-					mov		edi, [user_stack_ptr - DWORD_SIZE]	
+					mov		edi, [user_stack_ptr - QWORD_SIZE]	
 					fld		qword [edi]
 
 					mov		edi, [user_stack_ptr]	
@@ -159,18 +159,18 @@ f_subs:
 						jmp		.continue_std_operators
 
 				.continue_std_operators:
-					fstp	dword [user_stack_ptr]
+					fstp	qword [user_stack_ptr]
 
 					jmp		.continue_binary
 
 				.pow_operator:
-					ALIGN_STACK 8
-					push 	dword [user_stack_ptr]
-					push 	dword [user_stack_ptr - DWORD_SIZE]
+					ALIGN_STACK 16
+					push 	qword [user_stack_ptr]
+					push 	qword [user_stack_ptr - QWORD_SIZE]
 					call	pow
-					UNALIGN_STACK 8
+					UNALIGN_STACK 16
 
-					mov		[user_stack_ptr], eax	
+					fstp	qword [user_stack_ptr]	
 
 					jmp		.continue_binary
 
@@ -187,17 +187,14 @@ f_subs:
 				mov		[unary_func_name], esi
 
 				mov		esi, [edi]
-				mov		[unary_func_ptr], esi
+				mov		[unary_func_ptr], esi		
 
-				mov		edi, [user_stack_ptr]	
-				fld		qword [edi]
-
-				ALIGN_STACK 4
-				push	qword [edi]
+				ALIGN_STACK 8
+				push	qword [user_stack_ptr]
 				call	dword [unary_func_ptr]
-				UNALIGN_STACK 4
+				UNALIGN_STACK 8
 
-				mov		[user_stack_ptr], eax
+				fstp	qword [user_stack_ptr]
 
 				jmp 	.continue_L
 
@@ -205,17 +202,17 @@ f_subs:
 			mov		esi, [edi]
 			mov		[operand], esi		
 
-			mov		edi, [esi]
-			mov		[opearnd_obj], edi
+			fld		qword [esi]
+			fstp	qword [user_stack_ptr]
 
-			mov		[user_stack_ptr], edi
 			add		dword user_stack_ptr, DWORD_SIZE
 
 			jmp 	.continue_L
 
 		.variable:
-			mov		edi, [val]
-			mov		[user_stack_ptr], edi
+			fld		qword [val]
+			fstp	qword [user_stack_ptr]
+
 			add		dword user_stack_ptr, DWORD_SIZE
 
 			jmp 	.continue_L				
@@ -227,20 +224,21 @@ f_subs:
 		jmp		.L
 
 .continue_func:
-	mov		eax, [user_stack_ptr]
+	fstp 	qword [user_stack_ptr]
 
 	pop 	esi
 	pop		edi
 	pop		ebx
 
-	FUNCTION_EPILOGUE ???????
+	FUNCTION_EPILOGUE 64
 
 	ret
 
 section .bss
-	user_stack 		resd	500
+	user_stack 		resq	500
 
 section .data
 	DWORD_SIZE		equ		4
+	QWORD_SIZE		equ		8
 
 	user_stack_ptr	dd 		stack
