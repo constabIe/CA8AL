@@ -42,7 +42,7 @@ section .text
 
 %define val					ebp + 12
 %define func 				ebp + 8
-%define rpn					ebp - 4
+%define rpn_obj				ebp - 4
 %define rpn_size			ebp - 12				
 %define rpn_el				ebp - 16
 %define rpn_el_type			ebp - 20
@@ -74,13 +74,13 @@ f_subs:
 	mov		ebx, [func]
 
 	mov 	edi, [ebx]
-	mov	 	[rpn], edi
+	mov	 	[rpn_obj], edi
 
 	mov 	esi, [edi + DWORD_SIZE]
 	mov	 	[rpn_size], esi
 
 	mov		dword [iterator], 0
-	mov		ebx, DWORD_SIZE
+	mov		ebx, 0
 
 	; debug
 	ALIGN_STACK 8
@@ -103,11 +103,12 @@ f_subs:
 		UNALIGN_STACK 8
 		; debug
 
-		mov		edi, [rpn]
+		mov		edi, [rpn_obj]
 		mov		esi, [edi]
 
-		add		esi, ebx
-		mov		[rpn_el], esi
+		add		edi, [esi]
+		add		edi, ebx
+		mov		[rpn_el], edi
 
 		; debug
 		ALIGN_STACK 8
