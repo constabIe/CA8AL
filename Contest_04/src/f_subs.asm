@@ -80,6 +80,15 @@ f_subs:
 	mov 	edi, [ebx]
 	mov	 	[rpn_size], edi
 
+	; debug
+	ALIGN_STACK 8
+	push	eвi
+	push	debug_o_format_int
+	call	printf
+	UNALIGN_STACK 8
+	; debug
+
+
 	mov		dword [iterator], 0
 	mov		ebx, DWORD_SIZE
 
