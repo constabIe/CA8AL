@@ -127,8 +127,6 @@ f_subs:
 		UNALIGN_STACK 8
 		; debug
 
-		debug_o_format_int
-
 		; debug
 		ALIGN_STACK 8
 		push	esi
