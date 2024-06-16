@@ -104,9 +104,9 @@ f_subs:
 		; debug
 
 		mov		edi, [rpn]
-		add		edi, ebx
-
 		mov		esi, [edi]
+
+		add		esi, ebx
 		mov		[rpn_el], esi
 
 		; debug
