@@ -77,11 +77,11 @@ f_subs:
 	mov	 	[rpn], edi
 
 	mov 	esi, [edi + DWORD_SIZE]
-	mov	 	[rpn_size], edi
+	mov	 	[rpn_size], esi
 
 	; debug
 	ALIGN_STACK 8
-	push	edi
+	push	esi
 	push	debug_o_format_int
 	call	printf
 	UNALIGN_STACK 8
