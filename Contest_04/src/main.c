@@ -17,7 +17,7 @@ int main(void) {
 
     set_variable(func, "y");
     printf("%s\n", func->obj_rpn->rpn[1]->obj->variable->obj);
-    printf("%u\n", func->obj_rpn->size);
+    printf("%u\n", func->obj_rpn->rpn[0]->type );
 
     double val = f_subs(func, 4);
     printf("%lf\n", val);
