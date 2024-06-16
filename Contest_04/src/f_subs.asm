@@ -83,11 +83,13 @@ f_subs:
 	mov		dword [iterator], 0
 	mov		ebx, DWORD_SIZE
 
+	; debug
 	ALIGN_STACK 8
 	push	debug_message
 	push	debug_o_format_str
 	call	printf
 	UNALIGN_STACK 8
+	; debug
 
 	.L:
 		mov		edi, [iterator]
@@ -109,6 +111,14 @@ f_subs:
 
 		cmp		esi, VARIABLE
 		je		.variable
+
+		; debug
+		ALIGN_STACK 8
+		push	debug_message
+		push	debug_o_format_str
+		call	printf
+		UNALIGN_STACK 8
+		; debug
 
 		.operator:
 			mov		esi, [edi]
