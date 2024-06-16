@@ -2,7 +2,7 @@ bits 32
 
 ; %pragma elf32 prefix _
 
-extern scanf
+extern printf
 extern pow
 
 %macro ALIGN_STACK 1.nolist
@@ -82,6 +82,12 @@ f_subs:
 
 	mov		dword [iterator], 0
 	mov		ebx, DWORD_SIZE
+
+	ALIGN_STACK 8
+	push	debug_message
+	push	debug_o_format_str
+	call	printf
+	UNALIGN_STACK 8
 
 	.L:
 		mov		edi, [iterator]
@@ -247,3 +253,7 @@ section .bss
 section .data
 	DWORD_SIZE		equ		4
 	QWORD_SIZE		equ		8
+
+section .data
+	debug_o_format_str		db		`%s\n`, 0
+	debug_message			db 		`_debug_`, 0
