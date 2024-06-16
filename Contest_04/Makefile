@@ -50,9 +50,9 @@ BUILDDIR = build
 INCLUDEDIR = include
 SOURCEDIR = src
 
-CFLAGS += -I ${INCLUDE}
+CFLAGS += -I ${INCLUINCLUDEDIRDE}
 
-SOURCES = ${wildcard ${SOURCEDIR}/*.c}
+SOURCES = ${wildcard ${SOURCEDIR}/*.c} ${wildcard ${SOURCEDIR}/*.asm} 
 
 OBJECTS_C = $(patsubst $(SOURCEDIR)/%.c, $(BUILDDIR)/%.o, $(SOURCES))
 OBJECTS_ASM = $(patsubst $(SOURCEDIR)/%.asm, $(BUILDDIR)/%.o, $(SOURCES))
