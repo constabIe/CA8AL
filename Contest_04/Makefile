@@ -52,10 +52,11 @@ SOURCEDIR = src
 
 CFLAGS += -I ${INCLUDEDIR}
 
-SOURCES = ${wildcard ${SOURCEDIR}/*.c} ${wildcard ${SOURCEDIR}/*.asm} 
+SOURCES = ${wildcard ${SOURCEDIR}/*.c} \
+# 		  ${wildcard ${SOURCEDIR}/*.asm} 
 
 OBJECTS = ${patsubst ${SOURCEDIR}/%.c, ${BUILDDIR}/%.o, ${SOURCES}} \
-		${patsubst ${SOURCEDIR}/%.asm, ${BUILDDIR}/%.o, ${SOURCES}}
+# 		${patsubst ${SOURCEDIR}/%.asm, ${BUILDDIR}/%.o, ${SOURCES}}
 
 EXECUTABLE = ${BUILDDIR}/main
 
