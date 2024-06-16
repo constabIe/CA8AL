@@ -53,10 +53,10 @@ SOURCEDIR = src
 CFLAGS += -I ${INCLUDEDIR}
 
 SOURCES = ${wildcard ${SOURCEDIR}/*.c} \
-# 		  ${wildcard ${SOURCEDIR}/*.asm} 
+		  ${wildcard ${SOURCEDIR}/*.asm} 
 
-OBJECTS = ${patsubst ${SOURCEDIR}/%.c, ${BUILDDIR}/%.o, ${SOURCES}} \
-# 		${patsubst ${SOURCEDIR}/%.asm, ${BUILDDIR}/%.o, ${SOURCES}}
+OBJECTS = ${patsubst ${SOURCEDIR}/%.c, 	 ${BUILDDIR}/%.o, ${SOURCES}} \
+		  ${patsubst ${SOURCEDIR}/%.asm, ${BUILDDIR}/%.o, ${SOURCES}}
 
 EXECUTABLE = ${BUILDDIR}/main
 
@@ -92,7 +92,7 @@ run: ${EXECUTABLE}
 #---------------
 
 clean:
-	@printf "${BYELLOW}Cleaning build directories${RESET}\n"
+	@printf "${BYELLOW}Cleaning build directory${RESET}\n"
 	rm -rf ${BUILDDIR}
 
 GDB_FLAGS = \
