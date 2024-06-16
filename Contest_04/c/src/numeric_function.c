@@ -1,4 +1,5 @@
 #include "../include/numeric_function.h"
+#include "../include/utils.h"
 
 #define VERIFY_CONTRACT(contract, format, ...) \
     do { \
@@ -12,37 +13,39 @@
     } while (0)
 
 #define REGEX_Q 15
-#define UNARY_Q 6
+#define UNARY_Q 7
 
 static const char *global_regex[REGEX_Q] =
         {"^exp$", "^log$", "^sin$", "^cos$", "^tan$", "^cot$", "^sqrt$", "^\\+$", "^\\-$", "^\\*$", "^\\/+$",
          "^[-+]?([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?$", "^pi$", "^e$",
          "^[a-zA-Z]+[0-9_]*$"};
-static const void *global_unary_operators_ptrs[UNARY_Q] = {exp, log, sin, cos, tan, cot};
+static const void *global_unary_operators_ptrs[UNARY_Q] = {exp, log, sin, cos, tan, cot, sqrt};
 
 static OperatorLabel global_operator_name;
 static double global_val;
 static char *global_str;
 
-static void change_global_operator_name(OperatorLabel new_operator) {
-    VERIFY_CONTRACT(EXP <= new_operator && new_operator <= POW, "Invalid operation");
-    global_operator_name = new_operator;
-}
-static void change_global_val(double new_val) {
-    global_val = new_val;
-}
-static void change_global_str(const char *new_str) {
-    if (new_str == NULL) {
-        raise(SIGSEGV);
-    }
-
-    if (global_str != NULL) {
-        free(global_str);
-    }
-
-    global_str = strdup(new_str);
-    VERIFY_CONTRACT(global_str != NULL, "Unable to allocate memory");
-}
+static void change_global_operator_name(OperatorLabel new_operator);
+static void change_global_val(double new_val);
+static void change_global_str(const char *new_str);
+static RPN *init_RPN(const char *raw_rpn);
+static void del_RPN(RPN *rpn);
+ 
+static char **split(const char *str, uint32_t *num_tokens);
+static int matchesRegex(const char *string, const char *pattern);
+static bool isRPN(RPN *obj_rpn);
+ 
+static RPNelement *init_RPNelement(RPNelTypeLabel rpn_el_type);
+static void del_RPNelement(RPNelement *rpn_el);
+ 
+static Operator *init_Operator(OperatorLabel operation_name);
+static void del_Operator(Operator *operator);
+ 
+static Operand *init_Operand(double val);
+static void del_Operand(Operand *operand);
+ 
+static Variable *init_Variable(const char *str);
+static void del_Variable(Variable *variable);
 
 double cot(double x) {
     return 1 / tan(x);
@@ -95,6 +98,26 @@ void set_variable(Function *func, const char *var) {
             func->obj_rpn->rpn[i] = init_RPNelement(VARIABLE);
         }
     }
+}
+
+static void change_global_operator_name(OperatorLabel new_operator) {
+    VERIFY_CONTRACT(EXP <= new_operator && new_operator <= POW, "Invalid operation");
+    global_operator_name = new_operator;
+}
+static void change_global_val(double new_val) {
+    global_val = new_val;
+}
+static void change_global_str(const char *new_str) {
+    if (new_str == NULL) {
+        raise(SIGSEGV);
+    }
+
+    if (global_str != NULL) {
+        free(global_str);
+    }
+
+    global_str = strdup(new_str);
+    VERIFY_CONTRACT(global_str != NULL, "Unable to allocate memory");
 }
 
 static RPN *init_RPN(const char *raw_rpn) {
@@ -361,13 +384,7 @@ static Operator *init_Operator(OperatorLabel operation_name) {
         operator->obj->unary->type = operation_name;
 
         operator->type = UNARY;
-
-        if (operation_name == SQRT) {
-            operator->obj->unary->func_ptr = NULL;
-        }
-        else {
-            operator->obj->unary->func_ptr = (void *) global_unary_operators_ptrs[operation_name];
-        }
+        operator->obj->unary->func_ptr = (void *) global_unary_operators_ptrs[operation_name];
     }
     else if (ADD <= operation_name && operation_name <= POW) {
         operator->obj->binary = (Binary *) malloc(sizeof(Binary));

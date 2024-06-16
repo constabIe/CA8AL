@@ -1,5 +1,5 @@
-#ifndef NUMERIC_FUNCTION_H
-#define NUMERIC_FUNCTION_H
+#ifndef UTILS_H
+#define UTILS_H
 
 #define VERIFY_CONTRACT(contract, format, ...) \
     do { \
@@ -12,4 +12,4 @@
         } \
     } while (0)
 
-#endif // NUMERIC_FUNCTION_H   
+#endif // UTILS_H   

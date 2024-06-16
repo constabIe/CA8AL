@@ -1,25 +1,31 @@
-# No copyright. Vladislav Alenik, 2024
-
 #-----------------------
 # Compiler/linker flags
 #-----------------------
 
-CC = gcc
-
-BUILDDIR = build
-INCLUDEDIR = include
-SOURCEDIR = src
+CC  = x86_64-linux-gnu-gcc
+AS  = nasm
+GDB = gdb
 
 CFLAGS = \
 	-std=gnu99 \
-	-Wall      \
-	-Wextra    \
-	-O2
+	-m32 \
+	-Wfatal-errors \
+	-no-pie
+
+ASFLAGS = \
+	-f elf32 \
+	-DUNIX 
+
+LDFLAGS = \
+	-m32 \
+	-no-pie \
+	-z noexecstack
 
 LDLIBS = -lm
 
 ifeq (${DEBUG}, 1)
 	CFLAGS += -g
+	ASFLAGS += -g
 else
 	CFLAGS  += -flto
 	LDFLAGS += -flto
@@ -40,13 +46,18 @@ RESET   = \033[0m
 # Files
 #-------
 
-INCLUDES = ${wildcard ${INCLUDEDIR}/*.h}
+BUILDDIR = build
+INCLUDEDIR = include
+SOURCEDIR = src
 
+INCLUDES = ${wildcard ${INCLUDEDIR}/*.h}
 CFLAGS += -I ${abspath ${INCLUDES}}
 
 SOURCES = ${wildcard ${SOURCEDIR}/*.c}
 
-OBJECTS = $(patsubst $(SOURCEDIR)/%.c, $(BUILDDIR)/%.o, $(SOURCES))
+# OBJECTS_C = $(patsubst $(SOURCEDIR)/%.c, $(BUILDDIR)/%.o, $(SOURCES))
+# OBJECTS_ASM = $(patsubst $(SOURCEDIR)/%.asm, $(BUILDDIR)/%.o, $(SOURCES))
+OBJECTS = $(patsubst $(SOURCEDIR)/%.%, $(BUILDDIR)/%.o, $(SOURCES))
 
 EXECUTABLE = ${BUILDDIR}/main
 
@@ -60,10 +71,15 @@ ${EXECUTABLE}: ${OBJECTS}
 	@printf "${BYELLOW}Linking executable ${BCYAN}$@${RESET}\n"
 	${CC} ${OBJECTS} ${LDFLAGS} -o $@ ${LDLIBS}
 
-${BUILDDIR}/%.o: $(SOURCEDIR)/%.c ${INCLUDES}
+${OBJECTS}: $(SOURCEDIR)/%.c
 	@printf "${BYELLOW}Building object file ${BCYAN}$@${RESET}\n"
 	@mkdir -p ${BUILDDIR}
 	${CC} -c $< ${CFLAGS} -o $@
+
+${OBJECTS}: $(SOURCEDIR)/%.asm
+	@printf "${BYELLOW}Building object file ${BCYAN}$@${RESET}\n"
+	@mkdir -p ${BUILDDIR}
+	${AS} ${ASFLAGS} $< ${CFLAGS} -o $@
 
 #--------------
 # Test scripts
@@ -77,7 +93,18 @@ run: ${EXECUTABLE}
 #---------------
 
 clean:
-	@printf "${BYELLOW}Cleaning build and resource directories${RESET}\n"
+	@printf "${BYELLOW}Cleaning build directories${RESET}\n"
 	rm -rf ${BUILDDIR}
 
-.PHONY: run clean default
+GDB_FLAGS = \
+	--eval-command="set architecture i386" \
+	--eval-command="file $(EXECUTABLE)" \
+	--eval-command="b main" \
+	--eval-command="run" \
+	--eval-command="tui e" \
+	--eval-command="la regs"
+
+gdb: $(EXECUTABLE)
+	$(GDB) $(GDB_FLAGS)
+
+.PHONY: default clean run gdb

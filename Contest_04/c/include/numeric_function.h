@@ -59,9 +59,9 @@ typedef struct {
 } Variable;
 
 typedef union {
-    const Operator *operator;
-    const Operand *operand;
-    const Variable *variable;
+    Operator *operator;
+    Operand *operand;
+    Variable *variable;
 } AnyRpnElType;
 
 typedef enum {

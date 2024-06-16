@@ -1,5 +1,7 @@
 bits 32
 
+%pragma elf32 prefix _
+
 extern scanf
 extern pow
 
@@ -23,19 +25,18 @@ extern pow
 	leave
 %endmacro	
 
-%define OPERATOR	0
-%define OPERAND		1
-%define VARIABLE	2
-
-%define BINARY		0
-%define UNARY		1
-
-%define SQRT_INSTR
-%define ADD_INSTR	7
-%define SUB_INSTR	8
-%define MUL_INSTR	9
-%define DIV_INSTR 	10
-%define POW_INSTR	11
+%define OPERATOR			0
+%define OPERAND				1
+%define VARIABLE			2
+		
+%define BINARY				0
+%define UNARY				1
+		
+%define ADD_INSTR			7
+%define SUB_INSTR			8
+%define MUL_INSTR			9
+%define DIV_INSTR 			10
+%define POW_INSTR			11
 
 %define val					ebp + 12
 %define func 				ebp + 8
@@ -63,9 +64,6 @@ f_subs:
 	push	ebx
 	push	edi
 	push	esi
-
-	push	edx
-	push	ecx
 
 	mov		ebx, [func]
 
@@ -100,8 +98,6 @@ f_subs:
 		cmp		esi, VARIABLE
 		je		.variable
 
-		; jmp		.continue_L
-
 		.operator:
 			mov		esi, [edi]
 			mov		[operator], esi
@@ -120,47 +116,68 @@ f_subs:
 				mov		esi, [edi]
 				mov		[bin_func_name], esi
 
-				mov		edi, [user_stack_ptr - DWORD_SIZE]	
-				fld		qword [edi]
-
-				mov		edi, [user_stack_ptr]	
-				fld		qword [edi]
-
-				sub 	dword user_stack_ptr, DWORD_SIZE
-				sub 	dword user_stack_ptr, DWORD_SIZE
-
-				cmp		esi, ADD_INSTR
-				je		.add_instr
-
-				cmp		esi, SUB_INSTR
-				je		.sub_instr
-
-				cmp		esi, MUL_INSTR
-				je		.mul_instr
-
 				cmp		esi, DIV_INSTR
-				je		.div_instr
+				jbe		.std_operators
+				jmp		.pow_operator
 
-				.add_instr:
-					faddp
+				.std_operators:
+					mov		edi, [user_stack_ptr - DWORD_SIZE]	
+					fld		qword [edi]
+
+					mov		edi, [user_stack_ptr]	
+					fld		qword [edi]
+
+					cmp		esi, ADD_INSTR
+					je		.add_instr
+
+					cmp		esi, SUB_INSTR
+					je		.sub_instr
+
+					cmp		esi, MUL_INSTR
+					je		.mul_instr
+
+					cmp		esi, DIV_INSTR
+					je		.div_instr
+
+					cmp		esi, POW_INSTR
+					je		.pow_instr
+
+					.add_instr:
+						faddp
+						jmp		.continue_std_operators
+
+					.sub_instr:
+						fsubp
+						jmp		.continue_std_operators
+
+					.mul_instr:
+						fmulp
+						jmp		.continue_std_operators
+
+					.div_instr:
+						fdivp
+						jmp		.continue_std_operators
+
+				.continue_std_operators:
+					fstp	dword [user_stack_ptr]
+
 					jmp		.continue_binary
 
-				.sub_instr:
-					fsubp
-					jmp		.continue_binary
+				.pow_operator:
+					ALIGN_STACK 8
+					push 	dword [user_stack_ptr]
+					push 	dword [user_stack_ptr - DWORD_SIZE]
+					call	pow
+					UNALIGN_STACK 8
 
-				.mul_instr:
-					fmulp
-					jmp		.continue_binary
+					mov		[user_stack_ptr], eax	
 
-				.div_instr:
-					fdivp
 					jmp		.continue_binary
 
 			.continue_binary:
-				fstp	dword [user_stack_ptr]
+				sub 	dword user_stack_ptr, DWORD_SIZE
 
-				jmp .continue_L
+				jmp		.continue_L
 
 			.unary:
 				mov		edi, [esi]
@@ -169,17 +186,11 @@ f_subs:
 				mov		esi, [edi + DWORD_SIZE]
 				mov		[unary_func_name], esi
 
-				cmp		esi, POW_INSTR
-				je		.
-
 				mov		esi, [edi]
 				mov		[unary_func_ptr], esi
 
 				mov		edi, [user_stack_ptr]	
 				fld		qword [edi]
-				sub		dword user_stack_ptr, DWORD_SIZE
-
-
 
 				ALIGN_STACK 4
 				push	qword [edi]
@@ -209,17 +220,14 @@ f_subs:
 
 			jmp 	.continue_L				
 
-
 	.continue_L:
 		add		ebx, DWORD_SIZE
 		inc		dword [iterator]
 
 		jmp		.L
 
-
-	
-	pop		ecx
-	pop		edx
+.continue_func:
+	mov		eax, [user_stack_ptr]
 
 	pop 	esi
 	pop		edi
@@ -229,31 +237,10 @@ f_subs:
 
 	ret
 
-; %define	val 	ebp + 8
-
-; global user_push
-; user_push:
-; 	FUNCTION_PROLOGUE 0
-
-; 	push	ebx
-
-; 	mov		ebx, [val]
-; 	mov		[user_stack_ptr], ebx
-
-; 	add		phony_stack_ptr, DWORD_SIZE
-
-; 	pop		ebx
-
-; 	FUNCTION_EPILOGUE 0
-
-; 	ret
-
-; %undef	val
-
 section .bss
 	user_stack 		resd	500
 
 section .data
-	DWORD_SIZE			equ		4
+	DWORD_SIZE		equ		4
 
-	user_stack_ptr		dd 		stack
+	user_stack_ptr	dd 		stack
