@@ -77,7 +77,7 @@ ${BUILDDIR}/%.o: ${SOURCEDIR}/%.c
 ${BUILDDIR}/%.o: ${SOURCEDIR}/%.asm
 	@printf "${BYELLOW}Building object file ${BCYAN}$@${RESET}\n"
 	@mkdir -p ${BUILDDIR}
-	${AS} ${ASFLAGS} $< ${CFLAGS} -o $@
+	${AS} ${ASFLAGS} $< -o $@
 
 #--------------
 # Test scripts
