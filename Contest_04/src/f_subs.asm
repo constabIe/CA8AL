@@ -76,8 +76,7 @@ f_subs:
 	mov 	edi, [ebx]
 	mov	 	[rpn], edi
 
-	add		ebx, DWORD_SIZE
-	mov 	edi, [ebx]
+	mov 	esi, [edi + DWORD_SIZE]
 	mov	 	[rpn_size], edi
 
 	; debug
