@@ -92,7 +92,7 @@ typedef struct {
 
 double cot(double x);
 
-double _f_subs(Function *func, double val);
+double f_subs(Function *func, double val);
 
 Function *init_Function(const char *raw_rpn);
 void del_Function(Function *function);

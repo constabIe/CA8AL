@@ -10,7 +10,7 @@
 
 #include "../include/numeric_function.h"
 
-extern double _f_subs(Function *func, double val);
+// extern double f_subs(Function *func, double val);
 
 int main(void) {
     Function *func = init_Function("3 x +");
@@ -18,7 +18,7 @@ int main(void) {
     set_variable(func, "y");
     printf("%s\n", func->obj_rpn->rpn[1]->obj->variable->obj);
 
-    double val = _f_subs(func, 4);
+    double val = f_subs(func, 4);
     printf("%lf\n", val);
 
     del_Function(func);

@@ -60,8 +60,8 @@ section .text
 %define iterator			ebp - 68
 %define	user_stack_ptr		ebp - 72
 
-global f_subs
-f_subs:
+global _f_subs
+_f_subs:
 	FUNCTION_PROLOGUE 68
 
 	push	ebx
