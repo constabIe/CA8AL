@@ -220,7 +220,7 @@ static RPN *init_RPN(const char *raw_rpn) {
                 break;
             }
         }
-        VERIFY_CONTRACT(match, "Incorrect symbols for the RPN");
+        VERIFY_CONTRACT(match, "Incorrect symbolss for the RPN");
 
         if (i < num_tokens) {
             ++ind_rpn;
