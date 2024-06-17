@@ -138,6 +138,20 @@ func_subs:
 				mov		edi, dword [user_stack_ptr]
 				fld		qword [edi - QWORD_SIZE]
 				fld		qword [edi]
+				
+				; debug
+				ALIGN_STACK 20
+				sub		esp, 8
+				fstp	qword [esp]
+				sub		esp, 8
+				fstp	qword [esp]
+				push	debug_o_format_double
+				call	printf
+				UNALIGN_STACK 20
+				; debug				
+
+				fld		qword [edi - QWORD_SIZE]
+				fld		qword [edi]
 
 				sub		dword [user_stack_ptr], QWORD_SIZE
 				sub		dword [user_stack_ptr], QWORD_SIZE
@@ -238,7 +252,7 @@ func_subs:
 			fstp	qword [esi]
 
 			add		dword [user_stack_ptr], QWORD_SIZE
-			
+
 			jmp		.continue_L
 
 		.variable:
@@ -276,7 +290,7 @@ section .data
 
 section .data
 	debug_o_format_int		db		`%u\n`, 0
-	debug_o_format_double	db 		`%lf\n`, 0
+	debug_o_format_double	db 		`%lf %lf__`, 0
 	debug_o_format_str		db		`%s\n`, 0
 	debug_message			db 		`_debug_`, 0
 	res 					dq		1.0
