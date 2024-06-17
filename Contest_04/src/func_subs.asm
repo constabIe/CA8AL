@@ -83,6 +83,14 @@ func_subs:
 	mov		edi, [esi + DWORD_SIZE]
 	mov		[rpn_size], esi
 
+	; debug
+	ALIGN_STACK 8
+	push	esi
+	push	debug_o_format_int
+	call 	printf
+	UNALIGN_STACK 8
+	; debug	
+
 	mov		dword [iterator], 0
 	mov		ebx, 0
 
