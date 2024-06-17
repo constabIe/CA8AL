@@ -70,8 +70,7 @@ func_subs:
 
 	fstcw   word [fpu_ctrl]
 	finit
-
-	fld qword [val]   ; Загружаем double в FPU стек
+  ; Загружаем double в FPU стек
 
     ; ; Подготовка аргументов для printf
     ; ALIGN_STACK 12
