@@ -58,18 +58,24 @@ section .text
 %define variable_obj		ebp - 64		
 %define iterator			ebp - 68
 %define	user_stack_ptr		ebp - 72
+%define fpu_ctrl    		ebp - 76
 
 global func_subs
 func_subs:
-	FUNCTION_PROLOGUE 68
+	FUNCTION_PROLOGUE 72
 
 	push	ebx
 	push	edi
 	push	esi
 
+	fstcw   fpu_ctrl
+	finit
+
+	lea		ebx, dword [val]
+
 	; debug
 	ALIGN_STACK 8
-	push	dword [val]
+	push	ebx
 	push	debug_o_format_double
 	call 	printf
 	UNALIGN_STACK 8
@@ -91,7 +97,6 @@ func_subs:
 
 	mov		dword [iterator], 0
 	mov		ebx, 0
-	finit
 
 	.L:
 		mov		edi, [iterator]
@@ -188,7 +193,7 @@ func_subs:
 	pop		edi
 	pop		ebx
 
-	FUNCTION_EPILOGUE 68
+	FUNCTION_EPILOGUE 72
 
 	ret
 
