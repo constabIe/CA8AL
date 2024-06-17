@@ -42,7 +42,8 @@ section .text
 
 %define val					ebp + 12
 %define func 				ebp + 8
-%define rpn_obj				ebp - 4
+%define obj_rpn				ebp - 4
+%define rpn 				ebp - 8
 %define rpn_size			ebp - 12				
 %define rpn_el				ebp - 16
 %define rpn_el_type			ebp - 20
@@ -82,22 +83,17 @@ func_subs:
 
 	mov		ebx, [func] ; func
 
-	mov 	edi, [ebx]
-	mov	 	[rpn_obj], edi ; func->obj_rpn
+	mov		esi, [ebx]
+	mov		[obj_rpn], esi
 
-	mov 	esi, [edi + DWORD_SIZE]
-	mov	 	[rpn_size], esi
+	mov		edi, [esi]
+	mov		[rpn], edi
+
+	mov		edi, [esi + DWORD_SIZE]
+	mov		[rpn_size], esi
 
 	mov		dword [iterator], 0
 	mov		ebx, 0
-
-	; debug
-	ALIGN_STACK 8
-	push	debug_message
-	push	debug_o_format_str
-	call	printf
-	UNALIGN_STACK 8
-	; debug
 
 	.L:
 		mov		edi, [iterator]
@@ -112,10 +108,7 @@ func_subs:
 		UNALIGN_STACK 8
 		; debug
 
-		mov		edi, [rpn_obj] ; func->obj_rpn->rpn ; func->obj_rpn->rpn->
-
-		add		edi, ebx
-		mov		[rpn_el], edi ; func->obj_rpn->rpn[i]
+		mov		edi, [rpn]
 
 		; debug
 		ALIGN_STACK 8
@@ -125,8 +118,8 @@ func_subs:
 		UNALIGN_STACK 8
 		; debug
 
-		mov		esi, [edi + DWORD_SIZE]
-		mov		[rpn_el_type], esi
+		mov		esi, [edi + ebx]
+		mov		[rpn_el], esi
 
 		; debug
 		ALIGN_STACK 8
@@ -135,6 +128,9 @@ func_subs:
 		call	printf
 		UNALIGN_STACK 8
 		; debug
+
+		mov		edi, [esi + DWORD_SIZE]
+		mov		[rpn_el_type], edi
 
 		; debug
 		ALIGN_STACK 8
