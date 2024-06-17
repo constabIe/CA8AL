@@ -139,16 +139,16 @@ func_subs:
 				fld		qword [edi - QWORD_SIZE]
 				fld		qword [edi]
 
-				; debug
-				ALIGN_STACK 20
-				sub		esp, 8
-				fstp	qword [esp]
-				sub		esp, 8
-				fstp	qword [esp]
-				push	debug_o_format_double
-				call	printf
-				UNALIGN_STACK 20
-				; debug				
+				; ; debug
+				; ALIGN_STACK 20
+				; sub		esp, 8
+				; fstp	qword [esp]
+				; sub		esp, 8
+				; fstp	qword [esp]
+				; push	debug_o_format_double
+				; call	printf
+				; UNALIGN_STACK 20
+				; ; debug				
 
 				fld		qword [edi - QWORD_SIZE]
 				fld		qword [edi]
@@ -246,9 +246,19 @@ func_subs:
 			mov		[operand], edi
 
 			add		dword [user_stack_ptr], QWORD_SIZE
+
 			fld		qword [edi]
 			mov		esi, dword [user_stack_ptr]
 			fstp	qword [esi]
+
+			fld		qword [esi]
+
+			ALIGN_STACK 12
+			sub		esp, 8
+			fstp	qword [esp]
+			push	debug_o_format_double
+			call	printf
+			UNALIGN_STACK 12
 
 			jmp		.continue_L
 
@@ -257,6 +267,16 @@ func_subs:
 
 			fld		qword [val]
 			mov		edi, dword [user_stack_ptr]
+			fstp	qword [edi]
+
+			fld		qword [edi]
+
+			ALIGN_STACK 12
+			sub		esp, 8
+			fstp	qword [esp]
+			push	debug_o_format_double
+			call	printf
+			UNALIGN_STACK 12
 
 			jmp		.continue_L
 
@@ -287,7 +307,7 @@ section .data
 
 section .data
 	debug_o_format_int		db		`%u\n`, 0
-	debug_o_format_double	db 		`%lf %lf__`, 0
+	debug_o_format_double	db 		`%lf__`, 0
 	debug_o_format_str		db		`%s\n`, 0
 	debug_message			db 		`_debug_`, 0
 	res 					dq		1.0
