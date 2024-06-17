@@ -83,6 +83,7 @@ func_subs:
 
 	mov		dword [iterator], 0
 	mov		ebx, 0
+	finit
 
 	.L:
 		mov		edi, [iterator]
