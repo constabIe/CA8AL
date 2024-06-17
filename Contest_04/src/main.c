@@ -16,11 +16,11 @@ int main(void) {
     Function *func = init_Function("3 x +");
     printf("%lu\n" , sizeof(func->obj_rpn->rpn));
 
-    set_variable(func, "y");
-    printf("%u\n", func->obj_rpn->rpn[0]->type);
-    printf("%u\n", func->obj_rpn->rpn[1]->type );
+//    set_variable(func, "y");
+//    printf("%u\n", func->obj_rpn->rpn[0]->type);
+//    printf("%u\n", func->obj_rpn->rpn[1]->type );
 
-//    double val = func_subs(func, 4);
+    double val = func_subs(func, 4);
 
     del_Function(func);
 
