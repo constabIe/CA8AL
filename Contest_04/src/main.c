@@ -17,7 +17,7 @@ int main(void) {
     // printf("%lu\n" , sizeof(func->obj_rpn->rpn));
 
 // //    set_variable(func, "y");
-//    printf("%u\n", func->obj_rpn->rpn[0]->type);
+   printf("%u\n", func->obj_rpn->rpn[0]->operand->obj);
 //    printf("%u\n", func->obj_rpn->rpn[1]->type);
 //    printf("%u\n", func->obj_rpn->rpn[2]->type);
 
