@@ -165,7 +165,7 @@ func_subs:
 		jmp		.L
 
 .continue_func:
-	fld		qword [res]
+	mov		eax,  res
 
 	pop 	esi
 	pop		edi
