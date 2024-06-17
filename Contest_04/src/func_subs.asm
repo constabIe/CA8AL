@@ -106,13 +106,13 @@ func_subs:
 		mov		edi, [esi + DWORD_SIZE]
 		mov		[rpn_el_type], edi
 
-		; ; debug
-		; ALIGN_STACK 8
-		; push	edi
-		; push	debug_o_format_int
-		; call 	printf
-		; UNALIGN_STACK 8
-		; ; debug	
+		; debug
+		ALIGN_STACK 8
+		push	edi
+		push	debug_o_format_int
+		call 	printf
+		UNALIGN_STACK 8
+		; debug	
 
 		cmp		edi, OPERATOR
 		je		.operator
