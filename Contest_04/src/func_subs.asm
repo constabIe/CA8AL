@@ -269,7 +269,22 @@ func_subs:
 			mov		edi, dword [user_stack_ptr]
 			fstp	qword [edi]
 
+			; debug
+			ALIGN_STACK 8
+			push	debug_message
+			push	debug_o_format_str
+			call 	printf
+			UNALIGN_STACK 8
+			; debug	
+
 			fld		qword [edi]
+			; debug
+			ALIGN_STACK 8
+			push	debug_message
+			push	debug_o_format_str
+			call 	printf
+			UNALIGN_STACK 8
+			; debug	
 
 			ALIGN_STACK 12
 			sub		esp, 8
@@ -320,11 +335,3 @@ section .data
 ; UNALIGN_STACK 8
 ; ; debug	
 
-
-; ; debug
-; ALIGN_STACK 8
-; push	esi
-; push	debug_o_format_int
-; call 	printf
-; UNALIGN_STACK 8
-; ; debug
