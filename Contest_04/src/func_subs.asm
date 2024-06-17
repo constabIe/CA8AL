@@ -61,15 +61,6 @@ section .text
 %define iterator			ebp - 68
 %define	user_stack_ptr		ebp - 72
 
-; ; Начальное значение регистра eax указывает на адрес func
-; mov eax, [eax]            ; eax = func->obj_rpn (получаем адрес obj_rpn)
-; mov eax, [eax]            ; eax = func->obj_rpn->rpn (получаем адрес rpn)
-; mov eax, [eax]            ; eax = func->obj_rpn->rpn[0] (получаем адрес rpn[0])
-; mov eax, [eax + type_offset] ; eax = func->obj_rpn->rpn[0]->type (получаем значение type)
-
-; ; В этом примере предполагается, что смещение поля 'type' от начала структуры известно и хранится в type_offset.
-
-
 global func_subs
 func_subs:
 	FUNCTION_PROLOGUE 68
@@ -101,14 +92,6 @@ func_subs:
 		jae		.continue_func
 
 		mov		edi, [rpn]
-
-		; debug
-		ALIGN_STACK 8
-		push	debug_message
-		push	debug_o_format_str
-		call 	printf
-		UNALIGN_STACK 8
-		; debug
 
 		mov		esi, [edi + ebx]
 		mov		[rpn_el], esi
@@ -234,7 +217,7 @@ func_subs:
 			call 	printf
 			UNALIGN_STACK 8
 			; debug			
-			
+
 			mov		edi, [esi]
 			mov		[operand], edi		
 
