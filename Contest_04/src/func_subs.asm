@@ -83,13 +83,13 @@ func_subs:
 	mov		edi, [esi + DWORD_SIZE]
 	mov		[rpn_size], edi
 
-	; debug
-	ALIGN_STACK 8
-	push	edi
-	push	debug_o_format_int
-	call 	printf
-	UNALIGN_STACK 8
-	; debug	
+	; ; debug
+	; ALIGN_STACK 8
+	; push	edi
+	; push	debug_o_format_int
+	; call 	printf
+	; UNALIGN_STACK 8
+	; ; debug	
 
 	mov		dword [iterator], 0
 	mov		ebx, 0
@@ -115,13 +115,13 @@ func_subs:
 		mov		edi, [esi + DWORD_SIZE]
 		mov		[rpn_el_type], edi
 
-		; debug
-		ALIGN_STACK 8
-		push	edi
-		push	debug_o_format_int
-		call 	printf
-		UNALIGN_STACK 8
-		; debug	
+		; ; debug
+		; ALIGN_STACK 8
+		; push	edi
+		; push	debug_o_format_int
+		; call 	printf
+		; UNALIGN_STACK 8
+		; ; debug	
 
 		cmp		edi, OPERATOR
 		je		.operator
@@ -251,13 +251,13 @@ func_subs:
 				jmp 	.continue_L
 
 		.operand:
-			; debug
-			ALIGN_STACK 8
-			push	debug_message
-			push	debug_o_format_str
-			call 	printf
-			UNALIGN_STACK 8
-			; debug			
+			; ; debug
+			; ALIGN_STACK 8
+			; push	debug_message
+			; push	debug_o_format_str
+			; call 	printf
+			; UNALIGN_STACK 8
+			; ; debug			
 
 			mov		edi, [esi]
 			mov		[operand], edi		
@@ -270,6 +270,14 @@ func_subs:
 			jmp 	.continue_L
 
 		.variable:
+			; debug
+			ALIGN_STACK 8
+			push	debug_message
+			push	debug_o_format_str
+			call 	printf
+			UNALIGN_STACK 8
+			; debug
+
 			fld		qword [val]
 
 			add		dword [user_stack_ptr], QWORD_SIZE
