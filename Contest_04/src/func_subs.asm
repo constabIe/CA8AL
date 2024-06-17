@@ -282,7 +282,8 @@ func_subs:
 		jmp		.L
 
 .continue_func:
-	mov		eax,  res
+	mov		edi, [user_stack]
+	fstp	qword [edi]
 
 	pop 	esi
 	pop		edi
