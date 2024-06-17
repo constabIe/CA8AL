@@ -60,8 +60,8 @@ section .text
 %define iterator			ebp - 68
 %define	user_stack_ptr		ebp - 72
 
-global f_subs
-f_subs:
+global func_subs
+func_subs:
 	FUNCTION_PROLOGUE 68
 
 	push	ebx
@@ -118,8 +118,8 @@ f_subs:
 		UNALIGN_STACK 8
 		; debug
 
-		mov		edi, [esi + DWORD_SIZE]
-		mov		[rpn_el_type], edi
+		mov		esi, [edi + DWORD_SIZE]
+		mov		[rpn_el_type], esi
 
 		; debug
 		ALIGN_STACK 8
