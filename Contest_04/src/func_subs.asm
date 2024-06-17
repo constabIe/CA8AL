@@ -131,7 +131,7 @@ func_subs:
 
 		; debug
 		ALIGN_STACK 8
-		push	edi
+		push	esi
 		push	debug_o_format_int
 		call	printf
 		UNALIGN_STACK 8
