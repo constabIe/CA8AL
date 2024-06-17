@@ -83,21 +83,12 @@ func_subs:
 	mov		edi, [esi + DWORD_SIZE]
 	mov		[rpn_size], edi
 
-	; ; debug
-	; ALIGN_STACK 8
-	; push	edi
-	; push	debug_o_format_int
-	; call 	printf
-	; UNALIGN_STACK 8
-	; ; debug	
-
-	mov		dword [iterator], 0
+	mov		dword [iterator], edi
 	mov		ebx, 0
 
 	.L:
-		mov		edi, [iterator]
-		cmp		edi, [rpn_size]
-		jae		.continue_func
+		cmp		dword [iterator], 0
+		jle		.continue_func
 
 		; ; debug
 		; ALIGN_STACK 8
@@ -133,13 +124,13 @@ func_subs:
 		je		.variable
 
 		.operator:
-			; ; debug
-			; ALIGN_STACK 8
-			; push	debug_message
-			; push	debug_o_format_str
-			; call 	printf
-			; UNALIGN_STACK 8
-			; ; debug	
+			; debug
+			ALIGN_STACK 8
+			push	debug_message
+			push	debug_o_format_str
+			call 	printf
+			UNALIGN_STACK 8
+			; debug	
 
 			mov		edi, [esi]
 			mov		[operator], edi
@@ -296,7 +287,7 @@ func_subs:
 
 	.continue_L:
 		add		ebx, DWORD_SIZE
-		inc		dword [iterator]
+		dec		dword [iterator]
 
 		; ; debug
 		; ALIGN_STACK 8
