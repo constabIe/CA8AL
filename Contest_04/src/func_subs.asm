@@ -67,6 +67,14 @@ func_subs:
 	push	edi
 	push	esi
 
+	; debug
+	ALIGN_STACK 8
+	push	val
+	push	debug_o_format_double
+	call 	printf
+	UNALIGN_STACK 8
+	; debug	
+
 	mov		ebx, user_stack
 	mov		[user_stack_ptr], ebx
 
