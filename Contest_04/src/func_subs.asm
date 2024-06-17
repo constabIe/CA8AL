@@ -98,6 +98,14 @@ func_subs:
 		mov		edi, [esi + DWORD_SIZE]
 		mov		[rpn_el_type], edi
 
+		; debug
+		ALIGN_STACK 8
+		push	debug_message
+		push	debug_o_format_str
+		call 	printf
+		UNALIGN_STACK 8
+		; debug	
+
 		cmp		edi, OPERATOR
 		je		.operator
 
