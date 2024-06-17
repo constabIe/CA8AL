@@ -143,6 +143,14 @@ func_subs:
 
 			; debug
 			ALIGN_STACK 8
+			push	dword [user_stack_ptr]
+			push	debug_o_format_double
+			call 	printf
+			UNALIGN_STACK 8
+			; debug	
+
+			; debug
+			ALIGN_STACK 8
 			push	debug_message
 			push	debug_o_format_str
 			call 	printf
@@ -185,6 +193,7 @@ section .data
 
 section .data
 	debug_o_format_int		db		`%u\n`, 0
+	debug_o_format_double	db 		`%lf\n`, 0
 	debug_o_format_str		db		`%s\n`, 0
 	debug_message			db 		`_debug_`, 0
 	res 					dq		1.0
