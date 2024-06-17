@@ -76,7 +76,7 @@ func_subs:
     ; Подготовка аргументов для printf
     ALIGN_STACK 12         ; Зарезервируем место для double
     fstp qword [esp]    ; Перемещаем double из FPU стека в стек
-    push dword format   ; Адрес строки формата
+    push debug_o_format_double   ; Адрес строки формата
     call printf 
     UNALIGN_STACK 12       ; Вызов функции printf
 
