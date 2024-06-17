@@ -248,6 +248,14 @@ func_subs:
 		add		ebx, DWORD_SIZE
 		inc		dword [iterator]
 
+		; debug
+		ALIGN_STACK 8
+		push	debug_message
+		push	debug_o_format_str
+		call 	printf
+		UNALIGN_STACK 8
+		; debug	
+
 		jmp		.L
 
 .continue_func:
