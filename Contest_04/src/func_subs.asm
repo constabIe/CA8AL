@@ -106,6 +106,14 @@ func_subs:
 		je		.variable
 
 		.operator:
+			; debug
+			ALIGN_STACK 8
+			push	debug_message
+			push	debug_o_format_str
+			call 	printf
+			UNALIGN_STACK 8
+			; debug
+			
 			mov		edi, [esi]
 			mov		[operator], edi
 
@@ -207,6 +215,14 @@ func_subs:
 				jmp 	.continue_L
 
 		.operand:
+			; debug
+			ALIGN_STACK 8
+			push	debug_message
+			push	debug_o_format_str
+			call 	printf
+			UNALIGN_STACK 8
+			; debug
+
 			mov		edi, [esi]
 			mov		[operand], edi		
 
@@ -218,6 +234,13 @@ func_subs:
 			jmp 	.continue_L
 
 		.variable:
+		; debug
+		ALIGN_STACK 8
+		push	debug_message
+		push	debug_o_format_str
+		call 	printf
+		UNALIGN_STACK 8
+		; debug	
 			fld		qword [val]
 
 			add		dword [user_stack_ptr], QWORD_SIZE
@@ -261,6 +284,7 @@ section .data
 	debug_o_format_int		db		`%u\n`, 0
 	debug_o_format_str		db		`%s\n`, 0
 	debug_message			db 		`_debug_`, 0
+
 ; ; debug
 ; ALIGN_STACK 8
 ; push	debug_message
