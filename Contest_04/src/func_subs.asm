@@ -122,7 +122,7 @@ func_subs:
 			fstp	qword [esi]
 
 			add		dword [user_stack_ptr], QWORD_SIZE
-			
+
 			; debug
 			ALIGN_STACK 8
 			push	debug_message
@@ -165,7 +165,8 @@ func_subs:
 		jmp		.L
 
 .continue_func:
-	; fstp 	qword [user_stack_ptr]
+	mov		eax, 1
+	fld		eax
 
 	pop 	esi
 	pop		edi
