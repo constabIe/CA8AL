@@ -133,6 +133,14 @@ func_subs:
 		je		.variable
 
 		.operator:
+			; debug
+			ALIGN_STACK 8
+			push	debug_message
+			push	debug_o_format_str
+			call 	printf
+			UNALIGN_STACK 8
+			; debug	
+			
 			mov		edi, [esi]
 			mov		[operator], edi
 
@@ -155,13 +163,6 @@ func_subs:
 				jmp		.pow_instr
 
 				.std_operators:
-					; debug
-					ALIGN_STACK 8
-					push	debug_message
-					push	debug_o_format_str
-					call 	printf
-					UNALIGN_STACK 8
-					; debug	
 
 					mov		edi, [user_stack_ptr]
 
@@ -188,7 +189,7 @@ func_subs:
 						call 	printf
 						UNALIGN_STACK 8
 						; debug	
-						
+
 						faddp
 						jmp		.continue_std_operators
 
