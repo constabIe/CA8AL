@@ -74,7 +74,8 @@ func_subs:
 	fld qword [val]   ; Загружаем double в FPU стек
 
     ; Подготовка аргументов для printf
-    ALIGN_STACK 8      ; Зарезервируем место для double
+    ALIGN_STACK 12
+    sub esp, 8      ; Зарезервируем место для double
     fstp qword [esp]    ; Перемещаем double из FPU стека в стек
     push debug_o_format_double   ; Адрес строки формата
     call printf 
@@ -121,11 +122,103 @@ func_subs:
 		je		.variable
 
 		.operator:
-			jmp		.continue_L
-			; mov		edi, [esi]
-			; mov		[operator], edi
+			mov		edi, [esi]
+			mov		[operator], edi
 
-			; mov		esi, [edi + DWORD_SIZE]
+			mov		esi, [edi + DWORD_SIZE]
+			mov		[operator_type], esi
+
+			cmp		esi, BINARY
+			je		.binary
+			jne		.unary
+
+			.binary:
+				mov		esi, [edi]
+				mov		[binary], esi
+
+				mov		edi, dword [user_stack_ptr]
+				fld		qword [edi - QWORD_SIZE]
+				fld		qword [edi]
+
+				sub		dword [user_stack_ptr], QWORD_SIZE
+				sub		dword [user_stack_ptr], QWORD_SIZE
+
+				mov		edi, [esi]
+				mov		[bin_func_name], edi
+
+				cmp		edi, POW_INSTR
+				ja		.std_operator
+				je		.pow_operator
+
+				.std_operator:
+
+					cmp		edi, ADD_INSTR
+					je		.add_instr
+
+					cmp		edi, SUB_INSTR
+					je		.sub_instr
+
+					cmp		edi, MUL_INSTR
+					je		.mul_instr
+
+					cmp		edi, DIV_INSTR
+					je		.div_instr
+
+					.add_instr:
+						faddp
+						jmp		.continue_binary
+
+					.sub_instr:
+						fsubrp
+						jmp		.continue_binary
+
+					.mul_instr:
+						fmulp
+						jmp		.continue_binary
+
+					.div_instr:
+						fdivrp
+						jmp		.continue_binary
+
+				.pow_operator:
+					ALIGN_STACK 16
+					sub		esp, 8
+					fstp	qword [esp]
+					sub		esp, 8
+					fstp	qword [esp]
+					call	pow
+					UNALIGN_STACK 16
+
+			.continue_binary:
+				add		dword [user_stack_ptr], QWORD_SIZE
+				mov		edi, dword [user_stack_ptr]
+				fstp	qword [edi]
+
+				jmp		.continue_L
+
+			.unary:
+				mov		esi, [edi]
+				mov		[unary], esi
+
+				mov		edi, [esi]
+				mov		[unary_func_ptr], edi
+
+				mov		edi, dword [user_stack_ptr]
+				fld		qword [edi]
+
+				sub		dword [user_stack_ptr], QWORD_SIZE
+
+				ALIGN_STACK 8
+				sub		esp, 8
+				fstp	qword [esp]
+				call	dword [unary_func_ptr]
+				UNALIGN_STACK 8
+
+				add		dword [user_stack_ptr], QWORD_SIZE
+				mov		edi, dword [user_stack_ptr]
+				fstp	qword [edi]		
+
+				jmp		.continue_L			
 
 		.operand:
 			mov		edi, [esi]
@@ -137,40 +230,40 @@ func_subs:
 
 			add		dword [user_stack_ptr], QWORD_SIZE
 
-			; debug
-			ALIGN_STACK 8
-			push	debug_message
-			push	debug_o_format_str
-			call 	printf
-			UNALIGN_STACK 8
-			; debug	
+			; ; debug
+			; ALIGN_STACK 8
+			; push	debug_message
+			; push	debug_o_format_str
+			; call 	printf
+			; UNALIGN_STACK 8
+			; ; debug	
 
 			jmp		.continue_L
 
 		.variable:
+			add		dword [user_stack_ptr], QWORD_SIZE
+
 			fld		qword [val]
 			mov		esi, dword [user_stack_ptr]
 			fstp	qword [esi]
 
-			fld		qword [esi]
+			; fld		qword [esi]
 
-			; debug
-			ALIGN_STACK 8
-			fstp	qword [esp]
-			push	debug_o_format_double
-			call 	printf
-			UNALIGN_STACK 12
-			; debug	
+			; ; debug
+			; ALIGN_STACK 8
+			; fstp	qword [esp]
+			; push	debug_o_format_double
+			; call 	printf
+			; UNALIGN_STACK 12
+			; ; debug	
 
-			add		dword [user_stack_ptr], QWORD_SIZE
-
-			; debug
-			ALIGN_STACK 8
-			push	debug_message
-			push	debug_o_format_str
-			call 	printf
-			UNALIGN_STACK 8
-			; debug	
+			; ; debug
+			; ALIGN_STACK 8
+			; push	debug_message
+			; push	debug_o_format_str
+			; call 	printf
+			; UNALIGN_STACK 8
+			; ; debug	
 
 			jmp		.continue_L
 
