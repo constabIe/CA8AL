@@ -21,7 +21,7 @@ int main(void) {
    printf("%u\n", func->obj_rpn->rpn[1]->type);
    printf("%u\n", func->obj_rpn->rpn[2]->type);
 
-    double val = func_subs(func, 4);
+    double val = func_subs(func, 4.0);
 
     printf("res: %lf", val); 
 
