@@ -251,13 +251,13 @@ func_subs:
 				jmp 	.continue_L
 
 		.operand:
-			; ; debug
-			; ALIGN_STACK 8
-			; push	debug_message
-			; push	debug_o_format_str
-			; call 	printf
-			; UNALIGN_STACK 8
-			; ; debug			
+			; debug
+			ALIGN_STACK 8
+			push	debug_message
+			push	debug_o_format_str
+			call 	printf
+			UNALIGN_STACK 8
+			; debug			
 
 			mov		edi, [esi]
 			mov		[operand], edi		
