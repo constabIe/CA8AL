@@ -69,7 +69,7 @@ func_subs:
 
 	; debug
 	ALIGN_STACK 8
-	push	val
+	push	dword [val]
 	push	debug_o_format_double
 	call 	printf
 	UNALIGN_STACK 8
