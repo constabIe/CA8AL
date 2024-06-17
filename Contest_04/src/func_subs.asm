@@ -68,7 +68,7 @@ func_subs:
 	push	edi
 	push	esi
 
-	fstcw   word [fpu_ctrl]
+	; fstcw   word [fpu_ctrl]
 	finit
   ; Загружаем double в FPU стек
 
