@@ -330,13 +330,13 @@ func_subs:
 		jmp		.L
 
 .continue_func:
-	; debug
-	ALIGN_STACK 8
-	push	debug_message
-	push	debug_o_format_str
-	call 	printf
-	UNALIGN_STACK 8
-	; debug	
+	; ; debug
+	; ALIGN_STACK 8
+	; push	debug_message
+	; push	debug_o_format_str
+	; call 	printf
+	; UNALIGN_STACK 8
+	; ; debug	
 
 	mov		edi, [user_stack]
 	fstp	qword [edi]
