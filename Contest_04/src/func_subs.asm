@@ -277,7 +277,7 @@ func_subs:
 			UNALIGN_STACK 8
 			; debug	
 
-			fld		qword [edi]
+			fld		dword [edi]
 			; debug
 			ALIGN_STACK 8
 			push	debug_message
