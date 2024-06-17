@@ -165,7 +165,7 @@ func_subs:
 		jmp		.L
 
 .continue_func:
-	fld		1
+	fld		qword [res]
 
 	pop 	esi
 	pop		edi
@@ -186,6 +186,7 @@ section .data
 	debug_o_format_int		db		`%u\n`, 0
 	debug_o_format_str		db		`%s\n`, 0
 	debug_message			db 		`_debug_`, 0
+	res 					dq		1.0
 
 ; ; debug
 ; ALIGN_STACK 8
