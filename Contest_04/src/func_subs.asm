@@ -138,7 +138,7 @@ func_subs:
 				mov		edi, dword [user_stack_ptr]
 				fld		qword [edi - QWORD_SIZE]
 				fld		qword [edi]
-				
+
 				; debug
 				ALIGN_STACK 20
 				sub		esp, 8
@@ -245,13 +245,10 @@ func_subs:
 			mov		edi, [esi]
 			mov		[operand], edi
 
-
-
+			add		dword [user_stack_ptr], QWORD_SIZE
 			fld		qword [edi]
 			mov		esi, dword [user_stack_ptr]
 			fstp	qword [esi]
-
-			add		dword [user_stack_ptr], QWORD_SIZE
 
 			jmp		.continue_L
 
