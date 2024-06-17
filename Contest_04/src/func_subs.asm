@@ -271,11 +271,11 @@ func_subs:
 			mov		edi, [esi]
 			mov		[operand], edi
 
+			add		dword [user_stack_ptr], QWORD_SIZE
+			
 			fld		qword [edi]
 			mov		esi, dword [user_stack_ptr]
 			fstp	qword [esi]
-
-			add		dword [user_stack_ptr], QWORD_SIZE
 
 			; ; debug
 			; ALIGN_STACK 8
@@ -291,8 +291,8 @@ func_subs:
 			add		dword [user_stack_ptr], QWORD_SIZE
 
 			fld		qword [val]
-			mov		esi, dword [user_stack_ptr]
-			fstp	qword [esi]
+			mov		edi, dword [user_stack_ptr]
+			fstp	qword [edi]
 
 			; fld		qword [esi]
 
