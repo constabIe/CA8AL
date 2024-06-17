@@ -165,8 +165,7 @@ func_subs:
 		jmp		.L
 
 .continue_func:
-	mov		eax, 1
-	fld		eax
+	fld		1
 
 	pop 	esi
 	pop		edi
