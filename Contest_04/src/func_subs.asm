@@ -113,24 +113,8 @@ func_subs:
 		mov		esi, [edi + ebx]
 		mov		[rpn_el], esi
 
-		; debug
-		ALIGN_STACK 8
-		push	debug_message
-		push	debug_o_format_str
-		call 	printf
-		UNALIGN_STACK 8
-		; debug
-		
 		mov		edi, [esi + DWORD_SIZE]
 		mov		[rpn_el_type], edi
-
-		; debug
-		ALIGN_STACK 8
-		push	edi
-		push	debug_o_format_int
-		call	printf
-		UNALIGN_STACK 8
-		; debug
 
 		cmp		edi, OPERATOR
 		je		.operator
@@ -142,24 +126,24 @@ func_subs:
 		je		.variable
 
 		.operator:
-			mov		esi, [edi]
-			mov		[operator], esi
+			mov		edi, [esi]
+			mov		[operator], edi
 
-			mov		edi, [esi + DWORD_SIZE]
-			mov		[operator_type], edi
+			mov		esi, [edi + DWORD_SIZE]
+			mov		[operator_type], esi
 
-			cmp		edi, BINARY
+			cmp		esi, BINARY
 			je		.binary
 			jne		.unary	
 
 			.binary:
-				mov		edi, [esi]
-				mov		[binary], edi
-
 				mov		esi, [edi]
-				mov		[bin_func_name], esi
+				mov		[binary], esi
 
-				cmp		esi, DIV_INSTR
+				mov		edi, [esi]
+				mov		[bin_func_name], edi
+
+				cmp		edi, DIV_INSTR
 				jbe		.std_operators
 				jmp		.pow_instr
 
@@ -223,14 +207,14 @@ func_subs:
 				jmp		.continue_L
 
 			.unary:
-				mov		edi, [esi]
-				mov		[unary], edi
-
-				mov		esi, [edi + DWORD_SIZE]
-				mov		[unary_func_name], esi
-
 				mov		esi, [edi]
-				mov		[unary_func_ptr], esi	
+				mov		[unary], esi
+
+				mov		edi, [esi + DWORD_SIZE]
+				mov		[unary_func_name], edi
+
+				mov		edi, [esi]
+				mov		[unary_func_ptr], edi	
 
 				ALIGN_STACK 4
 				lea		esi, [user_stack_ptr]
@@ -243,10 +227,18 @@ func_subs:
 				jmp 	.continue_L
 
 		.operand:
-			mov		esi, [edi]
-			mov		[operand], esi		
+			; debug
+			ALIGN_STACK 8
+			push	debug_message
+			push	debug_o_format_str
+			call 	printf
+			UNALIGN_STACK 8
+			; debug			
+			
+			mov		edi, [esi]
+			mov		[operand], edi		
 
-			fld		qword [esi]
+			fld		qword [edi]
 
 			add		dword [user_stack_ptr], QWORD_SIZE
 			fstp	qword [user_stack_ptr]

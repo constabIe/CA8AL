@@ -22,6 +22,8 @@ int main(void) {
 
     double val = func_subs(func, 4);
 
+    printf("%lf", val);
+
     del_Function(func);
 
     return 0;
