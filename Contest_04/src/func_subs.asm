@@ -118,7 +118,8 @@ func_subs:
 
 		.variable:
 			jmp		.continue_L
-			
+
+	.continue_L:
 		; debug
 		ALIGN_STACK 8
 		push	debug_message
@@ -127,7 +128,6 @@ func_subs:
 		UNALIGN_STACK 8
 		; debug	
 
-	.continue_L:
 		inc		dword [iterator]
 		add		ebx, DWORD_SIZE
 
