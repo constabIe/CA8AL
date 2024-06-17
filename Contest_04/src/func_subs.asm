@@ -251,7 +251,7 @@ func_subs:
 				jmp 	.continue_L
 
 		.operand:
-		
+
 			; debug
 			ALIGN_STACK 8
 			push	debug_message
@@ -267,6 +267,14 @@ func_subs:
 
 			add		dword [user_stack_ptr], QWORD_SIZE
 			fstp	qword [user_stack_ptr]
+
+			; debug
+			ALIGN_STACK 8
+			push	debug_message
+			push	debug_o_format_str
+			call 	printf
+			UNALIGN_STACK 8
+			; debug	
 
 			jmp 	.continue_L
 
