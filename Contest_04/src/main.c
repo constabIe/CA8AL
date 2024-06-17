@@ -19,7 +19,7 @@ int main(void) {
     printf("%s\n", func->obj_rpn->rpn[1]->obj->variable->obj);
     printf("%u\n", func->obj_rpn->rpn[0]->type );
 
-    double val = f_subs(func, 4);
+    double val = func_subs(func, 4);
     printf("%lf\n", val);
 
     del_Function(func);

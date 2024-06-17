@@ -28,8 +28,11 @@ static char *global_str;
 static void change_global_operator_name(OperatorLabel new_operator);
 static void change_global_val(double new_val);
 static void change_global_str(const char *new_str);
+
 static RPN *init_RPN(const char *raw_rpn);
 static void del_RPN(RPN *rpn);
+
+static int32_t sign(double val);
  
 static char **split(const char *str, uint32_t *num_tokens);
 static int matchesRegex(const char *string, const char *pattern);
@@ -46,6 +49,56 @@ static void del_Operand(Operand *operand);
  
 static Variable *init_Variable(const char *str);
 static void del_Variable(Variable *variable);
+
+double root(Function *f, Function *g, double a, double b, double eps1) {
+    VERIFY_CONTRACT(a <= b, "Invalid range");
+    if (f == NULL || g == NULL) {
+        raise(SIGSEGV);
+    }
+
+    double  a_i = a, 
+            b_i = b, 
+            c_i = (b_i - a_i) / 2;
+
+    while (true) {
+        if (fabs(a_i - b_i) < eps1) {
+            break;
+        }
+
+        double F_abc[3] = {func_subs(f, a_i) - func_subs(g, a_i),
+                            func_subs(f, c_i) - func_subs(g, c_i), 
+                            func_subs(f, b_i) - func_subs(g, b_i)};
+
+        if (sign(F_abc[0]) != sign(F_abc[1])) {
+            b_i = c_i;
+        } 
+        else if (sign(F_abc[1]) != sign(F_abc[0])) {
+            a_i = c_i; 
+        }
+        else {
+            VERIFY_CONTRACT(0, "Invalid arguments were passed")ж
+        }
+
+        c_i = (b_i - a_i) / 2;
+    }
+
+    double root = a_i + DBL_MIN;
+
+    return root;
+}
+double integral(Function *f, double a, double b, double eps2);
+
+static int32_t sign(double val) {
+    if (val > 0) {
+        return 1;
+    }
+    else if (val < 0) {
+        return -1;
+    }
+    else {
+        return 0;
+    }
+}
 
 double cot(double x) {
     return 1 / tan(x);
