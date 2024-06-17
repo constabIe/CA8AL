@@ -117,8 +117,8 @@ func_subs:
 		UNALIGN_STACK 8
 		; debug
 
-		mov		esi, [edi + DWORD_SIZE]
-		mov		[rpn_el_type], esi
+		mov		edi, [esi + DWORD_SIZE]
+		mov		[rpn_el_type], esdi
 
 		; debug
 		ALIGN_STACK 8
@@ -130,7 +130,7 @@ func_subs:
 
 		; debug
 		ALIGN_STACK 8
-		push	esi
+		push	edi
 		push	debug_o_format_int
 		call	printf
 		UNALIGN_STACK 8
