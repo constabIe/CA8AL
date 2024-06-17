@@ -147,6 +147,14 @@ func_subs:
 			mov		esi, [edi + DWORD_SIZE]
 			mov		[operator_type], esi
 
+			; debug
+			ALIGN_STACK 8
+			push	esi
+			push	debug_o_format_int
+			call 	printf
+			UNALIGN_STACK 8
+			; debug
+
 			cmp		esi, BINARY
 			je		.binary
 			jne		.unary	
@@ -158,12 +166,13 @@ func_subs:
 				mov		edi, [esi]
 				mov		[bin_func_name], edi
 
+					
+
 				cmp		edi, DIV_INSTR
 				jbe		.std_operators
 				jmp		.pow_instr
 
 				.std_operators:
-
 					mov		edi, [user_stack_ptr]
 
 					fld		qword [edi - QWORD_SIZE]
@@ -251,13 +260,13 @@ func_subs:
 				jmp 	.continue_L
 
 		.operand:
-			; ; debug
-			; ALIGN_STACK 8
-			; push	debug_message
-			; push	debug_o_format_str
-			; call 	printf
-			; UNALIGN_STACK 8
-			; ; debug			
+			; debug
+			ALIGN_STACK 8
+			push	debug_message
+			push	debug_o_format_str
+			call 	printf
+			UNALIGN_STACK 8
+			; debug			
 
 			mov		edi, [esi]
 			mov		[operand], edi		
