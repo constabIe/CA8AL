@@ -118,7 +118,7 @@ func_subs:
 		; debug
 
 		mov		edi, [esi + DWORD_SIZE]
-		mov		[rpn_el_type], esdi
+		mov		[rpn_el_type], edi
 
 		; debug
 		ALIGN_STACK 8
