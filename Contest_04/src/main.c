@@ -16,7 +16,7 @@ int main(void) {
     Function *func = init_Function("3 x +");
 
     set_variable(func, "y");
-    printf("%s\n", func->obj_rpn->rpn[0]->type);
+    printf("%u\n", func->obj_rpn->rpn[0]->type);
     printf("%u\n", func->obj_rpn->rpn[1]->type );
 
     double val = func_subs(func, 4);
