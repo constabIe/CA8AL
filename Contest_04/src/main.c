@@ -20,7 +20,6 @@ int main(void) {
     printf("%u\n", func->obj_rpn->rpn[1]->type );
 
     double val = func_subs(func, 4);
-    printf("%lf\n", val);
 
     del_Function(func);
 
