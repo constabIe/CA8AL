@@ -233,6 +233,15 @@ func_subs:
 				mov		edi, dword [user_stack_ptr]
 				fstp	qword [edi]
 
+				fld		qword [edi]
+
+				ALIGN_STACK 12
+				sub		esp, 8
+				fstp	qword [esp]
+				push	debug_o_format_double
+				call	printf
+				UNALIGN_STACK 12
+
 				jmp		.continue_L
 
 			.unary:
@@ -328,7 +337,7 @@ func_subs:
 	call 	printf
 	UNALIGN_STACK 8
 	; debug	
-	
+
 	mov		edi, [user_stack]
 	fstp	qword [edi]
 
