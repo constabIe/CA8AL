@@ -81,11 +81,11 @@ func_subs:
 	mov		[rpn], edi
 
 	mov		edi, [esi + DWORD_SIZE]
-	mov		[rpn_size], esi
+	mov		[rpn_size], edi
 
 	; debug
 	ALIGN_STACK 8
-	push	esi
+	push	edi
 	push	debug_o_format_int
 	call 	printf
 	UNALIGN_STACK 8
@@ -269,7 +269,7 @@ section .data
 	QWORD_SIZE		equ		8
 
 section .data
-	debug_o_format_int		db		`%d\n`, 0
+	debug_o_format_int		db		`%u\n`, 0
 	debug_o_format_str		db		`%s\n`, 0
 	debug_message			db 		`_debug_`, 0
 
