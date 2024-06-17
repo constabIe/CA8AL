@@ -60,13 +60,13 @@ section .text
 %define iterator			ebp - 68
 %define	user_stack_ptr		ebp - 72
 
-; Начальное значение регистра eax указывает на адрес func
-mov eax, [eax]            ; eax = func->obj_rpn (получаем адрес obj_rpn)
-mov eax, [eax]            ; eax = func->obj_rpn->rpn (получаем адрес rpn)
-mov eax, [eax]            ; eax = func->obj_rpn->rpn[0] (получаем адрес rpn[0])
-mov eax, [eax + type_offset] ; eax = func->obj_rpn->rpn[0]->type (получаем значение type)
+; ; Начальное значение регистра eax указывает на адрес func
+; mov eax, [eax]            ; eax = func->obj_rpn (получаем адрес obj_rpn)
+; mov eax, [eax]            ; eax = func->obj_rpn->rpn (получаем адрес rpn)
+; mov eax, [eax]            ; eax = func->obj_rpn->rpn[0] (получаем адрес rpn[0])
+; mov eax, [eax + type_offset] ; eax = func->obj_rpn->rpn[0]->type (получаем значение type)
 
-; В этом примере предполагается, что смещение поля 'type' от начала структуры известно и хранится в type_offset.
+; ; В этом примере предполагается, что смещение поля 'type' от начала структуры известно и хранится в type_offset.
 
 
 global func_subs
