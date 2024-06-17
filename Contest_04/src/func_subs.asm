@@ -106,9 +106,8 @@ func_subs:
 		mov		edi, [rpn_obj]
 		mov		esi, [edi]
 
-		add		edi, [esi]
-		add		edi, ebx
-		mov		[rpn_el], edi
+		add		esi, ebx
+		mov		[rpn_el], esi
 
 		; debug
 		ALIGN_STACK 8
