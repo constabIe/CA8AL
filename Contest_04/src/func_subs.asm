@@ -114,19 +114,50 @@ func_subs:
 			; mov		esi, [edi + DWORD_SIZE]
 
 		.operand:
+			mov		edi, [esi]
+			mov		[operand], edi
+
+			fld		qword [edi]
+			mov		esi, dword [user_stack_ptr]
+			fstp	qword [esi]
+
+			add		dword [user_stack_ptr], QWORD_SIZE
+			
+			; debug
+			ALIGN_STACK 8
+			push	debug_message
+			push	debug_o_format_str
+			call 	printf
+			UNALIGN_STACK 8
+			; debug	
+
 			jmp		.continue_L
 
 		.variable:
+			fld		qword [val]
+			mov		esi, dword [user_stack_ptr]
+			fstp	qword [esi]
+
+			add		dword [user_stack_ptr], QWORD_SIZE
+
+			; debug
+			ALIGN_STACK 8
+			push	debug_message
+			push	debug_o_format_str
+			call 	printf
+			UNALIGN_STACK 8
+			; debug	
+
 			jmp		.continue_L
 
 	.continue_L:
-		; debug
-		ALIGN_STACK 8
-		push	debug_message
-		push	debug_o_format_str
-		call 	printf
-		UNALIGN_STACK 8
-		; debug	
+		; ; debug
+		; ALIGN_STACK 8
+		; push	debug_message
+		; push	debug_o_format_str
+		; call 	printf
+		; UNALIGN_STACK 8
+		; ; debug	
 
 		inc		dword [iterator]
 		add		ebx, DWORD_SIZE
