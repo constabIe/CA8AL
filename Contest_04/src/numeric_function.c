@@ -50,42 +50,42 @@ static void del_Operand(Operand *operand);
 static Variable *init_Variable(const char *str);
 static void del_Variable(Variable *variable);
 
-double root(Function *f, Function *g, double a, double b, double eps1) {
-    VERIFY_CONTRACT(a <= b, "Invalid range");
-    if (f == NULL || g == NULL) {
-        raise(SIGSEGV);
-    }
+// double root(Function *f, Function *g, double a, double b, double eps1) {
+//     VERIFY_CONTRACT(a <= b, "Invalid range");
+//     if (f == NULL || g == NULL) {
+//         raise(SIGSEGV);
+//     }
 
-    double  a_i = a, 
-            b_i = b, 
-            c_i = (b_i - a_i) / 2;
+//     double  a_i = a, 
+//             b_i = b, 
+//             c_i = (b_i - a_i) / 2;
 
-    while (true) {
-        if (fabs(a_i - b_i) < eps1) {
-            break;
-        }
+//     while (true) {
+//         if (fabs(a_i - b_i) < eps1) {
+//             break;
+//         }
 
-        double F_abc[3] = {func_subs(f, a_i) - func_subs(g, a_i),
-                            func_subs(f, c_i) - func_subs(g, c_i), 
-                            func_subs(f, b_i) - func_subs(g, b_i)};
+//         double F_abc[3] = {func_subs(f, a_i) - func_subs(g, a_i),
+//                             func_subs(f, c_i) - func_subs(g, c_i), 
+//                             func_subs(f, b_i) - func_subs(g, b_i)};
 
-        if (sign(F_abc[0]) != sign(F_abc[1])) {
-            b_i = c_i;
-        } 
-        else if (sign(F_abc[1]) != sign(F_abc[0])) {
-            a_i = c_i; 
-        }
-        else {
-            VERIFY_CONTRACT(0, "Invalid arguments were passed")ж
-        }
+//         if (sign(F_abc[0]) != sign(F_abc[1])) {
+//             b_i = c_i;
+//         } 
+//         else if (sign(F_abc[1]) != sign(F_abc[0])) {
+//             a_i = c_i; 
+//         }
+//         else {
+//             VERIFY_CONTRACT(0, "Invalid arguments were passed")ж
+//         }
 
-        c_i = (b_i - a_i) / 2;
-    }
+//         c_i = (b_i - a_i) / 2;
+//     }
 
-    double root = a_i + DBL_MIN;
+//     double root = a_i + DBL_MIN;
 
-    return root;
-}
+//     return root;
+// }
 double integral(Function *f, double a, double b, double eps2);
 
 static int32_t sign(double val) {
