@@ -121,14 +121,6 @@ func_subs:
 		je		.variable
 
 		.operator:
-			; ; debug
-			; ALIGN_STACK 8
-			; push	debug_message
-			; push	debug_o_format_str
-			; call 	printf
-			; UNALIGN_STACK 8
-			; ; debug	
-
 			mov		edi, [esi]
 			mov		[operator], edi
 
@@ -140,14 +132,6 @@ func_subs:
 			jne		.unary
 
 			.binary:
-				; ; debug
-				; ALIGN_STACK 8
-				; push	debug_message
-				; push	debug_o_format_str
-				; call 	printf
-				; UNALIGN_STACK 8
-				; ; debug	
-
 				mov		esi, [edi]
 				mov		[binary], esi
 
@@ -166,14 +150,6 @@ func_subs:
 				je		.pow_operator
 
 				.std_operator:
-					; ; debug
-					; ALIGN_STACK 8
-					; push	debug_message
-					; push	debug_o_format_str
-					; call 	printf
-					; UNALIGN_STACK 8
-					; ; debug	
-
 					cmp		edi, ADD_INSTR
 					je		.add_instr
 
@@ -187,14 +163,6 @@ func_subs:
 					je		.div_instr
 
 					.add_instr:
-						; ; debug
-						; ALIGN_STACK 8
-						; push	debug_message
-						; push	debug_o_format_str
-						; call 	printf
-						; UNALIGN_STACK 8
-						; ; debug	
-
 						faddp
 						jmp		.continue_binary
 
@@ -220,14 +188,6 @@ func_subs:
 					UNALIGN_STACK 16
 
 			.continue_binary:
-				; ; debug
-				; ALIGN_STACK 8
-				; push	debug_message
-				; push	debug_o_format_str
-				; call 	printf
-				; UNALIGN_STACK 8
-				; ; debug	
-
 				add		dword [user_stack_ptr], QWORD_SIZE
 				mov		edi, dword [user_stack_ptr]
 				fstp	qword [edi]
@@ -278,15 +238,7 @@ func_subs:
 			fstp	qword [esi]
 
 			add		dword [user_stack_ptr], QWORD_SIZE
-
-			; ; debug
-			; ALIGN_STACK 8
-			; push	debug_message
-			; push	debug_o_format_str
-			; call 	printf
-			; UNALIGN_STACK 8
-			; ; debug	
-
+			
 			jmp		.continue_L
 
 		.variable:
@@ -294,51 +246,16 @@ func_subs:
 
 			fld		qword [val]
 			mov		edi, dword [user_stack_ptr]
-			fstp	qword [edi]
-
-			; fld		qword [esi]
-
-			; ; debug
-			; ALIGN_STACK 8
-			; fstp	qword [esp]
-			; push	debug_o_format_double
-			; call 	printf
-			; UNALIGN_STACK 12
-			; ; debug	
-
-			; ; debug
-			; ALIGN_STACK 8
-			; push	debug_message
-			; push	debug_o_format_str
-			; call 	printf
-			; UNALIGN_STACK 8
-			; ; debug	
 
 			jmp		.continue_L
 
 	.continue_L:
-		; ; debug
-		; ALIGN_STACK 8
-		; push	debug_message
-		; push	debug_o_format_str
-		; call 	printf
-		; UNALIGN_STACK 8
-		; ; debug	
-
 		inc		dword [iterator]
 		add		ebx, DWORD_SIZE
 
 		jmp		.L
 
 .continue_func:
-	; ; debug
-	; ALIGN_STACK 8
-	; push	debug_message
-	; push	debug_o_format_str
-	; call 	printf
-	; UNALIGN_STACK 8
-	; ; debug	
-
 	mov		edi, [user_stack]
 	fstp	qword [edi]
 
