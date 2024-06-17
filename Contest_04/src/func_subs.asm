@@ -102,9 +102,25 @@ func_subs:
 
 		mov		edi, [rpn]
 
+		; debug
+		ALIGN_STACK 8
+		push	debug_message
+		push	debug_o_format_str
+		call 	printf
+		UNALIGN_STACK 8
+		; debug
+
 		mov		esi, [edi + ebx]
 		mov		[rpn_el], esi
 
+		; debug
+		ALIGN_STACK 8
+		push	debug_message
+		push	debug_o_format_str
+		call 	printf
+		UNALIGN_STACK 8
+		; debug
+		
 		mov		edi, [esi + DWORD_SIZE]
 		mov		[rpn_el_type], edi
 
@@ -273,3 +289,5 @@ section .data
 	debug_o_format_int		db		`%d\n`, 0
 	debug_o_format_str		db		`%s\n`, 0
 	debug_message			db 		`_debug_`, 0
+
+
