@@ -99,6 +99,14 @@ func_subs:
 		cmp		edi, [rpn_size]
 		jae		.continue_func
 
+		; debug
+		ALIGN_STACK 8
+		push	debug_message
+		push	debug_o_format_str
+		call 	printf
+		UNALIGN_STACK 8
+		; debug	
+
 		mov		edi, [rpn]
 
 		mov		esi, [edi + ebx]
@@ -218,13 +226,13 @@ func_subs:
 				jmp 	.continue_L
 
 		.operand:
-			; debug
-			ALIGN_STACK 8
-			push	debug_message
-			push	debug_o_format_str
-			call 	printf
-			UNALIGN_STACK 8
-			; debug			
+			; ; debug
+			; ALIGN_STACK 8
+			; push	debug_message
+			; push	debug_o_format_str
+			; call 	printf
+			; UNALIGN_STACK 8
+			; ; debug			
 
 			mov		edi, [esi]
 			mov		[operand], edi		
@@ -248,13 +256,13 @@ func_subs:
 		add		ebx, DWORD_SIZE
 		inc		dword [iterator]
 
-		; debug
-		ALIGN_STACK 8
-		push	debug_message
-		push	debug_o_format_str
-		call 	printf
-		UNALIGN_STACK 8
-		; debug	
+		; ; debug
+		; ALIGN_STACK 8
+		; push	debug_message
+		; push	debug_o_format_str
+		; call 	printf
+		; UNALIGN_STACK 8
+		; ; debug	
 
 		jmp		.L
 
