@@ -107,6 +107,14 @@ func_subs:
 		UNALIGN_STACK 8
 		; debug	
 
+		; debug
+		ALIGN_STACK 8
+		push	dword [iterator]
+		push	debug_o_format_int
+		call 	printf
+		UNALIGN_STACK 8
+		; debug	
+
 		mov		edi, [rpn]
 
 		mov		esi, [edi + ebx]
