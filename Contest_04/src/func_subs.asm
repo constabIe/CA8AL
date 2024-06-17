@@ -74,7 +74,7 @@ func_subs:
 	fld qword [val]   ; Загружаем double в FPU стек
 
     ; Подготовка аргументов для printf
-    ALIGN_STACK 12         ; Зарезервируем место для double
+    ALIGN_STACK 8      ; Зарезервируем место для double
     fstp qword [esp]    ; Перемещаем double из FPU стека в стек
     push debug_o_format_double   ; Адрес строки формата
     call printf 
@@ -152,15 +152,17 @@ func_subs:
 			mov		esi, dword [user_stack_ptr]
 			fstp	qword [esi]
 
-			add		dword [user_stack_ptr], QWORD_SIZE
+			fld		qword [esi]
 
 			; debug
 			ALIGN_STACK 8
-			push	dword [user_stack_ptr]
+			fstp	qword [esp]
 			push	debug_o_format_double
 			call 	printf
-			UNALIGN_STACK 8
+			UNALIGN_STACK 12
 			; debug	
+
+			add		dword [user_stack_ptr], QWORD_SIZE
 
 			; debug
 			ALIGN_STACK 8
