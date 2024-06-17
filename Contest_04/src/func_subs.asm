@@ -90,13 +90,13 @@ func_subs:
 		cmp		dword [iterator], 0
 		jle		.continue_func
 
-		; ; debug
-		; ALIGN_STACK 8
-		; push	debug_message
-		; push	debug_o_format_str
-		; call 	printf
-		; UNALIGN_STACK 8
-		; ; debug	
+		; debug
+		ALIGN_STACK 8
+		push	debug_message
+		push	debug_o_format_str
+		call 	printf
+		UNALIGN_STACK 8
+		; debug	
 
 		mov		edi, [rpn]
 
@@ -124,13 +124,13 @@ func_subs:
 		je		.variable
 
 		.operator:
-			; debug
-			ALIGN_STACK 8
-			push	debug_message
-			push	debug_o_format_str
-			call 	printf
-			UNALIGN_STACK 8
-			; debug	
+			; ; debug
+			; ALIGN_STACK 8
+			; push	debug_message
+			; push	debug_o_format_str
+			; call 	printf
+			; UNALIGN_STACK 8
+			; ; debug	
 
 			mov		edi, [esi]
 			mov		[operator], edi
@@ -138,13 +138,13 @@ func_subs:
 			mov		esi, [edi + DWORD_SIZE]
 			mov		[operator_type], esi
 
-			; debug
-			ALIGN_STACK 8
-			push	esi
-			push	debug_o_format_int
-			call 	printf
-			UNALIGN_STACK 8
-			; debug
+			; ; debug
+			; ALIGN_STACK 8
+			; push	esi
+			; push	debug_o_format_int
+			; call 	printf
+			; UNALIGN_STACK 8
+			; ; debug
 
 			cmp		esi, BINARY
 			je		.binary
@@ -251,13 +251,13 @@ func_subs:
 				jmp 	.continue_L
 
 		.operand:
-			; debug
-			ALIGN_STACK 8
-			push	debug_message
-			push	debug_o_format_str
-			call 	printf
-			UNALIGN_STACK 8
-			; debug			
+			; ; debug
+			; ALIGN_STACK 8
+			; push	debug_message
+			; push	debug_o_format_str
+			; call 	printf
+			; UNALIGN_STACK 8
+			; ; debug			
 
 			mov		edi, [esi]
 			mov		[operand], edi		
@@ -270,13 +270,13 @@ func_subs:
 			jmp 	.continue_L
 
 		.variable:
-			; debug
-			ALIGN_STACK 8
-			push	debug_message
-			push	debug_o_format_str
-			call 	printf
-			UNALIGN_STACK 8
-			; debug
+			; ; debug
+			; ALIGN_STACK 8
+			; push	debug_message
+			; push	debug_o_format_str
+			; call 	printf
+			; UNALIGN_STACK 8
+			; ; debug
 
 			fld		qword [val]
 
