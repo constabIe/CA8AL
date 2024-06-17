@@ -68,18 +68,18 @@ func_subs:
 	push	edi
 	push	esi
 
-	fstcw   fpu_ctrl
+	fstcw   word [fpu_ctrl]
 	finit
 
-	lea		ebx, dword [val]
+	fld qword [val]   ; Загружаем double в FPU стек
 
-	; debug
-	ALIGN_STACK 8
-	push	ebx
-	push	debug_o_format_double
-	call 	printf
-	UNALIGN_STACK 8
-	; debug	
+    ; Подготовка аргументов для printf
+    ALIGN_STACK 12         ; Зарезервируем место для double
+    fstp qword [esp]    ; Перемещаем double из FPU стека в стек
+    push dword format   ; Адрес строки формата
+    call printf 
+    UNALIGN_STACK 12       ; Вызов функции printf
+
 
 	mov		ebx, user_stack
 	mov		[user_stack_ptr], ebx
