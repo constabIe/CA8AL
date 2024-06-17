@@ -60,6 +60,15 @@ section .text
 %define iterator			ebp - 68
 %define	user_stack_ptr		ebp - 72
 
+; Начальное значение регистра eax указывает на адрес func
+mov eax, [eax]            ; eax = func->obj_rpn (получаем адрес obj_rpn)
+mov eax, [eax]            ; eax = func->obj_rpn->rpn (получаем адрес rpn)
+mov eax, [eax]            ; eax = func->obj_rpn->rpn[0] (получаем адрес rpn[0])
+mov eax, [eax + type_offset] ; eax = func->obj_rpn->rpn[0]->type (получаем значение type)
+
+; В этом примере предполагается, что смещение поля 'type' от начала структуры известно и хранится в type_offset.
+
+
 global func_subs
 func_subs:
 	FUNCTION_PROLOGUE 68
@@ -71,10 +80,10 @@ func_subs:
 	mov		ebx, user_stack
 	mov		[user_stack_ptr], ebx
 
-	mov		ebx, [func]
+	mov		ebx, [func] ; func
 
 	mov 	edi, [ebx]
-	mov	 	[rpn_obj], edi
+	mov	 	[rpn_obj], edi ; func->obj_rpn
 
 	mov 	esi, [edi + DWORD_SIZE]
 	mov	 	[rpn_size], esi
@@ -103,22 +112,10 @@ func_subs:
 		UNALIGN_STACK 8
 		; debug
 
-		mov		edi, [rpn_obj]
-		mov		esi, [edi]
+		mov		edi, [rpn_obj] ; func->obj_rpn->rpn ; func->obj_rpn->rpn->
 
-		add		esi, ebx
-		mov		[rpn_el], esi
-
-		; debug
-		ALIGN_STACK 8
-		push	debug_message
-		push	debug_o_format_str
-		call	printf
-		UNALIGN_STACK 8
-		; debug
-
-		mov		edi, [esi + DWORD_SIZE]
-		mov		[rpn_el_type], edi
+		add		edi, ebx
+		mov		[rpn_el], edi ; func->obj_rpn->rpn[i]
 
 		; debug
 		ALIGN_STACK 8
@@ -128,9 +125,20 @@ func_subs:
 		UNALIGN_STACK 8
 		; debug
 
+		mov		esi, [edi + DWORD_SIZE]
+		mov		[rpn_el_type], esi
+
 		; debug
 		ALIGN_STACK 8
-		push	edi
+		push	debug_message
+		push	debug_o_format_str
+		call	printf
+		UNALIGN_STACK 8
+		; debug
+
+		; debug
+		ALIGN_STACK 8
+		push	esi
 		push	debug_o_format_int
 		call	printf
 		UNALIGN_STACK 8
