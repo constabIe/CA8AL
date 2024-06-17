@@ -95,16 +95,16 @@ func_subs:
 		mov		esi, [edi + ebx]
 		mov		[rpn_el], esi
 
+		; ; debug
+		; ALIGN_STACK 8
+		; push	debug_message
+		; push	debug_o_format_str
+		; call 	printf
+		; UNALIGN_STACK 8
+		; ; debug	
+
 		mov		edi, [esi + DWORD_SIZE]
 		mov		[rpn_el_type], edi
-
-		; debug
-		ALIGN_STACK 8
-		push	debug_message
-		push	debug_o_format_str
-		call 	printf
-		UNALIGN_STACK 8
-		; debug	
 
 		cmp		edi, OPERATOR
 		je		.operator
@@ -239,13 +239,13 @@ func_subs:
 		add		ebx, DWORD_SIZE
 		dec		dword [iterator]
 
-		; debug
-		ALIGN_STACK 8
-		push	debug_message
-		push	debug_o_format_str
-		call 	printf
-		UNALIGN_STACK 8
-		; debug	
+		; ; debug
+		; ALIGN_STACK 8
+		; push	debug_message
+		; push	debug_o_format_str
+		; call 	printf
+		; UNALIGN_STACK 8
+		; ; debug	
 
 		jmp		.L
 
