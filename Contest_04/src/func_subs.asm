@@ -165,7 +165,7 @@ func_subs:
 		jmp		.L
 
 .continue_func:
-	fstp 	qword [user_stack_ptr]
+	; fstp 	qword [user_stack_ptr]
 
 	pop 	esi
 	pop		edi
