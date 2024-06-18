@@ -292,8 +292,6 @@ func_subs:
 	mov		edi, [user_stack_ptr]
 	fld		qword [edi]
 
-	mov		eax, edi
-
 	pop 	esi
 	pop		edi
 	pop		ebx

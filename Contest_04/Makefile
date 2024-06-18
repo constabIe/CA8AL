@@ -7,7 +7,6 @@ AS  = nasm
 GDB = gdb
 
 CFLAGS = \
-	-std=gnu99 \
 	-m32 \
 	-Wfatal-errors \
 	-no-pie
