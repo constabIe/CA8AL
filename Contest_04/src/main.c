@@ -20,7 +20,8 @@ int main(void) {
     set_first_derivative(func_data, "7 3 /");
     set_second_derivative(func_data, "7 3 /");
 
-    // printf("%lu\n" , sizeof(func->obj_rpn->rpn));
+
+    printf("%d\n" , 444);
 
 // //    set_variable(func, "y");
    // printf("%lf\n\n", func->obj_rpn->rpn[0]->obj->operand->obj);
