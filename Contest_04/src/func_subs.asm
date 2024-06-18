@@ -171,7 +171,7 @@ func_subs:
 						jmp		.continue_operator
 
 					.sub_instr:
-						fsubp
+						fsubrp
 						jmp		.continue_operator
 
 					.mul_instr:
@@ -179,7 +179,7 @@ func_subs:
 						jmp		.continue_operator
 
 					.div_instr:
-						fdivp
+						fdivrp
 						jmp		.continue_operator
 
 				.pow_operator:
