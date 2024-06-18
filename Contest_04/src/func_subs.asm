@@ -245,6 +245,7 @@ func_subs:
 
 		.operand:
 			mov		edi, [esi]
+			mov		edi, [edi]
 			mov		[operand], edi
 
 			; add		dword [user_stack_ptr], QWORD_SIZE
