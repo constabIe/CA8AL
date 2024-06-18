@@ -9,8 +9,7 @@ GDB = gdb
 CFLAGS = \
 	-m32 \
 	-Wfatal-errors \
-	-no-pie \
-	-fsanitize=address,undefined
+	-no-pie 
 
 ASFLAGS = \
 	-f elf32 \
@@ -19,8 +18,7 @@ ASFLAGS = \
 LDFLAGS = \
 	-m32 \
 	-no-pie \
-	-z noexecstack \
-	-fsanitize=address,undefined
+	-z noexecstack
 
 LDLIBS = -lm
 
@@ -30,6 +28,11 @@ ifeq (${DEBUG}, 1)
 else
 	CFLAGS  += -flto
 	LDFLAGS += -flto
+endif
+
+ifeq (${MEMVIEW}, 1) 
+	CFLAGS += -fsanitize=address,undefined
+	LDFLAGS += -fsanitize=address,undefined
 endif
 
 #--------
