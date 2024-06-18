@@ -30,7 +30,7 @@ int main(void) {
 
     double val = func_subs(func, 5.0);
 
-    // printf("res: %lf", val); 
+    printf("res: %lf", val); 
 
     del_Function_data(func_data);
     del_Function(func);
