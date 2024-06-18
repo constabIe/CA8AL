@@ -130,6 +130,14 @@ func_subs:
 			mov		esi, [edi + DWORD_SIZE]
 			mov		[operator_type], esi
 
+			; debug
+			ALIGN_STACK 8
+			push	debug_message
+			push	debug_o_format_str
+			call 	printf
+			UNALIGN_STACK 8
+			; debug	
+
 			cmp		esi, BINARY
 			je		.binary
 			jne		.unary
@@ -160,6 +168,14 @@ func_subs:
 				sub		dword [user_stack_ptr], QWORD_SIZE
 				sub		dword [user_stack_ptr], QWORD_SIZE
 
+				; debug
+				ALIGN_STACK 8
+				push	debug_message
+				push	debug_o_format_str
+				call 	printf
+				UNALIGN_STACK 8
+				; debug	
+
 				mov		edi, [esi]
 				mov		[bin_func_name], edi
 
@@ -181,6 +197,15 @@ func_subs:
 					je		.div_instr
 
 					.add_instr:
+
+					; debug
+					ALIGN_STACK 8
+					push	debug_message
+					push	debug_o_format_str
+					call 	printf
+					UNALIGN_STACK 8
+					; debug	
+
 						faddp
 						jmp		.continue_binary
 
@@ -218,6 +243,13 @@ func_subs:
 				; push	debug_o_format_double
 				; call	printf
 				; UNALIGN_STACK 12
+				; debug
+				ALIGN_STACK 8
+				push	debug_message
+				push	debug_o_format_str
+				call 	printf
+				UNALIGN_STACK 8
+				; debug	
 
 				jmp		.continue_L
 
@@ -257,6 +289,14 @@ func_subs:
 
 			fld		qword [esi]
 
+			; debug
+			ALIGN_STACK 8
+			push	debug_message
+			push	debug_o_format_str
+			call 	printf
+			UNALIGN_STACK 8
+			; debug	
+
 			jmp		.continue_L
 
 		.variable:
@@ -289,6 +329,14 @@ func_subs:
 			; push	debug_o_format_double
 			; call	printf
 			; UNALIGN_STACK 12
+
+			; debug
+			ALIGN_STACK 8
+			push	debug_message
+			push	debug_o_format_str
+			call 	printf
+			UNALIGN_STACK 8
+			; debug	
 
 			jmp		.continue_L
 
