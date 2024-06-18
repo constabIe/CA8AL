@@ -281,14 +281,14 @@ func_subs:
 	mov		edi, [user_stack_ptr]
 	fstp	qword [edi]
 
-	fld		qword [edi]
+	; fld		qword [edi]
 
-	ALIGN_STACK 12
-	sub		esp, 8
-	fstp	qword [esp]
-	push	debug_o_format_double
-	call	printf
-	UNALIGN_STACK 12
+	; ALIGN_STACK 12
+	; sub		esp, 8
+	; fstp	qword [esp]
+	; push	debug_o_format_double
+	; call	printf
+	; UNALIGN_STACK 12
 
 	pop 	esi
 	pop		edi
