@@ -246,6 +246,8 @@ func_subs:
 
 	fldcw   word [fpu_ctrl]
 
+	mov		eax, edi
+
 	pop 	esi
 	pop		edi
 	pop		ebx

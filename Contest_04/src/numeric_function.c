@@ -50,42 +50,9 @@ static void del_Operand(Operand *operand);
 static Variable *init_Variable(const char *str);
 static void del_Variable(Variable *variable);
 
-// double root(Function *f, Function *g, double a, double b, double eps1) {
-//     VERIFY_CONTRACT(a <= b, "Invalid range");
-//     if (f == NULL || g == NULL) {
-//         raise(SIGSEGV);
-//     }
-
-//     double  a_i = a, 
-//             b_i = b, 
-//             c_i = (b_i - a_i) / 2;
-
-//     while (true) {
-//         if (fabs(a_i - b_i) < eps1) {
-//             break;
-//         }
-
-//         double F_abc[3] = {func_subs(f, a_i) - func_subs(g, a_i),
-//                             func_subs(f, c_i) - func_subs(g, c_i), 
-//                             func_subs(f, b_i) - func_subs(g, b_i)};
-
-//         if (sign(F_abc[0]) != sign(F_abc[1])) {
-//             b_i = c_i;
-//         } 
-//         else if (sign(F_abc[1]) != sign(F_abc[0])) {
-//             a_i = c_i; 
-//         }
-//         else {
-//             VERIFY_CONTRACT(0, "Invalid arguments were passed")ж
-//         }
-
-//         c_i = (b_i - a_i) / 2;
-//     }
-
-//     double root = a_i + DBL_MIN;
-
-//     return root;
-// }
+double root(Function *f, Function *g, double a, double b, double eps1) {
+    double 
+}
 double integral(Function *f, double a, double b, double eps2);
 
 static int32_t sign(double val) {
@@ -137,7 +104,6 @@ void del_Function(Function *function) {
         free(function);
     }
 }
-
 void set_variable(Function *func, const char *var) {
     if (func == NULL) {
         raise(SIGSEGV);
@@ -151,6 +117,42 @@ void set_variable(Function *func, const char *var) {
             func->obj_rpn->rpn[i] = init_RPNelement(VARIABLE);
         }
     }
+}
+
+Function_data *init_Function_data(const char *raw_rpn) {
+    Function_data *func_data = (Function_data *) malloc(sizeof(Function_data));
+    VERIFY_CONTRACT(func_data != NULL, "Unable to allocate memory");
+
+    func_data->func = init_Function(raw_rpn);
+    func_data->func_prime = NULL;
+    func_data->func_prime_prime = NULL;
+
+    return func_data;
+}
+void del_Function_data(Function_data *func_data) {
+    if (func_data->func != NULL) {
+        del_Function(func_data->func);
+    }
+
+    if (func_data->func_prime != NULL) {
+        del_Function(func_data->func_prime);
+    }
+
+    if (func_data->func_prime_prime != NULL) {
+        del_Function(func_data->func_prime_prime);
+    }
+}
+void set_first_derivative(Function_data *func_data, const char *raw_rpn) {
+    if (func_data->func_prime != NULL) {
+        del_Function(func_data->func_prime);
+    }
+    func_data->func_prime = init_Function(raw_rpn);
+}
+void set_second_derivative(Function_data *func_data, const char *raw_rpn) {
+    if (func_data->func_prime_prime != NULL) {
+        del_Function(func_data->func_prime_prime);
+    }
+    func_data->func_prime_prime = init_Function(raw_rpn);
 }
 
 static void change_global_operator_name(OperatorLabel new_operator) {

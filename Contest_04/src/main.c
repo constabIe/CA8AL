@@ -14,6 +14,11 @@
 
 int main(void) {
     Function *func = init_Function("7 3 /");
+
+    Function_data *func_data = init_Function_data("7 3 /");
+    set_first_derivative(func_data, "7 3 /");
+    set_second_derivative(func_data, "7 3 /");
+    
     // printf("%lu\n" , sizeof(func->obj_rpn->rpn));
 
 // //    set_variable(func, "y");
