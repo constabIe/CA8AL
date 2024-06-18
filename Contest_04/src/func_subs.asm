@@ -260,8 +260,10 @@ func_subs:
 .continue_func:
 	fstcw   word [fpu_ctrl]
 	finit
-	
+
 	mov		edi, [user_stack_ptr]
+	fld		qword [edi]
+	fld		qword [edi]
 	fld		qword [edi]
 
 	pop 	esi
