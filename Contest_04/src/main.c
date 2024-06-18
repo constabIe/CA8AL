@@ -13,7 +13,7 @@
 // extern double f_subs(Function *func, double val);
 
 int main(void) {
-    Function *func = init_Function(" x sin");
+    Function *func = init_Function("3 x 4 *");
     // printf("%lu\n" , sizeof(func->obj_rpn->rpn));
 
 // //    set_variable(func, "y");
