@@ -68,21 +68,6 @@ func_subs:
 	push	edi
 	push	esi
 
-	fstcw   word [fpu_ctrl]
-	finit
-  ; Загружаем double в FPU стек
-
-  	fld		qword [val]
-
-    ; ; Подготовка аргументов для printf
-    ; ALIGN_STACK 12
-    ; sub esp, 8      ; Зарезервируем место для double
-    ; fstp qword [esp]    ; Перемещаем double из FPU стека в стек
-    ; push debug_o_format_double   ; Адрес строки формата
-    ; call printf 
-    ; UNALIGN_STACK 12       ; Вызов функции printf
-
-
 	mov		ebx, user_stack
 	mov		[user_stack_ptr], ebx
 
@@ -99,6 +84,8 @@ func_subs:
 
 	mov		dword [iterator], 0
 	mov		ebx, 0
+	fstcw   word [fpu_ctrl]
+	finit
 
 	.L:
 		mov		edi, [iterator]
@@ -211,15 +198,6 @@ func_subs:
 				call	dword [unary_func_ptr]
 				UNALIGN_STACK 8
 
-				; fld		qword [edi]
-
-				; ALIGN_STACK 12
-				; sub		esp, 8
-				; fstp	qword [esp]
-				; push	debug_o_format_double
-				; call	printf
-				; UNALIGN_STACK 12
-
 				jmp		.continue_operator	
 
 		.continue_operator:
@@ -258,19 +236,9 @@ func_subs:
 		jmp		.L
 
 .continue_func:
-	fstcw   word [fpu_ctrl]
 	finit
-
 	mov		edi, [user_stack_ptr]
 	fld		qword [edi]
-	fld		qword [edi]
-	fld		qword [edi]
-	fld		qword [edi]
-	fld		qword [edi]
-	fld		qword [edi]
-	fld		qword [edi]
-	fld		qword [edi]
-
 
 	pop 	esi
 	pop		edi
@@ -287,12 +255,12 @@ section .data
 	DWORD_SIZE		equ		4
 	QWORD_SIZE		equ		8
 
-section .data
-	debug_o_format_int		db		`%u\n`, 0
-	debug_o_format_double	db 		`_%lf_\n`, 0
-	debug_o_format_str		db		`%s\n`, 0
-	debug_message			db 		`_debug_`, 0
-	res 					dq		1.0
+; section .data
+; 	debug_o_format_int		db		`%u\n`, 0
+; 	debug_o_format_double	db 		`_%lf_\n`, 0
+; 	debug_o_format_str		db		`%s\n`, 0
+; 	debug_message			db 		`_debug_`, 0
+; 	res 					dq		1.0
 
 ; ; debug
 ; ALIGN_STACK 8
@@ -302,15 +270,13 @@ section .data
 ; UNALIGN_STACK 8
 ; ; debug	
 
-	; ; fld		qword [edi]
+; ; fld		qword [edi]
 
-	
-
-	; ALIGN_STACK 12
-	; sub		esp, 8
-	; fstp	qword [esp]
-	; push	debug_o_format_double
-	; call	printf
-	; UNALIGN_STACK 12
+; ALIGN_STACK 12
+; sub		esp, 8
+; fstp	qword [esp]
+; push	debug_o_format_double
+; call	printf
+; UNALIGN_STACK 12
 
 
