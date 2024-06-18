@@ -1,17 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <limits.h>
-#include <ctype.h>
-#include <math.h>
-#include <stdbool.h>
-//#include <regex.h>
-#include <errno.h>
 
 #include "../include/numeric_function.h"
 #define EPS 0.001
 
-// extern double f_subs(Function *func, double val);
 
 int main(void) {
     Function *func = init_Function("x 3 /");
