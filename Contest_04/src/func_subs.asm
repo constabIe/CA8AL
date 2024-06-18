@@ -227,15 +227,6 @@ func_subs:
 			mov		edi, dword [user_stack_ptr]
 			fstp	qword [edi]		
 
-			; fld		qword [edi]
-
-			; ALIGN_STACK 12
-			; sub		esp, 8
-			; fstp	qword [esp]
-			; push	debug_o_format_double
-			; call	printf
-			; UNALIGN_STACK 12
-
 			jmp		.continue_L
 
 		.operand:
@@ -267,28 +258,9 @@ func_subs:
 		jmp		.L
 
 .continue_func:
-	; ; debug
-	; ALIGN_STACK 8
-	; push	debug_message
-	; push	debug_o_format_str
-	; call 	printf
-	; UNALIGN_STACK 8
-	; ; debug	
-
-	; sub		dword [user_stack_ptr], QWORD_SIZE
-	; mov		edi, [user_stack_ptr]
-	; ; fld		qword [edi]
-
-	
-
-	; ALIGN_STACK 12
-	; sub		esp, 8
-	; fstp	qword [esp]
-	; push	debug_o_format_double
-	; call	printf
-	; UNALIGN_STACK 12
-
+	fstcw   word [fpu_ctrl]
 	finit
+	
 	mov		edi, [user_stack_ptr]
 	fld		qword [edi]
 
@@ -321,4 +293,16 @@ section .data
 ; call 	printf
 ; UNALIGN_STACK 8
 ; ; debug	
+
+	; ; fld		qword [edi]
+
+	
+
+	; ALIGN_STACK 12
+	; sub		esp, 8
+	; fstp	qword [esp]
+	; push	debug_o_format_double
+	; call	printf
+	; UNALIGN_STACK 12
+
 
