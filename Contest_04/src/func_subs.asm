@@ -236,9 +236,15 @@ func_subs:
 		jmp		.L
 
 .continue_func:
+	fldcw   fpu_ctrl
+
+	fstcw   word [fpu_ctrl]
 	finit
+
 	mov		edi, [user_stack_ptr]
 	fld		qword [edi]
+
+	fldcw   fpu_ctrl
 
 	pop 	esi
 	pop		edi
