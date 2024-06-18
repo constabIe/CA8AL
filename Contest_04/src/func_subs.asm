@@ -275,9 +275,9 @@ func_subs:
 	; UNALIGN_STACK 8
 	; ; debug	
 
-	sub		dword [user_stack_ptr], QWORD_SIZE
-	mov		edi, [user_stack_ptr]
-	fstp	qword [edi]
+	; sub		dword [user_stack_ptr], QWORD_SIZE
+	; mov		edi, [user_stack_ptr]
+	; fstp	qword [edi]
 
 	fld		qword [edi]
 
