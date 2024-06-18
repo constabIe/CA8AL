@@ -23,7 +23,7 @@ int main(void) {
 
     double val = func_subs(func, 5.0);
 
-    // printf("rddes: %lf", val); 
+    printf("rddes: %lf", val); 
 
     del_Function(func);
 
