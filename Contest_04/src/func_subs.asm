@@ -265,6 +265,12 @@ func_subs:
 	fld		qword [edi]
 	fld		qword [edi]
 	fld		qword [edi]
+	fld		qword [edi]
+	fld		qword [edi]
+	fld		qword [edi]
+	fld		qword [edi]
+	fld		qword [edi]
+
 
 	pop 	esi
 	pop		edi
