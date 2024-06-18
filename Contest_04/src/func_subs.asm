@@ -275,7 +275,7 @@ func_subs:
 	; UNALIGN_STACK 8
 	; ; debug	
 
-	add		dword [user_stack_ptr], QWORD_SIZE
+	sub		dword [user_stack_ptr], QWORD_SIZE
 	mov		edi, [user_stack_ptr]
 	fstp	qword [edi]
 
