@@ -140,11 +140,8 @@ func_subs:
 				mov		[binary], esi
 
 				mov		edi, dword [user_stack_ptr]
-				fld		qword [edi - QWORD_SIZE]
-				fld		qword [edi]				
-
-				fld		qword [edi - QWORD_SIZE]
 				fld		qword [edi]
+				fld		qword [edi - QWORD_SIZE]
 
 				sub		dword [user_stack_ptr], QWORD_SIZE
 				sub		dword [user_stack_ptr], QWORD_SIZE
@@ -174,7 +171,7 @@ func_subs:
 						jmp		.continue_operator
 
 					.sub_instr:
-						fsubrp
+						fsubp
 						jmp		.continue_operator
 
 					.mul_instr:
@@ -182,7 +179,7 @@ func_subs:
 						jmp		.continue_operator
 
 					.div_instr:
-						fdivrp
+						fdivp
 						jmp		.continue_operator
 
 				.pow_operator:
