@@ -52,7 +52,6 @@ static void del_Variable(Variable *variable);
 
 double root(Function_data *f, Function_data *g, double a, double b, double eps1) {
     double F_x = func_subs(f->func, a) - func_subs(g->func, a);
-    
     double F_x_prime;
     double F_x_prime_prime = func_subs(f->func_prime_prime, a) - func_subs(g->func_prime_prime, a); 
 
@@ -72,8 +71,59 @@ double root(Function_data *f, Function_data *g, double a, double b, double eps1)
 
     return x;
 }
-double integral(Function_data *f, double a, double b, double eps2) {
+double integral(Function *f, double a, double b, double eps2) {
+    int32_t n = 10;
+    double p = 1 / 15;
+    double h;
 
+    double I_n;
+    double I_2n;
+    double x;
+
+    while (true) {
+        h = (b - a) / n;
+
+        I_n = func_subs(f, a);
+        for (int i = 0; i < (n / 2) - 1; ++i)
+        {
+            x = a + 2 * i * h;
+            I_n += func_subs(f, x);
+        }
+
+        for (int i = 0; i < n / 2; ++i)
+        {
+            x = a + (2 * i - 1) * h;
+            I_n += func_subs(f, x);
+        }
+
+        I_n += func_subs(f, a + n * h);
+
+
+        n = 2 * n;
+
+        h = (b - a) / n;
+
+        I_2n = func_subs(f, a);
+        for (int i = 0; i < (n / 2) - 1; ++i)
+        {
+            x = a + 2 * i * h;
+            I_2n += func_subs(f, x);
+        }
+
+        for (int i = 0; i < n / 2; ++i)
+        {
+            x = a + (2 * i - 1) * h;
+            I_2n += func_subs(f, x);
+        }
+
+        I_2n += func_subs(f, a + n * h);
+
+        if (p * fabs(I_n - I_2n) < eps2) {
+            break;
+        }
+    }
+
+    return I_2n;
 }
 
 

@@ -9,7 +9,8 @@ GDB = gdb
 CFLAGS = \
 	-m32 \
 	-Wfatal-errors \
-	-no-pie
+	-no-pie \
+	-fsanitize=address,undefined
 
 ASFLAGS = \
 	-f elf32 \
@@ -18,7 +19,8 @@ ASFLAGS = \
 LDFLAGS = \
 	-m32 \
 	-no-pie \
-	-z noexecstack
+	-z noexecstack \
+	-fsanitize=address,undefined
 
 LDLIBS = -lm
 
