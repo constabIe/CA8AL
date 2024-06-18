@@ -50,11 +50,11 @@ section .text
 %define bin_func_name		ebp - 36		
 %define unary				ebp - 40
 %define unary_func_ptr		ebp - 44	
-%define unary_func_name		ebp - 48	
+; %define unary_func_name		ebp - 48	
 %define operand				ebp - 52
-%define opearnd_obj			ebp - 56	
+; %define opearnd_obj			ebp - 56	
 %define variable			ebp - 60	
-%define variable_obj		ebp - 64		
+; %define variable_obj		ebp - 64		
 %define iterator			ebp - 68
 %define	user_stack_ptr		ebp - 72
 %define fpu_ctrl    		ebp - 76
@@ -76,7 +76,7 @@ func_subs:
 	mov		ebx, [func] ; func
 
 	mov		esi, [ebx]
-	mov		[obj_rpn], esi
+	; mov		[obj_rpn], esi
 
 	mov		edi, [esi]
 	mov		[rpn], edi
@@ -258,29 +258,3 @@ section .bss
 section .data
 	DWORD_SIZE		equ		4
 	QWORD_SIZE		equ		8
-
-; section .data
-; 	debug_o_format_int		db		`%u\n`, 0
-; 	debug_o_format_double	db 		`_%lf_\n`, 0
-; 	debug_o_format_str		db		`%s\n`, 0
-; 	debug_message			db 		`_debug_`, 0
-; 	res 					dq		1.0
-
-; ; debug
-; ALIGN_STACK 8
-; push	debug_message
-; push	debug_o_format_str
-; call 	printf
-; UNALIGN_STACK 8
-; ; debug	
-
-; ; fld		qword [edi]
-
-; ALIGN_STACK 12
-; sub		esp, 8
-; fstp	qword [esp]
-; push	debug_o_format_double
-; call	printf
-; UNALIGN_STACK 12
-
-
