@@ -202,16 +202,17 @@ Function_data *init_Function_data(const char *raw_rpn) {
     return func_data;
 }
 void del_Function_data(Function_data *func_data) {
-    if (func_data->func != NULL) {
-        del_Function(func_data->func);
-    }
-
-    if (func_data->func_prime != NULL) {
-        del_Function(func_data->func_prime);
-    }
-
-    if (func_data->func_prime_prime != NULL) {
-        del_Function(func_data->func_prime_prime);
+    if (func_data != NULL) {
+        if (func_data->func != NULL) {
+            del_Function(func_data->func);
+        }
+        if (func_data->func_prime != NULL) {
+            del_Function(func_data->func_prime);
+        }
+        if (func_data->func_prime_prime != NULL) {
+            del_Function(func_data->func_prime_prime);
+        }
+        free(func_data);
     }
 }
 void set_first_derivative(Function_data *func_data, const char *raw_rpn) {
