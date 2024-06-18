@@ -18,8 +18,7 @@ extern pow
 	and 	esp, 0xfffffff0
 %endmacro
 
-%macro FUNCTION_EPILOGUE 1.nolist
-	add		esp, %1
+%macro FUNCTION_EPILOGUE 0.nolist
 	leave
 %endmacro	
 
@@ -59,14 +58,17 @@ section .text
 %define iterator			ebp - 68
 %define	user_stack_ptr		ebp - 72
 %define fpu_ctrl    		ebp - 76
+%define tmp_ebx				ebp - 80
+%define tmp_edi				ebp - 84
+%define tmp_esi				ebp - 88
 
 global func_subs
 func_subs:
-	FUNCTION_PROLOGUE 72
+	FUNCTION_PROLOGUE 84
 
-	push	ebx
-	push	edi
-	push	esi
+	mov		dword [tmp_ebx], ebx
+	mov		dword [tmp_edi], edi
+	mov		dword [tmp_esi], esi
 
 	mov		ebx, user_stack
 	mov		[user_stack_ptr], ebx
@@ -238,21 +240,15 @@ func_subs:
 .continue_func:
 	fldcw   word [fpu_ctrl]
 
-	fstcw   word [fpu_ctrl]
 	finit
-
 	mov		edi, [user_stack_ptr]
 	fld		qword [edi]
 
-	fldcw   word [fpu_ctrl]
+	mov		ebx, dword [tmp_ebx]
+	mov		edi, dword [tmp_edi]
+	mov		esi, dword [tmp_esi]
 
-	mov		eax, edi
-
-	pop 	esi
-	pop		edi
-	pop		ebx
-
-	FUNCTION_EPILOGUE 72
+	FUNCTION_EPILOGUE
 
 	ret
 
