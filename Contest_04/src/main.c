@@ -14,7 +14,7 @@
 // extern double f_subs(Function *func, double val);
 
 int main(void) {
-    Function *func = init_Function("7 3 /");
+    Function *func = init_Function("x 3 /");
 
     Function_data *func_data = init_Function_data("7 3 /");
     set_first_derivative(func_data, "7 3 /");
@@ -30,9 +30,10 @@ int main(void) {
 
     double val = func_subs(func, 5.0);
 
-    printf("rddes: %lf", val); 
+    printf("res: %lf", val); 
 
-    del_Function(func);
+    // del_Function_data(func_data);
+    // del_Function(func);
 
     return 0;
 }
