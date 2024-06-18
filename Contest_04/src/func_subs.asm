@@ -50,21 +50,18 @@ section .text
 %define bin_func_name		ebp - 36		
 %define unary				ebp - 40
 %define unary_func_ptr		ebp - 44	
-; %define unary_func_name		ebp - 48	
-%define operand				ebp - 52
-; %define opearnd_obj			ebp - 56	
-%define variable			ebp - 60	
-; %define variable_obj		ebp - 64		
-%define iterator			ebp - 68
-%define	user_stack_ptr		ebp - 72
-%define fpu_ctrl    		ebp - 76
-%define tmp_ebx				ebp - 80
-%define tmp_edi				ebp - 84
-%define tmp_esi				ebp - 88
+%define operand				ebp - 48
+%define variable			ebp - 52		
+%define iterator			ebp - 56
+%define	user_stack_ptr		ebp - 60
+%define fpu_ctrl    		ebp - 64
+%define tmp_ebx				ebp - 68
+%define tmp_edi				ebp - 72
+%define tmp_esi				ebp - 76
 
 global func_subs
 func_subs:
-	FUNCTION_PROLOGUE 84
+	FUNCTION_PROLOGUE 72
 
 	mov		dword [tmp_ebx], ebx
 	mov		dword [tmp_edi], edi
@@ -73,10 +70,9 @@ func_subs:
 	mov		ebx, user_stack
 	mov		[user_stack_ptr], ebx
 
-	mov		ebx, [func] ; func
+	mov		ebx, [func] 
 
 	mov		esi, [ebx]
-	; mov		[obj_rpn], esi
 
 	mov		edi, [esi]
 	mov		[rpn], edi
@@ -251,6 +247,41 @@ func_subs:
 	FUNCTION_EPILOGUE
 
 	ret
+
+%undef	OPERATOR
+%undef	OPERAND
+%undef	VARIABLE
+
+%undef	BINARY
+%undef	UNARY
+
+%undef	ADD_INSTR
+%undef	SUB_INSTR
+%undef	MUL_INSTR
+%undef	DIV_INSTR
+%undef	POW_INSTR
+
+%undef	val
+%undef	func
+%undef	obj_rpn
+%undef	rpn
+%undef	rpn_size
+%undef	rpn_el
+%undef	rpn_el_type
+%undef	operator
+%undef	operator_type
+%undef	binary
+%undef	bin_func_name
+%undef	unary
+%undef	unary_func_ptr
+%undef	operand
+%undef	variable
+%undef	iterator
+%undef	user_stack_ptr
+%undef	fpu_ctrl
+%undef	tmp_ebx
+%undef	tmp_edi
+%undef	tmp_esi
 
 section .bss
 	user_stack 		resq	500

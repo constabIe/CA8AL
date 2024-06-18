@@ -16,24 +16,16 @@
 int main(void) {
     Function *func = init_Function("x 3 /");
 
-    Function_data *func_data = init_Function_data("7 3 /");
+    Function_data *func_data = init_Function_data("32 43 * x exp + 65 2 pow /");
     set_first_derivative(func_data, "7 3 /");
     set_second_derivative(func_data, "7 3 /");
-
-
-    printf("%d\n" , 444);
-
-// //    set_variable(func, "y");
-   // printf("%lf\n\n", func->obj_rpn->rpn[0]->obj->operand->obj);
-//    printf("%u\n", func->obj_rpn->rpn[1]->type);
-//    printf("%u\n", func->obj_rpn->rpn[2]->type);
 
     double val = func_subs(func, 5.0);
 
     printf("res: %lf\n", val); 
 
     del_Function_data(func_data);
-    // del_Function(func);
+    del_Function(func);
 
     return 0;
 }
