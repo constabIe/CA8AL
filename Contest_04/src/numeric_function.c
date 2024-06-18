@@ -50,10 +50,32 @@ static void del_Operand(Operand *operand);
 static Variable *init_Variable(const char *str);
 static void del_Variable(Variable *variable);
 
-double root(Function *f, Function *g, double a, double b, double eps1) {
-    double 
+double root(Function_data *f, Function_data *g, double a, double b, double eps1) {
+    double F_x = func_subs(f->func, a) - func_subs(g->func, a);
+    
+    double F_x_prime;
+    double F_x_prime_prime = func_subs(f->func_prime_prime, a) - func_subs(g->func_prime_prime, a); 
+
+    double x = (F_x * F_x_prime_prime > 0) ? a : b;
+
+    while (true) {
+        F_x = func_subs(f->func, x) - func_subs(g->func, x);
+
+        if (fabs(F_x) <= eps1) {
+            break;
+        }
+
+        F_x_prime = func_subs(f->func_prime, a) - func_subs(g->func_prime, a);
+
+        x = x - F_x / F_x_prime;
+    }
+
+    return x;
 }
-double integral(Function *f, double a, double b, double eps2);
+double integral(Function_data *f, double a, double b, double eps2) {
+
+}
+
 
 static int32_t sign(double val) {
     if (val > 0) {

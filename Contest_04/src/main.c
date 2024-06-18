@@ -9,6 +9,7 @@
 #include <errno.h>
 
 #include "../include/numeric_function.h"
+#define EPS 0.001
 
 // extern double f_subs(Function *func, double val);
 
@@ -18,7 +19,7 @@ int main(void) {
     Function_data *func_data = init_Function_data("7 3 /");
     set_first_derivative(func_data, "7 3 /");
     set_second_derivative(func_data, "7 3 /");
-    
+
     // printf("%lu\n" , sizeof(func->obj_rpn->rpn));
 
 // //    set_variable(func, "y");

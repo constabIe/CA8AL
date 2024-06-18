@@ -93,8 +93,8 @@ typedef struct {
 } Function_data;
 
 double func_subs(Function *func, double val);
-double root(Function *f, Function *g, double a, double b, double eps1);
-double integral(Function *f, double a, double b, double eps2);
+double root(Function_data *f, Function_data *g, double a, double b, double eps1);
+double integral(Function_data *f, double a, double b, double eps2);
 
 double cot(double x);
 
