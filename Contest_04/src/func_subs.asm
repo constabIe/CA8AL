@@ -270,13 +270,13 @@ func_subs:
 		jmp		.L
 
 .continue_func:
-	; debug
-	ALIGN_STACK 8
-	push	debug_message
-	push	debug_o_format_str
-	call 	printf
-	UNALIGN_STACK 8
-	; debug	
+	; ; debug
+	; ALIGN_STACK 8
+	; push	debug_message
+	; push	debug_o_format_str
+	; call 	printf
+	; UNALIGN_STACK 8
+	; ; debug	
 
 	mov		edi, [user_stack_ptr]
 	fstp	qword [edi]
@@ -307,7 +307,7 @@ section .data
 
 section .data
 	debug_o_format_int		db		`%u\n`, 0
-	debug_o_format_double	db 		`%lf__`, 0
+	debug_o_format_double	db 		`_%lf_\n`, 0
 	debug_o_format_str		db		`%s\n`, 0
 	debug_message			db 		`_debug_`, 0
 	res 					dq		1.0
