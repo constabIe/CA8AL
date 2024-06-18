@@ -194,6 +194,8 @@ func_subs:
 					call	pow
 					UNALIGN_STACK 16
 
+					jmp		.continue_operator
+
 			.unary:
 				mov		esi, [edi]
 				mov		esi, [esi]
@@ -236,6 +238,8 @@ func_subs:
 			push	debug_o_format_double
 			call	printf
 			UNALIGN_STACK 12
+
+			jmp		.continue_L
 
 		.operand:
 			mov		edi, [esi]
