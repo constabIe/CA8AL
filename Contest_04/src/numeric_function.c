@@ -202,7 +202,7 @@ Function *init_Function(const char *raw_rpn, const char *func_name) {
 
     VERIFY_CONTRACT(system(command) != -1, "The error was raised after an attempt to initialize the shell command");
 
-    const char *prefix_path = "../functions/"
+    const char *prefix_path = "../functions/";
     char path[PATH_SIZE];
 
     snprintf(path, sizeof(path), "%s%s", prefix_path, func_name);
