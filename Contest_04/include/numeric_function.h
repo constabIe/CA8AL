@@ -107,7 +107,7 @@ double cot(double x);
 Function *init_Function(const char *raw_rpn, const char *func_name);
 void del_Function(Function *function);
 
-Function_data *init_Function_data(const char *raw_rpn);
+// Function_data *init_Function_data(const char *raw_rpn);
 // void del_Function_data(Function_data *func_data);
 // void set_first_derivative(Function_data *func_data, const char *raw_rpn);
 // void set_second_derivative(Function_data *func_data, const char *raw_rpn);
