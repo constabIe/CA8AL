@@ -122,4 +122,14 @@ GDB_FLAGS = \
 gdb: $(EXECUTABLE)
 	$(GDB) $(GDB_FLAGS)
 
+MESSAGE = asm definiton generation prototype
+
+git:
+	@printf "${BCYAN}>>>${RESET} "
+	git add .
+	@printf "${BCYAN}>>>${RESET} "
+	git commit -m "${MESSAGE}"
+	@printf "${BCYAN}>>>${RESET} "
+	git push origin main
+
 .PHONY: default clean run gdb
