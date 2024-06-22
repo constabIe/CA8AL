@@ -48,7 +48,7 @@ static void intel_asm_cdecl_function_end_template(FILE *output);
 
 static void intel_asm_fpu_load_binary_operator_template(FILE *output);
 static void intel_asm_fpu_load_unary_operator_template(FILE *output);
-static void intel_asm_fpu_UPload_template(FILE *output)
+static void intel_asm_fpu_UPload_template(FILE *output);
 
 static void intel_asm_fpu_add_operator_template(FILE *output);
 static void intel_asm_fpu_sub_operator_template(FILE *output);
