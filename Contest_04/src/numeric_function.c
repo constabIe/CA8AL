@@ -256,7 +256,7 @@ Function *init_Function(const char *raw_rpn, const char *func_name) {
 void del_Function(Function *function) {
     if (function != NULL) {
         if (function->raw_func != NULL) {
-            del_RawFunction(function->raw_func)
+            del_RawFunction(function->raw_func);
         }
         free(function);
     }
