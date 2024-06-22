@@ -82,15 +82,21 @@ typedef struct {
 
 typedef struct {
     RPN *obj_rpn;
-
     Variable *obj_var;
-} Function;
+} RawFunction;
+
+typedef double (*generated_func_t) (double);
 
 typedef struct {
-    Function *func;
-    Function *func_prime;
-    Function *func_prime_prime;
-} Function_data;
+    RawFunction *raw_func;
+    generated_func_t subs_val;
+} Function;
+
+// typedef struct {
+//     Function *func;
+//     Function *func_prime;
+//     Function *func_prime_prime;
+// } Function_data;
 
 double func_subs(Function *func, double val);
 double root(Function_data *f, Function_data *g, double a, double b, double eps1);
@@ -98,13 +104,12 @@ double integral(Function *f, double a, double b, double eps2);
 
 double cot(double x);
 
-Function *init_Function(const char *raw_rpn);
+Function *init_Function(const char *raw_rpn, const char *func_name);
 void del_Function(Function *function);
-void set_variable(Function *func, const char *var);
 
 Function_data *init_Function_data(const char *raw_rpn);
-void del_Function_data(Function_data *func_data);
-void set_first_derivative(Function_data *func_data, const char *raw_rpn);
-void set_second_derivative(Function_data *func_data, const char *raw_rpn);
+// void del_Function_data(Function_data *func_data);
+// void set_first_derivative(Function_data *func_data, const char *raw_rpn);
+// void set_second_derivative(Function_data *func_data, const char *raw_rpn);
 
 #endif // NUMERIC_FUNCTION_H

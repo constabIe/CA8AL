@@ -18,7 +18,8 @@ extern pow
 	and 	esp, 0xfffffff0
 %endmacro
 
-%macro FUNCTION_EPILOGUE 0.nolist
+%macro FUNCTION_EPILOGUE 1.nolist
+	add		esp, %1
 	leave
 %endmacro	
 
@@ -50,29 +51,30 @@ section .text
 %define bin_func_name		ebp - 36		
 %define unary				ebp - 40
 %define unary_func_ptr		ebp - 44	
-%define operand				ebp - 48
-%define variable			ebp - 52		
-%define iterator			ebp - 56
-%define	user_stack_ptr		ebp - 60
-%define fpu_ctrl    		ebp - 64
-%define tmp_ebx				ebp - 68
-%define tmp_edi				ebp - 72
-%define tmp_esi				ebp - 76
+%define unary_func_name		ebp - 48	
+%define operand				ebp - 52
+%define opearnd_obj			ebp - 56	
+%define variable			ebp - 60	
+%define variable_obj		ebp - 64		
+%define iterator			ebp - 68
+%define	user_stack_ptr		ebp - 72
+%define fpu_ctrl    		ebp - 76
 
 global func_subs
 func_subs:
 	FUNCTION_PROLOGUE 72
 
-	mov		dword [tmp_ebx], ebx
-	mov		dword [tmp_edi], edi
-	mov		dword [tmp_esi], esi
+	push	ebx
+	push	edi
+	push	esi
 
 	mov		ebx, user_stack
 	mov		[user_stack_ptr], ebx
 
-	mov		ebx, [func] 
+	mov		ebx, [func] ; func
 
 	mov		esi, [ebx]
+	mov		[obj_rpn], esi
 
 	mov		edi, [esi]
 	mov		[rpn], edi
@@ -236,52 +238,23 @@ func_subs:
 .continue_func:
 	fldcw   word [fpu_ctrl]
 
+	fstcw   word [fpu_ctrl]
 	finit
+
 	mov		edi, [user_stack_ptr]
 	fld		qword [edi]
 
-	mov		ebx, dword [tmp_ebx]
-	mov		edi, dword [tmp_edi]
-	mov		esi, dword [tmp_esi]
+	fldcw   word [fpu_ctrl]
 
-	FUNCTION_EPILOGUE
+
+
+	pop 	esi
+	pop		edi
+	pop		ebx
+
+	FUNCTION_EPILOGUE 72
 
 	ret
-
-%undef	OPERATOR
-%undef	OPERAND
-%undef	VARIABLE
-
-%undef	BINARY
-%undef	UNARY
-
-%undef	ADD_INSTR
-%undef	SUB_INSTR
-%undef	MUL_INSTR
-%undef	DIV_INSTR
-%undef	POW_INSTR
-
-%undef	val
-%undef	func
-%undef	obj_rpn
-%undef	rpn
-%undef	rpn_size
-%undef	rpn_el
-%undef	rpn_el_type
-%undef	operator
-%undef	operator_type
-%undef	binary
-%undef	bin_func_name
-%undef	unary
-%undef	unary_func_ptr
-%undef	operand
-%undef	variable
-%undef	iterator
-%undef	user_stack_ptr
-%undef	fpu_ctrl
-%undef	tmp_ebx
-%undef	tmp_edi
-%undef	tmp_esi
 
 section .bss
 	user_stack 		resq	500
@@ -289,3 +262,29 @@ section .bss
 section .data
 	DWORD_SIZE		equ		4
 	QWORD_SIZE		equ		8
+
+; section .data
+; 	debug_o_format_int		db		`%u\n`, 0
+; 	debug_o_format_double	db 		`_%lf_\n`, 0
+; 	debug_o_format_str		db		`%s\n`, 0
+; 	debug_message			db 		`_debug_`, 0
+; 	res 					dq		1.0
+
+; ; debug
+; ALIGN_STACK 8
+; push	debug_message
+; push	debug_o_format_str
+; call 	printf
+; UNALIGN_STACK 8
+; ; debug	
+
+; ; fld		qword [edi]
+
+; ALIGN_STACK 12
+; sub		esp, 8
+; fstp	qword [esp]
+; push	debug_o_format_double
+; call	printf
+; UNALIGN_STACK 12
+
+

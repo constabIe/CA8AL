@@ -92,13 +92,23 @@ ${BUILDDIR}/%.o: ${SOURCEDIR}/%.asm
 run: ${EXECUTABLE}
 	./$<
 
+
+FUNCDIR = functions
+FUNCNAME = null
+
+function:
+	@printf "${BYELLOW}Definition of the function ${BCYAN}${FUNCNAME}${RESET}\n"
+	@mkdir -p ${FUNCDIR}
+	@touch ${FUNCDIR}/${FUNCNAME}.asm
+
 #---------------
 # Miscellaneous
 #---------------
 
 clean:
-	@printf "${BYELLOW}Cleaning build directory${RESET}\n"
+	@printf "${BYELLOW}Cleaning proccess${RESET}\n"
 	rm -rf ${BUILDDIR}
+	rm -rf ${FUNCDIR}
 
 GDB_FLAGS = \
 	--eval-command="set architecture i386" \
