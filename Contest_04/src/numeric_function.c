@@ -532,8 +532,8 @@ static void add_func_name(const char *func_name) {
     {
         if (strcmp(global_functions_names[i], func_name) == 0) {
             char message[MESSAGE_SIZE];
-            const char *prefix_message = "A function named "
-            const char *postfix_maessage = " already exists"
+            const char *prefix_message = "A function named ";
+            const char *postfix_maessage = " already exists";
 
             snprintf(message, sizeof(message), "%s%s%s", prefix_command, func_name, postfix_maessage);
 
