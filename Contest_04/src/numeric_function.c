@@ -28,7 +28,7 @@ static const void *global_unary_operators_ptrs[UNARY_Q] = {exp, log, sin, cos, t
 
 static OperatorLabel global_operator_name;
 static double global_val;
-static char *global_str[FUNC_NAME_SIZE];
+static char *global_str;
 
 static char *global_functions_names[FUNC_NAME_SIZE];
 static uint32_t global_func_names_quantity = 0;
@@ -526,7 +526,7 @@ static void change_global_str(const char *new_str) {
 }
 
 static void add_func_name(const char *func_name) {
-    VERIFY_CONTRACT(func_name != NULL, "SIGSEGV", raise(SIGSEGV));
+    if (func_name == NULL) { raise(SIGSEGV); }
 
     for (uit32_t i = 0; i < global_func_names_quantity; ++i)
     {
