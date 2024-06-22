@@ -213,18 +213,18 @@ Function *init_Function(const char *raw_rpn, const char *func_name) {
 
     for (uint32_t i = 0; i < function->raw_func->obj_rpn->size; ++i) {
         if (function->raw_func->obj_rpn->rpn[i]->type == OPERATOR) {
-            if (function->raw_func->obj_rpn->rpn[i]->type == BINARY) {
+            if (function->raw_func->obj_rpn->rpn[i]->obj->operator->type == BINARY) {
                 intel_asm_fpu_load_binary_operator_template(output);
-                if (function->raw_func->obj_rpn->rpn[i]->binary->type == ADD) {
+                if (function->raw_func->obj_rpn->rpn[i]->obj->operator->obj->binary->type == ADD) {
                     intel_asm_fpu_add_operator_template(output);
                 }
-                else if (function->raw_func->obj_rpn->rpn[i]->binary->type == SUB) {
+                else if (function->raw_func->obj_rpn->rpn[i]->obj->operator->obj->binary->type == SUB) {
                     intel_asm_fpu_sub_operator_template(output);
                 }
-                else if (function->raw_func->obj_rpn->rpn[i]->binary->type == MUL) {
+                else if (function->raw_func->obj_rpn->rpn[i]->obj->operator->obj->binary->type == MUL) {
                     intel_asm_fpu_mul_operator_template(output);
                 }
-                else if (function->raw_func->obj_rpn->rpn[i]->binary->type == DIV) {
+                else if (function->raw_func->obj_rpn->rpn[i]->obj->operator->obj->binary->type == DIV) {
                     intel_asm_fpu_div_operator_template(output);
                 }
                 else {
@@ -239,7 +239,7 @@ Function *init_Function(const char *raw_rpn, const char *func_name) {
             }
         } 
         else if (function->raw_func->obj_rpn->rpn[i]->type == OPERAND) {
-            add_operand(function->raw_func->obj_rpn->rpn[i]->operand->obj);
+            add_operand(function->raw_func->obj_rpn->rpn[i]->obj->operand->obj);
             intel_asm_fpu_load_operand_template(output);
         }
         else {
