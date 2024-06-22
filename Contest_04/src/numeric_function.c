@@ -253,7 +253,14 @@ Function *init_Function(const char *raw_rpn, const char *func_name) {
 
     return function;
 }
-void del_Function(Function *function);
+void del_Function(Function *function) {
+    if (function != NULL) {
+        if (function->raw_func != NULL) {
+            del_RawFunction(function->raw_func)
+        }
+        free(function);
+    }
+}
 
 static void intel_asm_cdecl_function_start_template(FILE *output, const char *func_name) {
     if (output == NULL) { raise(SIGSEGV); }
