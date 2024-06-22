@@ -247,7 +247,7 @@ Function *init_Function(const char *raw_rpn, const char *func_name) {
         }   
     }
 
-    intel_asm_cdecl_function_start_template(output);
+    intel_asm_cdecl_function_end_template(output);
 
     fclose(output);
 
