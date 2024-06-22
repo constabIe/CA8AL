@@ -197,7 +197,7 @@ Function *init_Function(const char *raw_rpn, const char *func_name) {
 
     char command[CMD_SIZE];
     memset(command, 0, sizeof(command));
-    const char *prefix_command = "cd .. && make function FUNCNAME=";
+    const char *prefix_command = "make function FUNCNAME=";
     snprintf(command, sizeof(command), "%s%s", prefix_command, func_name);
 
     VERIFY_CONTRACT(system(command) != -1, "The error was raised after an attempt to initialize the shell command");
