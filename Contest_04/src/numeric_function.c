@@ -30,7 +30,7 @@ static OperatorLabel global_operator_name;
 static double global_val;
 static char *global_str[FUNC_NAME_SIZE];
 
-static char *global_functions_names[FUNC_NAME_SIZE]
+static char *global_functions_names[FUNC_NAME_SIZE];
 static uint32_t global_func_names_quantity = 0;
 
 static double global_operands[256];
