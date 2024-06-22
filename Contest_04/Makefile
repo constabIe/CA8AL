@@ -8,6 +8,7 @@ GDB = gdb
 
 CFLAGS = \
 	-m32 \
+	-Werror\
 	-Wfatal-errors \
 	-no-pie 
 
