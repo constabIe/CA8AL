@@ -528,7 +528,7 @@ static void change_global_str(const char *new_str) {
 static void add_func_name(const char *func_name) {
     if (func_name == NULL) { raise(SIGSEGV); }
 
-    for (uit32_t i = 0; i < global_func_names_quantity; ++i)
+    for (uint32_t i = 0; i < global_func_names_quantity; ++i)
     {
         if (strcmp(global_functions_names[i], func_name) == 0) {
             char message[MESSAGE_SIZE];
