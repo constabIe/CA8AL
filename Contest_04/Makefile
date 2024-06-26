@@ -53,7 +53,7 @@ RESET   = \033[0m
 
 BUILDDIR = build
 INCLUDEDIR = include
-SOURCEDIR = src
+SOURCEDIR =  src
 
 CFLAGS += -I ${INCLUDEDIR}
 

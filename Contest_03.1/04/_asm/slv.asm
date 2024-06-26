@@ -2,99 +2,57 @@ bits 32
 
 %include "io.inc"
 
-section .text
+%macro ALIGN_STACK 1.nolist
+	sub		esp, %1
+	and		esp, 0xfffffff0
+	add		esp, %1
+%endmacro
+
+%macro UNALIGN_STACK 1.nolist
+	add		esp, %1
+%endmacro
+
+%macro FUNCTION_PROLOGUE 1.nolist
+	enter	%1, 0
+	and 	esp, 0xfffffff0
+%endmacro
+
+%macro FUNCTION_EPILOGUE 1.nolist
+	add		esp, %1
+	leave
+%endmacro	
+
+global main
+main:
+	FUNCTION_PROLOGUE 0
+
+
+
+	FUNCTION_EPILOGUE 0
+
+	ret
+
+%define	pos		dword [ebp - 4]
+
 global reverse_half
 reverse_half:
-	push 	ebp
-	mov 	ebp, esp
+	push	ebp
+	mov		ebp, esp
 
-	push 	eax		; input storage
-	push 	ecx 	; common iterator
-	push  	ebx 	; even iterator
+	GET_DEC	4, eax
 
-	sub     esp, 12
+	bt		ebx, 0
+	jc		
 
-	xor 	ecx, ecx
-	xor  	ebx, ebx
+	cmp		eax, 0
+	jne 	.recursion
 
-	.while:
-		GET_DEC 4, eax
+	.recursion:
 
-		cmp  	eax, 0
-		jz 		.exit_while
 
-		bt 		ecx, 0
-		jnc 	.out_odd
-		jc 		.in_even
+	mov		esp, ebp
+	pop		ebp
 
-		.out_odd: 	
-			PRINT_DEC 	4, eax
-			PRINT_CHAR 	` `
-
-			inc 	ecx
-
-			jmp 	.while
-
-		.in_even:
-			inc 	ecx
-			inc  	ebx
-
-			push 	eax
-
-			jmp 	.while
-
-	.exit_while:
-		jmp .out_even_loop
-
-	.out_even_loop:
-		cmp 	ebx, 0
-		jz 		.exit_function 		
-
-		pop  	eax
-
-		PRINT_DEC 	4, eax
-		PRINT_CHAR 	` `
-
-		dec 	ebx
-		jmp 	.out_even_loop
-
-	.exit_function:
-		NEWLINE
-
-    	add     esp, 12
-
-		pop  	ebx
-		pop  	ecx
-		pop  	eax
-
-		mov  	esp, ebp
-		pop  	ebp
-
-		ret
-
-global main:
-main:
-	push 	ebp
-	mov 	ebp, esp
-
-	push 	eax
-	push 	ecx
-	push  	ebx
-
-	sub     esp, 12
-
-	call 	reverse_half
-
-    add     esp, 12
-
-	pop  	ebx
-	pop  	ecx
-	pop 	eax
-
-	mov  	esp, ebp
-	pop  	ebp
-
-	xor  	eax, eax
 	ret
 
 

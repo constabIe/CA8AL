@@ -1,6 +1,7 @@
-*.DS_Store*
-*build*
-*task-template*
-*.slaaaay*
-*slv_asm*
-*slv_c*
+*.DS_Store
+*build
+^task-template$
+*slv_asm
+*slv_c
+*.idea
+*html-version

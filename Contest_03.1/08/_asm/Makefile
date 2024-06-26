@@ -31,8 +31,10 @@ LDFLAGS = \
 # Files
 #-------
 
-SOURCE 	   = slv.asm
-OBJECTS    = $(SOURCE:%.asm=build/%.o)
+SOURCE = slv.asm
+
+OBJECTS = $(SOURCE:%.asm=build/%.o)
+
 EXECUTABLE = build/slv_asm
 
 #---------------

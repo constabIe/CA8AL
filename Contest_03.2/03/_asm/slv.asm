@@ -1,6 +1,6 @@
 bits 32
 
-extern malloc, calloc, realloc, free
+extern malloc, free
 extern printf, scanf 
 extern strcpy, strncpy, strncmp, strlen
 
@@ -28,8 +28,6 @@ section .text
 
 section .text	
 
-; -------------------------main---------------------------
-
 %define	string_1			dword [ebp -  4]
 %define	len_str_1			dword [ebp -  8]
 %define	string_2			dword [ebp - 12]
@@ -47,6 +45,7 @@ main:
 
 	push	ebx
 	push	edi
+	push	esi
 
 	ALIGN_STACK 0
 	call	get_str
@@ -118,7 +117,7 @@ main:
 	.true_substr:
 		ALIGN_STACK 4
 		push	103
-		call	calloc
+		call	malloc
 		UNALIGN_STACK 4
 
 		mov		res_string, eax
@@ -214,6 +213,7 @@ main:
 	call	free
 	UNALIGN_STACK 4	
 
+	pop		esi
 	pop		edi
 	pop 	ebx
 
@@ -228,10 +228,6 @@ main:
 %undef	len_str_2
 %undef 	struct_issubstr
 %undef	flag_swap
-
-; ------------------------endmain-------------------------
-
-; -----------------------functions-----------------------
 
 %define	dst		dword [ebp - 4]
 
@@ -395,8 +391,6 @@ issubstr:
 %undef	substring
 %undef	len_substring	
 
-; ---------------------endfunctions----------------------
-
 section .data	
 	BYTE_SIZE				equ		1
 	NEWLINE					equ 	0x0A
@@ -405,4 +399,3 @@ section .data
 		
 	char_i_format			db		`%c`, 0
 	str_o_format			db 		`%s\n`, 0
-		

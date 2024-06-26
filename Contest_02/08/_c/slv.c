@@ -22,7 +22,7 @@ typedef struct
 	int **data;
  	int rows_q; 
  	int cols_q; 
-
+ 						
 } Matrix_t;	
 
 Matrix_t* allocate_matrix(const int rows_q, const int cols_q); 

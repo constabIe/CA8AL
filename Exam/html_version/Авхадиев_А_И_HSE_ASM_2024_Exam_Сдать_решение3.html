@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0092)https://www.contest.solutions/cgi-bin/new-client?SID=a7e37e7a27717d21&action=139&prob_id=130 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<script type="text/javascript" src="./Авхадиев А. И. [HSE ASM 2024 Exam]_ Сдать решение3_files/jquery.min.js.загрузка"></script>
+<script type="text/javascript" src="./Авхадиев А. И. [HSE ASM 2024 Exam]_ Сдать решение3_files/unpriv.js.загрузка"></script>
+<script type="text/javascript">
+  var SID="a7e37e7a27717d21";
+  var NEW_SRV_ACTION_JSON_USER_STATE=175;
+  var NEW_SRV_ACTION_VIEW_PROBLEM_SUMMARY=137;
+  var self_url="https://www.contest.solutions/cgi-bin/new-client";
+  var script_name="/cgi-bin/new-client";
+  var jsonState = { "h": 12, "m": 14, "s": 48, "d": 21, "o": 6, "y": 2024, "r": 835 };
+  var updateFailedMessage = "ОШИБКА ОБНОВЛЕНИЯ СТАТУСА!";
+  var testingInProgressMessage = "ИДЁТ ТЕСТИРОВАНИЕ...";
+  var testingCompleted = "ТЕСТИРОВАНИЕ ЗАВЕРШЕНО";
+  var waitingTooLong = "ОБНОВЛЯЙТЕ СТРАНИЦУ ВРУЧНУЮ!";
+</script>
+<link rel="stylesheet" href="./Авхадиев А. И. [HSE ASM 2024 Exam]_ Сдать решение3_files/unpriv.css" type="text/css">
+<link rel="stylesheet" href="./Авхадиев А. И. [HSE ASM 2024 Exam]_ Сдать решение3_files/unpriv3.css" type="text/css">
+
+<title>Авхадиев А. И. [HSE ASM 2024 Exam]: Сдать решение</title></head>
+<body onload="startClock()"><div id="main-cont"><div id="container"><div id="l12-col"><div id="l12">
+<div class="main_phrase">Авхадиев А. И. [HSE ASM 2024 Exam]: Сдать решение</div>
+<div id="main-menu">
+<ul>
+
+<li><div class="contest_actions_item"><a class="menu" href="https://www.contest.solutions/cgi-bin/new-client?SID=a7e37e7a27717d21&amp;action=143">Настройки</a></div></li>
+
+
+<li><div class="contest_actions_item"><a class="menu" href="https://www.contest.solutions/cgi-bin/new-client?SID=a7e37e7a27717d21&amp;action=2">Инфо</a></div></li><li><div class="contest_actions_item"><a class="menu" href="https://www.contest.solutions/cgi-bin/new-client?SID=a7e37e7a27717d21&amp;action=137">Итог</a></div></li><li><div class="contest_actions_item"><a class="menu" href="https://www.contest.solutions/cgi-bin/new-client?SID=a7e37e7a27717d21&amp;action=140">Посылки</a></div></li><li><div class="contest_actions_item"><a class="menu" href="https://www.contest.solutions/cgi-bin/new-client?SID=a7e37e7a27717d21&amp;action=141">Отправить вопрос</a></div></li><li><div class="contest_actions_item"><a class="menu" href="https://www.contest.solutions/cgi-bin/new-client?SID=a7e37e7a27717d21&amp;action=142">Сообщения</a></div></li>
+<li><div class="contest_actions_item"><a class="menu" href="https://www.contest.solutions/cgi-bin/new-client?SID=a7e37e7a27717d21&amp;action=74">Выйти из системы [hse23321]</a></div></li>
+</ul>
+</div>
+</div></div>
+<div id="l11"><img src="./Авхадиев А. И. [HSE ASM 2024 Exam]_ Сдать решение3_files/logo3.png" alt="logo"></div>
+<div id="l13">
+<div class="server_status_on" id="statusLine">
+<div id="currentTime">12:14:53</div> / <b>RUNNING</b>/ <b>приём решений</b> / Остаётся: <div id="remainingTime">0:13:50</div><div id="reloadButton" style="visibility: hidden">/ <a class="menu" onclick="reloadPage()"><b>[ ОБНОВИТЬ ]</b></a></div><div id="statusString" style="visibility: hidden"></div></div>
+<br>
+<table class="probNav">
+<tbody><tr><td class="b0" id="probNavTaskArea" valign="top"><div id="probNavTaskArea">
+
+
+
+
+<h2>Сдать решение задачи 3-Decompile-Декомпиляция программы с массивом (60 баллов)</h2>
+
+<table class="line-table-wb">
+
+
+
+
+
+
+
+
+
+    <tbody><tr><td><b>Оставшиеся посылки:</b></td><td><tt>7</tt></td></tr>
+
+
+</tbody></table>
+
+<h3>Задача 3-Decompile: Декомпиляция программы с массивом (60 баллов)</h3>
+	<p>Даны два фрагмента кода на языке Си c пятью пропусками:</p>
+<code style="display: block; white-space: pre">
+// объявление глобальных переменных 
+<i>пропуск_1</i> a;
+short A[23][9][<i>пропуск_2</i>];
+int x, y, z;
+
+// выражение-оператор 
+<i>пропуск_3</i> = A[<i>пропуск_4</i>][<i>пропуск_5</i>][y];
+
+</code>
+
+	<p>Для этих фрагментов компилятор построил следующий код:</p>
+<code style="display: block; white-space: pre">
+    mov     eax, dword[z]
+    shl     eax, 3
+    add     eax, dword[z]
+    add     eax, dword[x]
+    mov     edx, dword[y]
+    lea     eax, [eax + eax * 2]
+    lea     eax, [edx + eax * 2]
+    movsx   eax, word[A + eax * 2]
+    mov     edx, dword[a]
+    mov     dword[edx], eax
+</code>
+
+<p>Вам необходимо восстановить пропуски в исходном фрагменте кода на языке Си. Выпишите их в ответе по одному на строке. В ответе должно быть ровно пять строк. Если не получается заполнить какой-то из пропусков, оставьте эту строку пустой.</p>
+
+<p>На месте пропуска может быть либо число (в таком случае выписывайте число в десятичной системе счисления), либо одно из выражений, указанных ниже под буквами (в таком случае выписывайте соответствующую букву):</p>
+
+ <ol type="A">
+    <li>short</li>
+    <li>int</li>
+    <li>unsigned short</li>
+    <li>unsigned int</li>
+    <li>short *</li>
+    <li>int *</li>
+    <li>unsigned short *</li>
+    <li>unsigned int *</li>
+    <li>a</li>
+    <li>A</li>
+    <li>x</li>
+    <li>y</li>
+    <li>z</li>
+    <li>*a</li>
+    <li>*A</li>
+    <li>*x</li>
+    <li>*y</li>
+    <li>*z</li>
+    <li>x + y</li>
+    <li>x + z</li>
+    <li>y + z</li>
+    <li>x * 2</li>
+    <li>y * 4</li>
+    <li>z * 9</li>
+</ol>
+
+<p><b>Пример форматирования ответа:</b></p>
+<code style="display: block; white-space: pre">
+100
+A
+200
+B
+50
+</code>
+
+<h3>Сдать решение</h3><form method="post" enctype="multipart/form-data" action="https://www.contest.solutions/cgi-bin/new-client"><input type="hidden" name="SID" value="a7e37e7a27717d21"><input type="hidden" name="prob_id" value="130">
+<table class="b0">
+<tbody><tr><td colspan="2" class="b0"><textarea name="file" rows="20" cols="60"></textarea></td></tr>
+<tr><td class="b0">Отправить!</td><td class="b0"><input type="submit" name="action_40" value="Отправить!"></td></tr></tbody></table></form>
+<h2>Предыдущие решения этой задачи</h2>
+<table class="table"><tbody><tr><th class="b1">Номер решения</th><th class="b1">Время</th><th class="b1">Размер</th><th class="b1">Результат</th><th class="b1">Сданный ответ</th><th class="b1">Отчёт о проверке</th></tr>
+<tr bgcolor="#ddffdd"><td class="b1">494</td><td class="b1">2024/06/21 12:00:07</td><td class="b1">13</td><td class="b1">Принято на проверку</td><td class="b1"><a href="https://www.contest.solutions/cgi-bin/new-client?SID=a7e37e7a27717d21&amp;action=36&amp;run_id=494">Просмотр</a></td><td class="b1">&nbsp;</td></tr>
+</tbody></table>
+
+
+
+
+
+</div></td><td class="b0" id="probNavRightList" valign="top"><div class="probEmpty"><a class="tab" href="https://www.contest.solutions/cgi-bin/new-client?SID=a7e37e7a27717d21&amp;action=139&amp;prob_id=110">1-Fill</a></div><div class="probOk"><a class="tab" href="https://www.contest.solutions/cgi-bin/new-client?SID=a7e37e7a27717d21&amp;action=139&amp;prob_id=120">2-Logic</a></div><div class="probCurrent"><a class="tab" href="https://www.contest.solutions/cgi-bin/new-client?SID=a7e37e7a27717d21&amp;action=139&amp;prob_id=130">3-Decompile</a></div><div class="probEmpty"><a class="tab" href="https://www.contest.solutions/cgi-bin/new-client?SID=a7e37e7a27717d21&amp;action=139&amp;prob_id=140">4-Enigma</a></div><div class="probOk"><a class="tab" href="https://www.contest.solutions/cgi-bin/new-client?SID=a7e37e7a27717d21&amp;action=139&amp;prob_id=150">5-StackFrame</a></div><div class="probEmpty"><a class="tab" href="https://www.contest.solutions/cgi-bin/new-client?SID=a7e37e7a27717d21&amp;action=139&amp;prob_id=160">6-Reloc</a></div><div class="probOk"><a class="tab" href="https://www.contest.solutions/cgi-bin/new-client?SID=a7e37e7a27717d21&amp;action=139&amp;prob_id=170">7-HW-n-Arch</a></div><div class="probOk"><a class="tab" href="https://www.contest.solutions/cgi-bin/new-client?SID=a7e37e7a27717d21&amp;action=139&amp;prob_id=180">8-VirtMem</a></div></td></tr></tbody></table>
+<div id="footer"><p class="ejudge_copyright"><a href="http://www.ejudge.ru/">ejudge 3.7.9 #6 (2021-04-29 16:21:39)</a>.</p>
+<p class="ejudge_copyright">Copyright © 2000-2019 Alexander Chernov.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+</body></html>

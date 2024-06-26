@@ -129,8 +129,6 @@ main:
 	push  	ebx		
 	push 	edx		
 	push 	esi	
-
-    sub     esp, 12
     
 	GET_DEC 4, eax
 
@@ -181,8 +179,6 @@ exit_program:
 	pop     ebx
     pop     edx
     pop     esi
-
-    add     esp, 12
 
     mov     esp, ebp
     pop     ebp

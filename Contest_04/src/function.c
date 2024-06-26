@@ -1,24 +1,14 @@
-#include "../include/numeric_function.h"
+#include "../include/function.h"
 #include "../include/utils.h"
 
-#define VERIFY_CONTRACT(contract, format, ...) \
-    do { \
-        if (!(contract)) { \
-            printf( \
-                "\n[%s:%d:%s] " format "\n", \
-                __FILE__, __LINE__, __func__, \
-                ##__VA_ARGS__); \
-            exit(EXIT_FAILURE); \
-        } \
-    } while (0)
+#define REGEX_Q             15
+#define UNARY_Q             7
+#define CMD_SIZE            500
+#define FUNC_NAME_SIZE      256
+#define PATH_SIZE           256
+#define MESSAGE_SIZE        256
+#define OPERANDS_Q          256
 
-#define REGEX_Q 15
-#define UNARY_Q 7
-#define CMD_SIZE 500
-#define FUNC_NAME_SIZE 256
-#define PATH_SIZE 256
-#define MESSAGE_SIZE 256
-#define OPERANDS_Q 256
 
 static const char *global_regex[REGEX_Q] =
         {"^exp$", "^log$", "^sin$", "^cos$", "^tan$", "^cot$", "^sqrt$", "^\\+$", "^\\-$", "^\\*$", "^\\/+$",
@@ -33,155 +23,50 @@ static char *global_str;
 static char *global_functions_names[FUNC_NAME_SIZE];
 static uint32_t global_func_names_quantity = 0;
 
-static double global_operands[256];
+static double global_operands[OPERANDS_Q];
 static uint32_t global_operands_quantity = 0;
 
-static void change_global_operator_name(OperatorLabel new_operator);
-static void change_global_val(double new_val);
-static void change_global_str(const char *new_str);
+static void change_global_operator_name(OperatorLabel new_operator) {
+    VERIFY_CONTRACT(EXP <= new_operator && new_operator <= POW, "Invalid operation");
+    global_operator_name = new_operator;
+}
+static void change_global_val(double new_val) {
+    global_val = new_val;
+}
+static void change_global_str(const char *new_str) {
+    if (new_str == NULL) {
+        raise(SIGSEGV);
+    }
 
-static void add_func_name(const char *func_name);
-static void add_operand(double operand);
+    if (global_str != NULL) {
+        free(global_str);
+    }
 
-static void intel_asm_cdecl_function_start_template(FILE *output, const char *func_name);
-static void intel_asm_cdecl_function_end_template(FILE *output);
+    global_str = strdup(new_str);
+    VERIFY_CONTRACT(global_str != NULL, "Unable to allocate memory");
+}
 
-static void intel_asm_fpu_load_binary_operator_template(FILE *output);
-static void intel_asm_fpu_load_unary_operator_template(FILE *output);
-static void intel_asm_fpu_UPload_template(FILE *output);
+static void add_func_name(const char *func_name) {
+    if (func_name == NULL) { raise(SIGSEGV); }
 
-static void intel_asm_fpu_add_operator_template(FILE *output);
-static void intel_asm_fpu_sub_operator_template(FILE *output);
-static void intel_asm_fpu_mul_operator_template(FILE *output);
-static void intel_asm_fpu_div_operator_template(FILE *output);
-static void intel_asm_fpu_pow_operator_template(FILE *output);
-static void intel_asm_fpu_unary_operator_template(FILE *output);
+    for (uint32_t i = 0; i < global_func_names_quantity; ++i) {
+        VERIFY_CONTRACT(strcmp(global_functions_names[i], func_name) != 0, "The function name already used");
+    }
 
-static void intel_asm_fpu_load_operand_template(FILE *output);
-static void intel_asm_fpu_load_variable_template(FILE *output);
+    global_functions_names[global_func_names_quantity] = strdup(func_name);
+    ++global_func_names_quantity;
+}
+static void add_operand(double operand) {
+    if (global_operands_quantity <= OPERANDS_Q) {
+        global_operands[global_operands_quantity++] = operand;
+    }
+}
 
-static RawFunction *init_RawFunction(const char *raw_rpn);
-static void del_RawFunction(RawFunction *function);
-// static void set_variable(RawFunction *func, const char *var);
-
-static RPN *init_RPN(const char *raw_rpn);
-static void del_RPN(RPN *rpn);
-
-static int32_t sign(double val);
- 
-static char **split(const char *str, uint32_t *num_tokens);
-static int matchesRegex(const char *string, const char *pattern);
-static bool isRPN(RPN *obj_rpn);
- 
-static RPNelement *init_RPNelement(RPNelTypeLabel rpn_el_type);
-static void del_RPNelement(RPNelement *rpn_el);
- 
-static Operator *init_Operator(OperatorLabel operation_name);
-static void del_Operator(Operator *operator);
- 
-static Operand *init_Operand(double val);
-static void del_Operand(Operand *operand);
- 
-static Variable *init_Variable(const char *str);
-static void del_Variable(Variable *variable);
-
-// double root(Function_data *f, Function_data *g, double a, double b, double eps1) {
-//     double F_x = func_subs(f->func, a) - func_subs(g->func, a);
-//     double F_x_prime;
-//     double F_x_prime_prime = func_subs(f->func_prime_prime, a) - func_subs(g->func_prime_prime, a); 
-
-//     double x = (F_x * F_x_prime_prime > 0) ? a : b;
-
-//     while (true) {
-//         F_x = func_subs(f->func, x) - func_subs(g->func, x);
-
-//         if (fabs(F_x) <= eps1) {
-//             break;
-//         }
-
-//         F_x_prime = func_subs(f->func_prime, a) - func_subs(g->func_prime, a);
-
-//         x = x - F_x / F_x_prime;
-//     }
-
-//     return x;
-// }
-// double integral(Function *f, double a, double b, double eps2) {
-//     int32_t n = 10;
-//     double p = 1 / 15;
-//     double h;
-
-//     double I_n;
-//     double I_2n;
-//     double x;
-
-//     while (true) {
-//         h = (b - a) / n;
-
-//         I_n = func_subs(f, a);
-//         for (int i = 0; i < (n / 2) - 1; ++i)
-//         {
-//             x = a + 2 * i * h;
-//             I_n += func_subs(f, x);
-//         }
-
-//         for (int i = 0; i < n / 2; ++i)
-//         {
-//             x = a + (2 * i - 1) * h;
-//             I_n += func_subs(f, x);
-//         }
-
-//         I_n += func_subs(f, a + n * h);
-
-
-//         n = 2 * n;
-
-//         h = (b - a) / n;
-
-//         I_2n = func_subs(f, a);
-//         for (int i = 0; i < (n / 2) - 1; ++i)
-//         {
-//             x = a + 2 * i * h;
-//             I_2n += func_subs(f, x);
-//         }
-
-//         for (int i = 0; i < n / 2; ++i)
-//         {
-//             x = a + (2 * i - 1) * h;
-//             I_2n += func_subs(f, x);
-//         }
-
-//         I_2n += func_subs(f, a + n * h);
-
-//         if (p * fabs(I_n - I_2n) < eps2) {
-//             break;
-//         }
-//     }
-
-//     return I_2n;
-// }
-
-
-// static int32_t sign(double val) {
-//     if (val > 0) {
-//         return 1;
-//     }
-//     else if (val < 0) {
-//         return -1;
-//     }
-//     else {
-//         return 0;
-//     }
-// }
+// =====================================================================================================================
 
 double cot(double x) {
     return 1 / tan(x);
 }
-
-// typedef struct {
-//     RawFunction *raw_func;
-//     generated_func_t subs_val;
-// } Function;
 
 Function *init_Function(const char *raw_rpn, const char *func_name) {
     add_func_name(func_name);
@@ -262,7 +147,7 @@ void del_Function(Function *function) {
     }
 }
 
-static void intel_asm_cdecl_function_start_template(FILE *output, const char *func_name) {
+void intel_asm_cdecl_function_start_template(FILE *output, const char *func_name) {
     if (output == NULL) { raise(SIGSEGV); }
 
     fprintf(output, "%s", "bits 32\n\n");
@@ -307,7 +192,7 @@ static void intel_asm_cdecl_function_start_template(FILE *output, const char *fu
     fprintf(output, "%s", "    finit\n");
     fprintf(output, "%s", "    fstcw   word [fpu_ctrl]\n");
 }
-static void intel_asm_cdecl_function_end_template(FILE *output) {
+void intel_asm_cdecl_function_end_template(FILE *output) {
     if (output == NULL) { raise(SIGSEGV); }
 
     fprintf(output, "%s", "    fldcw   word [fpu_ctrl]\n\n");
@@ -343,7 +228,7 @@ static void intel_asm_cdecl_function_end_template(FILE *output) {
     } 
 }
 
-static void intel_asm_fpu_load_binary_operator_template(FILE *output) {
+void intel_asm_load_binary_operator_template(FILE *output) {
     if (output == NULL) { raise(SIGSEGV); }
 
     fprintf(output, "%s", "    mov     edi, dword [user_stack_ptr]\n");
@@ -353,42 +238,35 @@ static void intel_asm_fpu_load_binary_operator_template(FILE *output) {
     fprintf(output, "%s", "    sub     dword [user_stack_ptr], QWORD_SIZE\n");
     fprintf(output, "%s", "    sub     dword [user_stack_ptr], QWORD_SIZE\n");
 }
-static void intel_asm_fpu_load_unary_operator_template(FILE *output) {
+void intel_asm_load_unary_operator_template(FILE *output) {
     if (output == NULL) { raise(SIGSEGV); }
 
     fprintf(output, "%s", "    mov     edi, dword [user_stack_ptr]\n");
     fprintf(output, "%s", "    fld     qword [edi]\n");
     fprintf(output, "%s", "    sub     dword [user_stack_ptr], QWORD_SIZE\n");
 }
-static void intel_asm_fpu_UPload_template(FILE *output) {
-    if (output == NULL) { raise(SIGSEGV); }
 
-    fprintf(output, "%s", "    add     dword [user_stack_ptr], QWORD_SIZE\n");
-    fprintf(output, "%s", "    mov     edi, dword [user_stack_ptr]\n");
-    fprintf(output, "%s", "    fstp    qword [edi]\n");
-}
-
-static void intel_asm_fpu_add_operator_template(FILE *output) {
+void intel_asm_fpu_add_operator_template(FILE *output) {
     if (output == NULL) { raise(SIGSEGV); }
     
     fprintf(output, "%s", "    faddp\n");
 }
-static void intel_asm_fpu_sub_operator_template(FILE *output) {
+void intel_asm_fpu_sub_operator_template(FILE *output) {
     if (output == NULL) { raise(SIGSEGV); }
 
     fprintf(output, "%s", "    fsubrp\n");
 }
-static void intel_asm_fpu_mul_operator_template(FILE *output) {
+void intel_asm_fpu_mul_operator_template(FILE *output) {
     if (output == NULL) { raise(SIGSEGV); }
 
     fprintf(output, "%s", "    fmulp\n");
 }
-static void intel_asm_fpu_div_operator_template(FILE *output) {
+void intel_asm_fpu_div_operator_template(FILE *output) {
     if (output == NULL) { raise(SIGSEGV); }
 
     fprintf(output, "%s", "    fdivrp\n");
 }
-static void intel_asm_fpu_pow_operator_template(FILE *output) {
+void intel_asm_fpu_pow_operator_template(FILE *output) {
     if (output == NULL) { raise(SIGSEGV); }
 
     fprintf(output, "%s", "    ALIGN_STACK 16\n");
@@ -399,7 +277,7 @@ static void intel_asm_fpu_pow_operator_template(FILE *output) {
     fprintf(output, "%s", "    call    pow\n");
     fprintf(output, "%s", "    UNALIGN_STACK 16\n");
 }
-static void intel_asm_fpu_unary_operator_template(FILE *output) {
+void intel_asm_fpu_unary_operator_template(FILE *output) {
     if (output == NULL) { raise(SIGSEGV); }
 
     fprintf(output, "%s", "    ALIGN_STACK 8\n");
@@ -409,7 +287,15 @@ static void intel_asm_fpu_unary_operator_template(FILE *output) {
     fprintf(output, "%s", "    UNALIGN_STACK 8\n");
 }
 
-static void intel_asm_fpu_load_operand_template(FILE *output) {
+void intel_asm_fpu_UPload_template(FILE *output) {
+    if (output == NULL) { raise(SIGSEGV); }
+
+    fprintf(output, "%s", "    add     dword [user_stack_ptr], QWORD_SIZE\n");
+    fprintf(output, "%s", "    mov     edi, dword [user_stack_ptr]\n");
+    fprintf(output, "%s", "    fstp    qword [edi]\n");
+}
+
+void intel_asm_fpu_load_operand_template(FILE *output) {
     if (output == NULL) { raise(SIGSEGV); }
 
     fprintf(output, "%s", "mov     edi, [ebx]\n");
@@ -418,7 +304,7 @@ static void intel_asm_fpu_load_operand_template(FILE *output) {
     fprintf(output, "%s", "fstp    qword [esi]\n");
     fprintf(output, "%s", "add     ebx, QWORD_SIZE\n");
 }
-static void intel_asm_fpu_load_variable_template(FILE *output) {
+void intel_asm_fpu_load_variable_template(FILE *output) {
     if (output == NULL) { raise(SIGSEGV); }
 
     fprintf(output, "%s", "    fld     qword [val]\n");
@@ -427,7 +313,7 @@ static void intel_asm_fpu_load_variable_template(FILE *output) {
     fprintf(output, "%s", "    fstp    qword [edi]\n");
 }
 
-static RawFunction *init_RawFunction(const char *raw_rpn) {
+RawFunction *init_RawFunction(const char *raw_rpn) {
     RawFunction *function = (RawFunction *) malloc(sizeof(RawFunction));
     VERIFY_CONTRACT(function != NULL, "Unable to allocate memory");
 
@@ -449,7 +335,7 @@ static RawFunction *init_RawFunction(const char *raw_rpn) {
 
     return function;
 }
-static void del_RawFunction(RawFunction *function) {
+void del_RawFunction(RawFunction *function) {
     if (function != NULL) {
         if (function->obj_rpn != NULL) {
             del_RPN(function->obj_rpn);
@@ -460,96 +346,8 @@ static void del_RawFunction(RawFunction *function) {
         free(function);
     }
 }
-// static void set_variable(RawFunction *func, const char *var) {
-//     if (func == NULL) {
-//         raise(SIGSEGV);
-//     }
-     
-//     for (uint32_t i = 0; i < func->obj_rpn->size; ++i) {
-//         if (func->obj_rpn->rpn[i]->type == VARIABLE) {
-//             del_RPNelement(func->obj_rpn->rpn[i]);
 
-//             change_global_str(var);
-//             func->obj_rpn->rpn[i] = init_RPNelement(VARIABLE);
-//         }
-//     }
-// }
-
-// Function_data *init_Function_data(const char *raw_rpn) {
-//     Function_data *func_data = (Function_data *) malloc(sizeof(Function_data));
-//     VERIFY_CONTRACT(func_data != NULL, "Unable to allocate memory");
-
-//     func_data->func = init_Function(raw_rpn);
-//     func_data->func_prime = NULL;
-//     func_data->func_prime_prime = NULL;
-
-//     return func_data;
-// }
-// void del_Function_data(Function_data *func_data) {
-//     if (func_data != NULL) {
-//         if (func_data->func != NULL) {
-//             del_Function(func_data->func);
-//         }
-//         if (func_data->func_prime != NULL) {
-//             del_Function(func_data->func_prime);
-//         }
-//         if (func_data->func_prime_prime != NULL) {
-//             del_Function(func_data->func_prime_prime);
-//         }
-//         free(func_data);
-//     }
-// }
-// void set_first_derivative(Function_data *func_data, const char *raw_rpn) {
-//     if (func_data->func_prime != NULL) {
-//         del_Function(func_data->func_prime);
-//     }
-//     func_data->func_prime = init_Function(raw_rpn);
-// }
-// void set_second_derivative(Function_data *func_data, const char *raw_rpn) {
-//     if (func_data->func_prime_prime != NULL) {
-//         del_Function(func_data->func_prime_prime);
-//     }
-//     func_data->func_prime_prime = init_Function(raw_rpn);
-// }
-
-static void change_global_operator_name(OperatorLabel new_operator) {
-    VERIFY_CONTRACT(EXP <= new_operator && new_operator <= POW, "Invalid operation");
-    global_operator_name = new_operator;
-}
-static void change_global_val(double new_val) {
-    global_val = new_val;
-}
-static void change_global_str(const char *new_str) {
-    if (new_str == NULL) {
-        raise(SIGSEGV);
-    }
-
-    if (global_str != NULL) {
-        free(global_str);
-    }
-
-    global_str = strdup(new_str);
-    VERIFY_CONTRACT(global_str != NULL, "Unable to allocate memory");
-}
-
-static void add_func_name(const char *func_name) {
-    if (func_name == NULL) { raise(SIGSEGV); }
-
-    for (uint32_t i = 0; i < global_func_names_quantity; ++i) {
-        VERIFY_CONTRACT(strcmp(global_functions_names[i], func_name) != 0, "The function name already used");
-    }
-
-    global_functions_names[global_func_names_quantity] = strdup(func_name);
-    ++global_func_names_quantity;
-}
-
-static void add_operand(double operand) {
-    if (global_operands_quantity <= OPERANDS_Q) {
-        global_operands[global_operands_quantity++] = operand;
-    }
-}
-
-static RPN *init_RPN(const char *raw_rpn) {
+RPN *init_RPN(const char *raw_rpn) {
     if (raw_rpn == NULL) {
         raise(SIGSEGV);
     }
@@ -616,7 +414,7 @@ static RPN *init_RPN(const char *raw_rpn) {
 
     return obj_rpn;
 }
-static void del_RPN(RPN *obj_rpn) {
+void del_RPN(RPN *obj_rpn) {
     if (obj_rpn != NULL) {
         if (obj_rpn->rpn != NULL) {
             for (uint32_t i = 0; i < obj_rpn->size; ++i) {
@@ -630,7 +428,7 @@ static void del_RPN(RPN *obj_rpn) {
     }
 }
 
-static char **split(const char *str, uint32_t *num_tokens) {
+char **split(const char *str, uint32_t *num_tokens) {
     if (str == NULL || num_tokens == NULL) {
         raise(SIGSEGV);
     }
@@ -687,8 +485,7 @@ static char **split(const char *str, uint32_t *num_tokens) {
     *num_tokens = ind_tokens_seq;
     return tokens_seq;
 }
-
-static int matchesRegex(const char *string, const char *pattern) {
+bool matchesRegex(const char *string, const char *pattern) {
     if (string == NULL || pattern == NULL) {
         raise(SIGSEGV);
     }
@@ -703,20 +500,20 @@ static int matchesRegex(const char *string, const char *pattern) {
     regfree(&regex);
 
     if (!result) {
-        return 1;
+        return true;
     }
     else if (result == REG_NOMATCH) {
-        return 0;
+        return false;
     }
     else {
         char error_msg[100];
         regerror(result, &regex, error_msg, sizeof(error_msg));
         fprintf(stderr, "Regex match failed: %s\n", error_msg);
 
-        return 0;
+        return false;
     }
 }
-static bool isRPN(RPN *obj_rpn) {
+bool isRPN(RPN *obj_rpn) {
     if (obj_rpn == NULL) {
         raise(SIGSEGV);
     }
@@ -751,7 +548,7 @@ static bool isRPN(RPN *obj_rpn) {
     return res;
 }
 
-static RPNelement *init_RPNelement(RPNelTypeLabel rpn_el_type) {
+RPNelement *init_RPNelement(RPNelTypeLabel rpn_el_type) {
     RPNelement *rpn_el = (RPNelement *) malloc(sizeof(RPNelement));
     VERIFY_CONTRACT(rpn_el != NULL, "Unable to allocate memory");
 
@@ -776,7 +573,7 @@ static RPNelement *init_RPNelement(RPNelTypeLabel rpn_el_type) {
 
     return rpn_el;
 }
-static void del_RPNelement(RPNelement *rpn_el) {
+void del_RPNelement(RPNelement *rpn_el) {
     if (rpn_el != NULL) {
         if (rpn_el->obj != NULL) {
             if (rpn_el->type == OPERATOR) {
@@ -800,7 +597,7 @@ static void del_RPNelement(RPNelement *rpn_el) {
     }
 }
 
-static Operator *init_Operator(OperatorLabel operation_name) {
+Operator *init_Operator(OperatorLabel operation_name) {
     Operator *operator = (Operator *) malloc(sizeof(Operator));
     VERIFY_CONTRACT(operator != NULL, "Unable to allocate memory");
 
@@ -828,7 +625,7 @@ static Operator *init_Operator(OperatorLabel operation_name) {
 
     return operator;
 }
-static void del_Operator(Operator *operator) {
+void del_Operator(Operator *operator) {
     if (operator != NULL) {
         if (operator->obj != NULL) {
             if (operator->type == UNARY) {
@@ -842,7 +639,7 @@ static void del_Operator(Operator *operator) {
     }
 }
 
-static Operand *init_Operand(double val) {
+Operand *init_Operand(double val) {
     Operand *operand = (Operand *) malloc(sizeof(Operand));
     VERIFY_CONTRACT(operand != NULL, "Unable to allocate memory");
 
@@ -850,13 +647,13 @@ static Operand *init_Operand(double val) {
 
     return operand;
 }
-static void del_Operand(Operand *operand) {
+void del_Operand(Operand *operand) {
     if (operand != NULL) {
         free(operand);
     }
 }
 
-static Variable *init_Variable(const char *str) {
+Variable *init_Variable(const char *str) {
     if (str == NULL) {
         raise(SIGSEGV);
     }
@@ -871,7 +668,7 @@ static Variable *init_Variable(const char *str) {
 
     return variable;
 }
-static void del_Variable(Variable *variable) {
+void del_Variable(Variable *variable) {
     if (variable != NULL) {
         if (variable->obj != NULL) {
             free(variable->obj);

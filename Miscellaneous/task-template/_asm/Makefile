@@ -43,7 +43,7 @@ EXECUTABLE = build/slv_asm
 
 all: $(EXECUTABLE) $(SOURCES)
 
-$(EXECUTABLE): $(OBJECTS) 
+$(EXECUTABLE): $(OBJECTS) Makefile
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
 
 build/%.o: %.asm
@@ -71,4 +71,4 @@ GDB_FLAGS = \
 gdb: $(EXECUTABLE)
 	$(GDB) $(GDB_FLAGS)
 
-.PHONY: all clean gdb 
+.PHONY: all clean gdb

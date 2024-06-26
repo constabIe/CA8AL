@@ -69,8 +69,8 @@ mscanf:
 	push 	ecx
 	push 	edx
 
-    xor 	eax, eax
-    mov 	ecx, matrix_base
+    	xor 	eax, eax
+    	mov 	ecx, matrix_base
 
 .rows_loop:
  	cmp 	eax, src_size_i
@@ -106,8 +106,8 @@ mscanf:
 	pop 	ebx 	 	
 	pop 	eax 
 
-	mov     esp, ebp
-    	pop     ebp	
+	mov    esp, ebp
+    	pop    ebp	
 
 	ret  
 
@@ -125,8 +125,8 @@ mprintf:
 	push 	ebx
 	push 	ecx
 
-    xor 	eax, eax
-    mov 	ecx, matrix_base
+    	xor 	eax, eax
+    	mov 	ecx, matrix_base
 
  .rows_loop:
  	cmp 	eax, src_size_i
@@ -154,8 +154,8 @@ mprintf:
 	pop 	ebx 	 	
 	pop 	eax 
 
-	mov     esp, ebp
-    	pop     ebp	
+	mov    esp, ebp
+    	pop    ebp	
 
 	ret  
 

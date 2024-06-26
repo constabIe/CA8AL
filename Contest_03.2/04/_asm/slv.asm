@@ -27,12 +27,7 @@ global main
 main:
 	FUNCTION_PROLOGUE 0
 
-	; ;_debug_
-	; ALIGN_STACK 4
-	; push	debug_message
-	; call	printf
-	; UNALIGN_STACK 4
-	; ;_debug_
+	push	ebx
 
 	ALIGN_STACK 8
 	push	mode_read
@@ -40,45 +35,38 @@ main:
 	call	fopen
 	UNALIGN_STACK 8
 
-	; ;_debug_
-	; ALIGN_STACK 4
-	; push	debug_message
-	; call	printf
-	; UNALIGN_STACK 4
-	; ;_debug_
+	mov		[input], eax
 
-	mov	[input], eax
+	xor		ebx, ebx
 
-	ALIGN_STACK 4
-	push	dword [input]
-	call	feof
-	UNALIGN_STACK 4
+	.L:
+		ALIGN_STACK 12
+		push	cell
+		push	io_format
+		push	dword [input]
+		call	fscanf
+		UNALIGN_STACK 12
 
-	;_debug_
-	ALIGN_STACK 4
-	push	eax
-	push	IO_format
+		cmp 	eax, 1
+		jne		.exit_func
+
+		add		ebx, eax
+
+		jmp 	.L
+
+.exit_func:
+	ALIGN_STACK 8
+	push	ebx
+	push	io_format
 	call	printf
-	UNALIGN_STACK 4
-	;_debug_
-
-	ALIGN_STACK 12
-	push	cell
-	push	IO_format
-	push	eax
-	call	fscanf
-	UNALIGN_STACK 12
+	UNALIGN_STACK 8
 
 	ALIGN_STACK 4
 	push	dword [input]
 	call	fclose
 	UNALIGN_STACK 4
 
-	ALIGN_STACK 8
-	push	dword [cell]
-	push	IO_format
-	call	printf
-	UNALIGN_STACK 8
+	pop		ebx
 
 	FUNCTION_EPILOGUE 0
 
@@ -87,12 +75,19 @@ main:
 
 section .data
 	mode_read			db		`r`, 0
-	stream				db		`/home/aiavkhadiev/Downloads/Assembly/CA8AL/Contest_03.2/04/data.txt`, 0
+	stream				db		`data.in`, 0
 	input				dd 		-1
 		
 	cell				dd 		-1
-	IO_format			db 		`%d`, 0
+	io_format			db 		`%d`, 0
 
-section .data ; debug
-	debug_message		db		`_debug_\n`, 0
+; section .data ; debug
+; 	debug_message		db		`_debug_\n`, 0
 
+
+	; ;_debug_
+	; ALIGN_STACK 4
+	; push	debug_message
+	; call	printf
+	; UNALIGN_STACK 4
+	; ;_debug_

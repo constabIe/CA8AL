@@ -15,11 +15,11 @@ main:
 	GET_DEC	4, eax
 	mov 	[k], eax
 
-	ALIGN_STACK	8
+	ALIGN_STACKK	8
 	push	dword []
 	push	dword [k]
 	call	combination
-	UNALIGN_STACK
+	UNALIGN_STACKK
 
 	PRINT_DEC 4, eax
 	; mov 	eax, dword [n]
@@ -69,34 +69,34 @@ combination:
 	cmp  	k, eax
 	ja 		RangeExceptionLabel
 
-	ALIGN_STACK 4
+	ALIGN_STACKK 4
 	push	n
 	call	factorial
-	UNALIGN_STACK
+	UNALIGN_STACKK
 
 	mov		n_factorial, eax
 
-	ALIGN_STACK 4
+	ALIGN_STACKK 4
 	push 	k
 	call 	factorial
-	UNALIGN_STACK
+	UNALIGN_STACKK
 
 	mov 	k_factorial, eax
 
 	mov		eax, n
 	sub		eax, k
 
-	ALIGN_STACK 4	
+	ALIGN_STACKK 4	
 	push	eax
 	call 	factorial
-	UNALIGN_STACK
+	UNALIGN_STACKK
 
 	mov	    n_sub_k_factorial, eax
 
-	ALIGN_STACK 4
+	ALIGN_STACKK 4
 	mov 	eax, k_factorial
 	imul 	n_sub_k_factorial
-	UNALIGN_STACK
+	UNALIGN_STACKK
 
 	mov		ebx, eax
 

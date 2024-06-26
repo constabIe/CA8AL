@@ -407,7 +407,7 @@ get_cell_base:
 %undef	matrix_base
 %undef	matrix_order
 
-; ---------------------end_functions---------------------
+; ---------------------endfunctions----------------------
 
 section	.data
 	DWORD_SIZE				equ		4

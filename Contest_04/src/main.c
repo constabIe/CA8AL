@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#include "../include/numeric_function.h"
+#include "../include/function.h"
+#include "../include/square.h"
 
 #define EPS 0.001
 
