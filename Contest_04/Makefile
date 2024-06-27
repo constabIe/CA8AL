@@ -51,9 +51,9 @@ RESET   = \033[0m
 # Files
 #-------
 
-BUILDDIR = build
+BUILDDIR   = build
 INCLUDEDIR = include
-SOURCEDIR =  src
+SOURCEDIR  = src
 
 CFLAGS += -I ${INCLUDEDIR}
 
@@ -94,7 +94,7 @@ run: ${EXECUTABLE}
 	./$<
 
 
-FUNCDIR = functions
+FUNCDIR := function_definition
 FUNCNAME = null
 
 function:
@@ -132,4 +132,4 @@ git:
 	@printf "${BCYAN}>>>${RESET} "
 	git push origin main
 
-.PHONY: default clean run gdb
+.PHONY: default clean run gdb function

@@ -99,23 +99,21 @@ double cot(double x);
 Function *init_Function(const char *raw_rpn, const char *func_name);
 void del_Function(Function *function);
 
-void intel_asm_cdecl_function_start_template(FILE *output, const char *func_name);
-void intel_asm_cdecl_function_end_template(FILE *output);
+void intel_asm_cdecl_function_definition_start_template(FILE *output, const char *func_name);
+void intel_asm_cdecl_function_definition_end_template(FILE *output);
 
-void intel_asm_load_binary_operator_template(FILE *output);
-void intel_asm_load_unary_operator_template(FILE *output);
+void intel_asm_load_fpu_template(FILE *output);
+void intel_asm_UPload_fpu_template(FILE *output);
+void intel_asm_save_fpu_template(FILE *output);
 
-void intel_asm_fpu_add_operator_template(FILE *output);
-void intel_asm_fpu_sub_operator_template(FILE *output);
-void intel_asm_fpu_mul_operator_template(FILE *output);
-void intel_asm_fpu_div_operator_template(FILE *output);
-void intel_asm_fpu_pow_operator_template(FILE *output);
-void intel_asm_fpu_unary_operator_template(FILE *output);
+void intel_asm_call_binary_operator(FILE *output, OperatorLabel label);
+void intel_asm_call_unary_operator(FILE *output, OperatorLabel label);
 
-void intel_asm_fpu_UPload_template(FILE *output);
-
-void intel_asm_fpu_load_operand_template(FILE *output);
-void intel_asm_fpu_load_variable_template(FILE *output);
+//void intel_asm_load_binary_operator_args_template(FILE *output);
+//void intel_asm_load_unary_operator_arg_template(FILE *output);
+//
+//void intel_asm_fpu_load_operand_template(FILE *output);
+//void intel_asm_fpu_load_variable_template(FILE *output);
 
 RawFunction *init_RawFunction(const char *raw_rpn);
 void del_RawFunction(RawFunction *function);

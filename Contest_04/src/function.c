@@ -6,8 +6,7 @@
 #define CMD_SIZE            500
 #define FUNC_NAME_SIZE      256
 #define PATH_SIZE           256
-#define MESSAGE_SIZE        256
-#define OPERANDS_Q          256
+#define FPUS_Q              256
 
 
 static const char *global_regex[REGEX_Q] =
@@ -23,8 +22,13 @@ static char *global_str;
 static char *global_functions_names[FUNC_NAME_SIZE];
 static uint32_t global_func_names_quantity = 0;
 
-static double global_operands[OPERANDS_Q];
-static uint32_t global_operands_quantity = 0;
+static double global_fpus[FPUS_Q];
+static uint32_t global_fpus_q = 0;
+
+static uint32_t global_cont_label_cntr = 0;
+static void set_default_global_cont_label_cntr() {
+    global_cont_label_cntr = 0;
+}
 
 static void change_global_operator_name(OperatorLabel new_operator) {
     VERIFY_CONTRACT(EXP <= new_operator && new_operator <= POW, "Invalid operation");
@@ -56,9 +60,9 @@ static void add_func_name(const char *func_name) {
     global_functions_names[global_func_names_quantity] = strdup(func_name);
     ++global_func_names_quantity;
 }
-static void add_operand(double operand) {
-    if (global_operands_quantity <= OPERANDS_Q) {
-        global_operands[global_operands_quantity++] = operand;
+static void add_fpu(double unit) {
+    if (global_fpus_q <= FPUS_Q) {
+        global_fpus[global_fpus_q++] = unit;
     }
 }
 
@@ -74,65 +78,54 @@ Function *init_Function(const char *raw_rpn, const char *func_name) {
     Function *function = (Function *) malloc(sizeof(Function));
     VERIFY_CONTRACT(function != NULL, "Unable to allocate memory");
 
-    function->raw_func = (RawFunction *) malloc(sizeof(RawFunction));
+    function->raw_func = init_RawFunction(raw_rpn);
     VERIFY_CONTRACT(function->raw_func != NULL, "Unable to allocate memory");
-
-    function->raw_func->obj_rpn = init_RPN(raw_rpn);
-    VERIFY_CONTRACT(function->raw_func != NULL, "Unable to perform the RPN");
 
     char command[CMD_SIZE];
     memset(command, 0, sizeof(command));
-    const char *prefix_command = "make function FUNCNAME=";
+    const char *prefix_command = "cd .. && make function FUNCNAME=";
     snprintf(command, sizeof(command), "%s%s", prefix_command, func_name);
 
     VERIFY_CONTRACT(system(command) != -1, "The error was raised after an attempt to initialize the shell command");
 
-    const char *prefix_path = "../functions/";
+    const char *prefix_path = "../function_definition/";
     char path[PATH_SIZE];
+    const char *suffix_path = ".asm";
 
-    snprintf(path, sizeof(path), "%s%s", prefix_path, func_name);
+    snprintf(path, sizeof(path), "%s%s%s", prefix_path, func_name, suffix_path);
 
     FILE *output = fopen(path, "w");
 
-    intel_asm_cdecl_function_start_template(output, func_name);
+    intel_asm_cdecl_function_definition_start_template(output, func_name);
+    set_default_global_cont_label_cntr();
 
     for (uint32_t i = 0; i < function->raw_func->obj_rpn->size; ++i) {
         if (function->raw_func->obj_rpn->rpn[i]->type == OPERATOR) {
             if (function->raw_func->obj_rpn->rpn[i]->obj->operator->type == BINARY) {
-                intel_asm_load_binary_operator_template(output);
-                if (function->raw_func->obj_rpn->rpn[i]->obj->operator->obj->binary->type == ADD) {
-                    intel_asm_fpu_add_operator_template(output);
-                }
-                else if (function->raw_func->obj_rpn->rpn[i]->obj->operator->obj->binary->type == SUB) {
-                    intel_asm_fpu_sub_operator_template(output);
-                }
-                else if (function->raw_func->obj_rpn->rpn[i]->obj->operator->obj->binary->type == MUL) {
-                    intel_asm_fpu_mul_operator_template(output);
-                }
-                else if (function->raw_func->obj_rpn->rpn[i]->obj->operator->obj->binary->type == DIV) {
-                    intel_asm_fpu_div_operator_template(output);
-                }
-                else {
-                    intel_asm_fpu_pow_operator_template(output);
-                }
-                intel_asm_fpu_UPload_template(output);
+                intel_asm_load_fpu_template(output);
+                intel_asm_load_fpu_template(output);
+                intel_asm_call_binary_operator(output,
+                                               function->raw_func->obj_rpn->rpn[i]->obj->operator->obj->binary->type);
+                intel_asm_UPload_fpu_template(output);
             }
             else {
-                intel_asm_load_unary_operator_template(output);
-                intel_asm_fpu_unary_operator_template(output);
-                intel_asm_fpu_UPload_template(output);
+                intel_asm_load_fpu_template(output);
+                intel_asm_call_unary_operator(output,
+                                              function->raw_func->obj_rpn->rpn[i]->obj->operator->obj->unary->type);
+                intel_asm_UPload_fpu_template(output);
             }
         }
         else if (function->raw_func->obj_rpn->rpn[i]->type == OPERAND) {
-            add_operand(function->raw_func->obj_rpn->rpn[i]->obj->operand->obj);
-            intel_asm_fpu_load_operand_template(output);
+            add_fpu(function->raw_func->obj_rpn->rpn[i]->obj->operand->obj);
+            add_fpu(1);
         }
         else {
-            intel_asm_fpu_load_variable_template(output);
+            add_fpu(0);
+            add_fpu(0);
         }
     }
 
-    intel_asm_cdecl_function_end_template(output);
+    intel_asm_cdecl_function_definition_end_template(output);
 
     fclose(output);
 
@@ -147,27 +140,27 @@ void del_Function(Function *function) {
     }
 }
 
-void intel_asm_cdecl_function_start_template(FILE *output, const char *func_name) {
+void intel_asm_cdecl_function_definition_start_template(FILE *output, const char *func_name) {
     if (output == NULL) { raise(SIGSEGV); }
 
-    fprintf(output, "%s", "bits 32\n\n");
+    fprintf(output, "%s", "bits 32\n");
 
-    fprintf(output, "%s", "extern pow\n\n");
+    fprintf(output, "%s", "extern exp, log, sin, cos, tan, cot, sqrt, pow\n");
 
     fprintf(output, "%s", "%macro ALIGN_STACK 1.nolist\n");
     fprintf(output, "%s", "    sub     esp, %1\n");
     fprintf(output, "%s", "    and     esp, 0xfffffff0\n");
     fprintf(output, "%s", "    add     esp, %1\n");
-    fprintf(output, "%s", "%endmacro\n\n");
+    fprintf(output, "%s", "%endmacro\n");
 
     fprintf(output, "%s", "%macro UNALIGN_STACK 1.nolist\n");
     fprintf(output, "%s", "    add     esp, %1\n");
-    fprintf(output, "%s", "%endmacro\n\n");
+    fprintf(output, "%s", "%endmacro\n");
 
     fprintf(output, "%s", "%macro FUNCTION_PROLOGUE 1.nolist\n");
     fprintf(output, "%s", "    enter   %1, 0\n");
     fprintf(output, "%s", "    and     esp, 0xfffffff0\n");
-    fprintf(output, "%s", "%endmacro\n\n");
+    fprintf(output, "%s", "%endmacro\n");
 
     fprintf(output, "%s", "%macro FUNCTION_EPILOGUE 1.nolist\n");
     fprintf(output, "%s", "    leave\n");
@@ -177,140 +170,150 @@ void intel_asm_cdecl_function_start_template(FILE *output, const char *func_name
     fprintf(output, "%s", "%define tmp_ebx         ebp - 4\n");
     fprintf(output, "%s", "%define tmp_edi         ebp - 12\n");
     fprintf(output, "%s", "%define tmp_esi         ebp - 16\n");
-    fprintf(output, "%s", "%define user_stack_ptr  ebp - 20\n");
-    fprintf(output, "%s", "%define fpu_ctrl        ebp - 24\n\n");
+    fprintf(output, "%s", "%define fpu_ctrl        ebp - 20\n");
 
     fprintf(output, "global %s\n", func_name);
     fprintf(output, "%s:\n", func_name);
     fprintf(output, "%s", "    FUNCTION_PROLOGUE 20\n");
     fprintf(output, "%s", "    mov     [tmp_ebx], ebx\n");
     fprintf(output, "%s", "    mov     [tmp_edi], edi\n");
-    fprintf(output, "%s", "    mov     [tmp_esi], esi\n\n");
+    fprintf(output, "%s", "    mov     [tmp_esi], esi\n");
 
-    fprintf(output, "%s", "    mov     ebx, operands_\n\n");
+    fprintf(output, "%s", "    mov     ebx, fpus\n");
 
     fprintf(output, "%s", "    finit\n");
     fprintf(output, "%s", "    fstcw   word [fpu_ctrl]\n");
 }
-void intel_asm_cdecl_function_end_template(FILE *output) {
+void intel_asm_cdecl_function_definition_end_template(FILE *output) {
     if (output == NULL) { raise(SIGSEGV); }
 
-    fprintf(output, "%s", "    fldcw   word [fpu_ctrl]\n\n");
+    fprintf(output, "%s", "    fldcw   word [fpu_ctrl]\n");
 
     fprintf(output, "%s", "    fstcw   word [fpu_ctrl]\n");
-    fprintf(output, "%s", "    finit\n\n");
-
-    fprintf(output, "%s", "    mov     edi, [user_stack_ptr]\n");
-    fprintf(output, "%s", "    fld     qword [edi]\n\n");
-
-    fprintf(output, "%s", "    fldcw   word [fpu_ctrl]\n\n");
+    fprintf(output, "%s", "    finit\n");
+    fprintf(output, "%s", "    mov     edi, [ebx]\n");
+    fprintf(output, "%s", "    fld     qword [edi]\n");
+    fprintf(output, "%s", "    fldcw   word [fpu_ctrl]\n");
 
     fprintf(output, "%s", "    mov     ebx, [tmp_ebx]\n");
     fprintf(output, "%s", "    mov     edi, [tmp_edi]\n");
-    fprintf(output, "%s", "    mov     esi, [tmp_esi]\n\n");
+    fprintf(output, "%s", "    mov     esi, [tmp_esi]\n");
 
-    fprintf(output, "%s", "    FUNCTION_EPILOGUE\n\n");
+    fprintf(output, "%s", "    FUNCTION_EPILOGUE\n");
 
-    fprintf(output, "%s", "    ret\n\n");
-
-    fprintf(output, "%s", "section .bss\n");
-    fprintf(output, "%s", "    user_stack      resq    500\n\n");
+    fprintf(output, "%s", "    ret\n");
 
     fprintf(output, "%s", "section .data\n");
     fprintf(output, "%s", "    DWORD_SIZE      equ     4\n");
     fprintf(output, "%s", "    QWORD_SIZE      equ     8\n");
 
     fprintf(output, "%s", "section .data\n");
-    fprintf(output, "%s", "    operands_       dq      ");
+    fprintf(output, "%s", "    fpus       dq      ");
 
-    for (uint32_t i = 0; i < global_operands_quantity; ++i) {
-         fprintf(output, "%lf, ", global_operands[i]);
+    for (uint32_t i = global_fpus_q - 1; i > 0; --i) {
+        fprintf(output, "%lf, ", global_fpus[i]);
+    }
+    fprintf(output, "%lf\n", global_fpus[0]);
+}
+
+void intel_asm_load_fpu_template(FILE *output) {
+    if (output == NULL) { raise(SIGSEGV); }
+
+    const char *label = "cont_";
+    char token[7];
+    snprintf(token, sizeof(token), "%s", label);
+    token[5] = (char) (global_cont_label_cntr + 49);
+    token[6] = '\0';
+
+    fprintf(output, "%s", "    mov     edi, [ebx]\n");
+    fprintf(output, "%s", "    fld     qword [edi]\n");
+    fprintf(output, "%s", "    add     ebx, QWORD_SIZE\n");
+    fprintf(output, "%s", "    fld1\n");
+    fprintf(output, "%s", "    fcompp\n");
+    fprintf(output, "%s", "    fstsw   ax\n");
+    fprintf(output, "%s", "    sahf\n");
+    fprintf(output, "%s", "    je      .operand\n");
+    fprintf(output, "%s", "    jne     .val\n");
+    fprintf(output, "%s", "    .operand:\n");
+    fprintf(output, "%s", "        mov     edi, [ebx]\n");
+    fprintf(output, "%s", "        fld     qword [edi]\n");
+    fprintf(output, "%s", "        add     ebx, QWORD_SIZE\n");
+    fprintf(output, "%s", "        jmp     .");
+    fprintf(output, "%s\n", token);
+
+    fprintf(output, "%s", "    .val:\n");
+    fprintf(output, "%s", "        fld     qword [val]\n");
+    fprintf(output, "%s", "        jmp     .");
+    fprintf(output, "%s\n", token);
+    fprintf(output, "%s", ".");
+    fprintf(output, "%s:\n", token);
+
+    ++global_cont_label_cntr;
+}
+void intel_asm_UPload_fpu_template(FILE *output) {
+    if (output == NULL) { raise(SIGSEGV); }
+
+    fprintf(output, "%s", "    sub     ebx, QWORD_SIZE\n");
+    fprintf(output, "%s", "    fstp    qword [ebx]\n");
+}
+
+void intel_asm_call_binary_operator(FILE *output, OperatorLabel label) {
+    if (output == NULL) { raise(SIGSEGV); }
+
+    if (label == ADD) {
+        fprintf(output, "%s", "    faddp\n");
+    }
+    else if (label == SUB) {
+        fprintf(output, "%s", "    fsubrp\n");
+    }
+    else if (label == MUL) {
+        fprintf(output, "%s", "    fmulp\n");
+    }
+    else if (label == DIV) {
+        fprintf(output, "%s", "    fdivrp\n");
+    }
+    else {
+        fprintf(output, "%s", "    ALIGN_STACK 16\n");
+        fprintf(output, "%s", "    sub		esp, 8\n");
+        fprintf(output, "%s", "    fstp	qword [esp]\n");
+        fprintf(output, "%s", "    sub		esp, 8\n");
+        fprintf(output, "%s", "    fstp	qword [esp]\n");
+        fprintf(output, "%s", "    call	pow\n");
+        fprintf(output, "%s", "    UNALIGN_STACK 16\n");
     }
 }
-
-void intel_asm_load_binary_operator_template(FILE *output) {
-    if (output == NULL) { raise(SIGSEGV); }
-
-    fprintf(output, "%s", "    mov     edi, dword [user_stack_ptr]\n");
-    fprintf(output, "%s", "    fld     qword [edi]\n");
-    fprintf(output, "%s", "    fld     qword [edi - QWORD_SIZE]\n\n");
-
-    fprintf(output, "%s", "    sub     dword [user_stack_ptr], QWORD_SIZE\n");
-    fprintf(output, "%s", "    sub     dword [user_stack_ptr], QWORD_SIZE\n");
-}
-void intel_asm_load_unary_operator_template(FILE *output) {
-    if (output == NULL) { raise(SIGSEGV); }
-
-    fprintf(output, "%s", "    mov     edi, dword [user_stack_ptr]\n");
-    fprintf(output, "%s", "    fld     qword [edi]\n");
-    fprintf(output, "%s", "    sub     dword [user_stack_ptr], QWORD_SIZE\n");
-}
-
-void intel_asm_fpu_add_operator_template(FILE *output) {
-    if (output == NULL) { raise(SIGSEGV); }
-
-    fprintf(output, "%s", "    faddp\n");
-}
-void intel_asm_fpu_sub_operator_template(FILE *output) {
-    if (output == NULL) { raise(SIGSEGV); }
-
-    fprintf(output, "%s", "    fsubrp\n");
-}
-void intel_asm_fpu_mul_operator_template(FILE *output) {
-    if (output == NULL) { raise(SIGSEGV); }
-
-    fprintf(output, "%s", "    fmulp\n");
-}
-void intel_asm_fpu_div_operator_template(FILE *output) {
-    if (output == NULL) { raise(SIGSEGV); }
-
-    fprintf(output, "%s", "    fdivrp\n");
-}
-void intel_asm_fpu_pow_operator_template(FILE *output) {
-    if (output == NULL) { raise(SIGSEGV); }
-
-    fprintf(output, "%s", "    ALIGN_STACK 16\n");
-    fprintf(output, "%s", "    sub     esp, 8\n");
-    fprintf(output, "%s", "    fstp    qword [esp]\n");
-    fprintf(output, "%s", "    sub     esp, 8\n");
-    fprintf(output, "%s", "    fstp    qword [esp]\n");
-    fprintf(output, "%s", "    call    pow\n");
-    fprintf(output, "%s", "    UNALIGN_STACK 16\n");
-}
-void intel_asm_fpu_unary_operator_template(FILE *output) {
-    if (output == NULL) { raise(SIGSEGV); }
-
-    fprintf(output, "%s", "    ALIGN_STACK 8\n");
-    fprintf(output, "%s", "    sub     esp, 8\n");
-    fprintf(output, "%s", "    fstp    qword [esp]\n");
-    fprintf(output, "%s", "    call    dword [unary_func_ptr]\n");
-    fprintf(output, "%s", "    UNALIGN_STACK 8\n");
-}
-
-void intel_asm_fpu_UPload_template(FILE *output) {
-    if (output == NULL) { raise(SIGSEGV); }
-
-    fprintf(output, "%s", "    add     dword [user_stack_ptr], QWORD_SIZE\n");
-    fprintf(output, "%s", "    mov     edi, dword [user_stack_ptr]\n");
-    fprintf(output, "%s", "    fstp    qword [edi]\n");
-}
-
-void intel_asm_fpu_load_operand_template(FILE *output) {
-    if (output == NULL) { raise(SIGSEGV); }
-
-    fprintf(output, "%s", "mov     edi, [ebx]\n");
-    fprintf(output, "%s", "mov     esi, [user_stack_ptr]\n");
-    fprintf(output, "%s", "fld     qword [edi]\n");
-    fprintf(output, "%s", "fstp    qword [esi]\n");
-    fprintf(output, "%s", "add     ebx, QWORD_SIZE\n");
-}
-void intel_asm_fpu_load_variable_template(FILE *output) {
-    if (output == NULL) { raise(SIGSEGV); }
-
-    fprintf(output, "%s", "    fld     qword [val]\n");
-    fprintf(output, "%s", "    add     dword [user_stack_ptr], QWORD_SIZE\n");
-    fprintf(output, "%s", "    mov     edi, dword [user_stack_ptr]\n");
-    fprintf(output, "%s", "    fstp    qword [edi]\n");
+void intel_asm_call_unary_operator(FILE *output, OperatorLabel label) {
+    fprintf(output, "%s", "    ALIGN_STACK 16");
+    fprintf(output, "%s", "    sub		esp, 8");
+    fprintf(output, "%s", "    fstp	qword [esp]");
+    fprintf(output, "%s", "    sub		esp, 8");
+    fprintf(output, "%s", "    fstp	qword [esp]");
+    switch (label) {
+        case EXP:
+            fprintf(output, "%s", "    call	exp");
+            break;
+        case LOG:
+            fprintf(output, "%s", "    call	log");
+            break;
+        case SIN:
+            fprintf(output, "%s", "    call	sin");
+            break;
+        case COS:
+            fprintf(output, "%s", "    call	cos");
+            break;
+        case TAN:
+            fprintf(output, "%s", "    call	tan");
+            break;
+        case COT:
+            fprintf(output, "%s", "    call	cot");
+            break;
+        case SQRT:
+            fprintf(output, "%s", "    call	sqrt");
+            break;
+        default:
+            VERIFY_CONTRACT(0, "Invalid operator label");
+    }
+    fprintf(output, "%s", "    UNALIGN_STACK 16");
 }
 
 RawFunction *init_RawFunction(const char *raw_rpn) {
