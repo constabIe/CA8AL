@@ -99,7 +99,7 @@ Function *init_Function(const char *raw_rpn, const char *func_name) {
     for (uint32_t i = 0; i < function->raw_func->obj_rpn->size; ++i) {
         if (function->raw_func->obj_rpn->rpn[i]->type == OPERATOR) {
             if (function->raw_func->obj_rpn->rpn[i]->obj->operator->type == BINARY) {
-                intel_asm_fpu_load_binary_operator_template(output);
+                intel_asm_load_binary_operator_template(output);
                 if (function->raw_func->obj_rpn->rpn[i]->obj->operator->obj->binary->type == ADD) {
                     intel_asm_fpu_add_operator_template(output);
                 }
@@ -118,18 +118,18 @@ Function *init_Function(const char *raw_rpn, const char *func_name) {
                 intel_asm_fpu_UPload_template(output);
             }
             else {
-                intel_asm_fpu_load_unary_operator_template(output);
+                intel_asm_load_unary_operator_template(output);
                 intel_asm_fpu_unary_operator_template(output);
                 intel_asm_fpu_UPload_template(output);
             }
-        } 
+        }
         else if (function->raw_func->obj_rpn->rpn[i]->type == OPERAND) {
             add_operand(function->raw_func->obj_rpn->rpn[i]->obj->operand->obj);
             intel_asm_fpu_load_operand_template(output);
         }
         else {
             intel_asm_fpu_load_variable_template(output);
-        }   
+        }
     }
 
     intel_asm_cdecl_function_end_template(output);
@@ -159,7 +159,7 @@ void intel_asm_cdecl_function_start_template(FILE *output, const char *func_name
     fprintf(output, "%s", "    and     esp, 0xfffffff0\n");
     fprintf(output, "%s", "    add     esp, %1\n");
     fprintf(output, "%s", "%endmacro\n\n");
-   
+
     fprintf(output, "%s", "%macro UNALIGN_STACK 1.nolist\n");
     fprintf(output, "%s", "    add     esp, %1\n");
     fprintf(output, "%s", "%endmacro\n\n");
@@ -225,7 +225,7 @@ void intel_asm_cdecl_function_end_template(FILE *output) {
 
     for (uint32_t i = 0; i < global_operands_quantity; ++i) {
          fprintf(output, "%lf, ", global_operands[i]);
-    } 
+    }
 }
 
 void intel_asm_load_binary_operator_template(FILE *output) {
@@ -248,7 +248,7 @@ void intel_asm_load_unary_operator_template(FILE *output) {
 
 void intel_asm_fpu_add_operator_template(FILE *output) {
     if (output == NULL) { raise(SIGSEGV); }
-    
+
     fprintf(output, "%s", "    faddp\n");
 }
 void intel_asm_fpu_sub_operator_template(FILE *output) {
