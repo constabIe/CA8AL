@@ -87,7 +87,7 @@ $(BUILDDIR)/%.o: $(LIBDIR)/%.c
 	@mkdir -p $(dir $@)
 	${CC} -c ${CFLAGS} $< -o $@
 
-$(BUILDDIR)/%.o: $(FUNCTIONS)/%.asm
+$(BUILDDIR)/%.o: $(FUNCTIONDIR)/%.asm
 	@printf "${BYELLOW}Building object file ${BCYAN}$@${RESET}\n"
 	@mkdir -p ${BUILDDIR}
 
