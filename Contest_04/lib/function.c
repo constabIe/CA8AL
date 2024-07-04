@@ -1,5 +1,5 @@
-#include "../include/function.h"
-#include "../include/utils.h"
+#include "function.h"
+#include "utils.h"
 
 #define REGEX_Q             15
 #define UNARY_Q             7
@@ -72,7 +72,7 @@ double cot(double x) {
     return 1 / tan(x);
 }
 
-Function *init_Function(const char *raw_rpn, const char *func_name) {
+void init_Function(const char *raw_rpn, const char *func_name) {
     add_func_name(func_name);
 
     Function *function = (Function *) malloc(sizeof(Function));
@@ -80,21 +80,22 @@ Function *init_Function(const char *raw_rpn, const char *func_name) {
 
     function->raw_func = init_RawFunction(raw_rpn);
     VERIFY_CONTRACT(function->raw_func != NULL, "Unable to allocate memory");
-
+    printf("%d", 4);
     char command[CMD_SIZE];
     memset(command, 0, sizeof(command));
-    const char *prefix_command = "cd .. && make function FUNCNAME=";
+    const char *prefix_command = "make functionn FUNCNAME=";
     snprintf(command, sizeof(command), "%s%s", prefix_command, func_name);
-
+    printf("%d", 4);
     VERIFY_CONTRACT(system(command) != -1, "The error was raised after an attempt to initialize the shell command");
-
-    const char *prefix_path = "../function_definition/";
+    printf("%d", 4);
+    const char *prefix_path = "functions_implementation/";
     char path[PATH_SIZE];
     const char *suffix_path = ".asm";
-
+    printf("%d", 4);
     snprintf(path, sizeof(path), "%s%s%s", prefix_path, func_name, suffix_path);
-
+    printf("%d", 4);
     FILE *output = fopen(path, "w");
+    printf("%d", 4);
 
     intel_asm_cdecl_function_definition_start_template(output, func_name);
     set_default_global_cont_label_cntr();
@@ -126,10 +127,9 @@ Function *init_Function(const char *raw_rpn, const char *func_name) {
     }
 
     intel_asm_cdecl_function_definition_end_template(output);
-
     fclose(output);
 
-    return function;
+    del_Function(function);
 }
 void del_Function(Function *function) {
     if (function != NULL) {

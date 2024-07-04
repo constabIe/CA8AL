@@ -1,7 +1,8 @@
 *.DS_Store
 *build
-^task-template$
+*task-template
 *slv_asm
 *slv_c
 *.idea
-*/html
+*html
+*function_definition

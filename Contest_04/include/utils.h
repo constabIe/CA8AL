@@ -5,11 +5,11 @@
     do { \
         if (!(contract)) { \
             printf( \
-                "\n[%s:%d:%s] " format "\n", \
-                __FILE__, __LINE__, __func__, \
+                "[%s:%d] " format "\n", \
+                __FILE__, __LINE__, \
                 ##__VA_ARGS__); \
             exit(EXIT_FAILURE); \
         } \
     } while (0)
 
-#endif // UTILS_H   
+#endif // UTILS_H
