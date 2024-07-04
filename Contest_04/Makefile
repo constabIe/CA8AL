@@ -74,11 +74,15 @@ MAIN_EXE = $(BUILDDIR)/main
 FUNCTION_DEPLOYMENT_OBJ = $(BUILDDIR)/functions_deployment.o
 FUNCTION_DEPLOYMENT_EXE = $(BUILDDIR)/functions_deployment
 
-all: $(MAIN_EXE) $(FUNCTION_DEPLOYMENT_EXE)
 
-$(MAIN_EXE): $(MAIN_OBJ) $(FUNCTION_OBJS)
+all: $(FUNCTION_DEPLOYMENT_EXE) $(MAIN_EXE)
+
+print_var:
+	@echo "The value of MY_VAR is: $(FUNCTION_OBJS)"
+
+$(MAIN_EXE): $(MAIN_OBJ) $(FUNCTION_OBJS) | $(FUNCTION_DEPLOYMENT_EXE)
 	@printf "$(BYELLOW)Linking executable $(BCYAN)$@$(RESET)\n"
-	$(CC) $(LDFLAGS) $^ $(FUNCTION_OBJS) -o $@ $(LDLIBS)
+	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
 $(FUNCTION_DEPLOYMENT_EXE): $(FUNCTION_DEPLOYMENT_OBJ) $(LIB_OBJS)
 	@printf "$(BYELLOW)Linking executable $(BCYAN)$@$(RESET)\n"
