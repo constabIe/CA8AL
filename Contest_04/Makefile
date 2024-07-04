@@ -73,8 +73,7 @@ MAIN_EXE = $(BUILDDIR)/main
 FUNCTION_DEPLOYMENT_OBJ = $(BUILDDIR)/functions_deployment.o
 FUNCTION_DEPLOYMENT_EXE = $(BUILDDIR)/functions_deployment
 
-
-all: $(FUNCTION_DEPLOYMENT_OBJ) $(FUNCTION_OBJS) $(MAIN_OBJ)
+all: $(FUNCTION_DEPLOYMENT_OBJ) $(LIB_OBJS) $(MAIN_OBJ)
 
 print_var:
 	@echo $(FUNCTION_OBJS)
@@ -111,7 +110,7 @@ touch_function:
 	@mkdir -p $(FUNCTIONDIR)
 	@touch $(FUNCTIONDIR)/$(FUNCNAME).asm
 
-run: $(MAIN_EXE) $(FUNCTION_DEPLOYMENT_EXE)
+run: $(MAIN_EXE) func
 	./$<
 
 clean:
