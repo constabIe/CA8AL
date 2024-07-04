@@ -250,11 +250,11 @@ void intel_asm_load_fpu_template(FILE *output) {
     fprintf(output, "%s", "        mov     edi, [ebx]\n");
     fprintf(output, "%s", "        fld     qword [edi]\n");
     fprintf(output, "%s", "        add     ebx, QWORD_SIZE\n");
-    fprintf(output, "        jmp    .%s:\n", token_1);
+    fprintf(output, "        jmp    .%s\n", token_1);
 
     fprintf(output, "    .%s:\n", token_3);
     fprintf(output, "%s", "        fld     qword [val]\n");
-    fprintf(output, "        jmp    .%s:\n", token_1);
+    fprintf(output, "        jmp    .%s\n", token_1);
     fprintf(output, ".%s:\n", token_1);
 
     ++global_label_cntr;
