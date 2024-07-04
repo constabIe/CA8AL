@@ -56,10 +56,10 @@ LIBDIR = lib
 FUNCTIONDIR = functions_implementation
 
 LIBS =  $(notdir $(wildcard $(LIBDIR)/*.c))
-LIB_OBJS = $(LIBS:$(LIBDIR)/%.c=$(BUILDDIR)/%.o)
+LIB_OBJS = $(LIBS:%.c=$(BUILDDIR)/%.o)
 
 SOURCES = $(notdir $(wildcard $(SOURCEDIR)/*.c))
-SOURCE_OBJS = $(SOURCES:(SOURCEDIR)/%.c=$(BUILDDIR)/%.o)
+SOURCE_OBJS = $(SOURCES:%.c=$(BUILDDIR)/%.o)
 
 FUNCTIONS = $(notdir $(wildcard $(FUNCTIONDIR)/*.asm))
 FUNCTION_OBJS = $(FUNCTIONS:%.asm=$(BUILDDIR)/%.o)
@@ -73,7 +73,7 @@ FUNCTION_DEPLOYMENT_OBJ = $(BUILDDIR)/functions_deployment.o
 FUNCTION_DEPLOYMENT_EXE = $(BUILDDIR)/functions_deployment
 
 
-all: $(FUNCTION_DEPLOYMENT_EXE) $(MAIN_EXE) 
+all: $(FUNCTION_DEPLOYMENT_EXE) $(MAIN_EXE)
 
 print_var:
 	@echo "The value of MY_VAR is: $(FUNCTION_OBJS)"
