@@ -15,6 +15,7 @@ ASFLAGS = \
 
 LDLIBS = -lm
 LDFLAGS = \
+		-m32 \
 		-no-pie \
 		-z noexecstack \
 
