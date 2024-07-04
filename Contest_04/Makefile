@@ -67,11 +67,11 @@ MAIN_EXE = $(BUILDDIR)/main
 FUNCTION_DEPLOYMENT_OBJ = $(BUILDDIR)/functions_deployment.o
 FUNCTION_DEPLOYMENT_EXE = $(BUILDDIR)/functions_deployment
 
-#all: $(MAIN_EXE) $(FUNCTION_DEPLOYMENT_EXE)
-#
-#$(MAIN_EXE): $(MAIN_OBJ) $(FUNCTION_OBJS) | $(FUNCTION_DEPLOYMENT_EXE)
-#	@printf "${BYELLOW}Linking executable ${BCYAN}$@${RESET}\n"
-#	${CC} -c $^ ${LDFLAGS} -o $@ ${LDLIBS}
+all: $(MAIN_EXE) $(FUNCTION_DEPLOYMENT_EXE)
+
+$(MAIN_EXE): $(MAIN_OBJ) $(FUNCTION_OBJS) | $(FUNCTION_DEPLOYMENT_EXE)
+	@printf "${BYELLOW}Linking executable ${BCYAN}$@${RESET}\n"
+	${CC} -c $^ ${LDFLAGS} -o $@ ${LDLIBS}
 
 $(FUNCTION_DEPLOYMENT_EXE): $(FUNCTION_DEPLOYMENT_OBJ) $(LIB_OBJS)
 	@printf "${BYELLOW}Linking executable ${BCYAN}$@${RESET}\n"
@@ -93,7 +93,10 @@ $(BUILDDIR)/%.o: $(FUNCTIONS)/%.asm
 
 	${AS} ${ASFLAGS} $< -o $@
 
-run: $(FUNCTION_DEPLOYMENT_EXE)
+run_main: $(MAIN_EXE)
+	./$(MAIN_EXE)
+
+run_func: $(FUNCTION_DEPLOYMENT_EXE)
 	./$(FUNCTION_DEPLOYMENT_EXE)
 
 clean:
@@ -106,12 +109,6 @@ functionn:
 	@printf "${BYELLOW}The implementation of the function ${BCYAN}$(FUNCNAME)${RESET}\n"
 	@mkdir -p $(FUNCTIONDIR)
 	@touch $(FUNCTIONDIR)/$(FUNCNAME).asm
-#	@
-#	@if [ ! -f "$(FUNCTIONDIR)/$(FUNCNAME).asm" ]; then \
-#			touch "$(FUNCTIONDIR)/$(FUNCNAME).asm"; \
-#		else \
-#			rm -rf $(FUNCTIONDIR)/$(FUNCNAME).asm;
-#		fi
 
 .PHONY: run clean function
 
