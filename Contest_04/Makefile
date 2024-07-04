@@ -118,5 +118,16 @@ clean:
 	rm -rf $(BUILDDIR)
 	rm -rf $(FUNCTIONDIR)
 
+GDB_FLAGS = \
+	--eval-command="set architecture i386" \
+	--eval-command="file $(EXECUTABLE)" \
+	--eval-command="b main" \
+	--eval-command="run" \
+	--eval-command="tui e" \
+	--eval-command="la regs"
+
+gdb: $(EXECUTABLE)
+	$(GDB) $(GDB_FLAGS)
+
 .PHONY: run clean functionn
 

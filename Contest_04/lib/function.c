@@ -92,7 +92,6 @@ void init_Function(const char *raw_rpn, const char *func_name) {
     snprintf(path, sizeof(path), "%s%s%s", prefix_path, func_name, suffix_path);
 
     FILE *output = fopen(path, "w");
-    printf("rrrr");
 
     intel_asm_cdecl_function_definition_start_template(output, func_name);
     set_default_global_label_cntr();
@@ -102,14 +101,12 @@ void init_Function(const char *raw_rpn, const char *func_name) {
             if (func_rpn->rpn[i]->obj->operator->type == BINARY) {
                 intel_asm_load_fpu_template(output);
                 intel_asm_load_fpu_template(output);
-                intel_asm_call_binary_operator(output,
-                                               func_rpn->rpn[i]->obj->operator->obj->binary->type);
+                intel_asm_call_binary_operator(output, func_rpn->rpn[i]->obj->operator->obj->binary->type);
                 intel_asm_UPload_fpu_template(output);
             }
             else {
                 intel_asm_load_fpu_template(output);
-                intel_asm_call_unary_operator(output,
-                                              func_rpn->rpn[i]->obj->operator->obj->unary->type);
+                intel_asm_call_unary_operator(output, func_rpn->rpn[i]->obj->operator->obj->unary->type);
                 intel_asm_UPload_fpu_template(output);
             }
         }
