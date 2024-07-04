@@ -1,5 +1,6 @@
 # x86_64-linux-gnu-gcc
 CC  = gcc
+LD = ld
 AS  = nasm
 GDB = gdb
 
@@ -73,14 +74,14 @@ FUNCTION_DEPLOYMENT_OBJ = $(BUILDDIR)/functions_deployment.o
 FUNCTION_DEPLOYMENT_EXE = $(BUILDDIR)/functions_deployment
 
 
-all: $(FUNCTION_DEPLOYMENT_EXE) $(MAIN_EXE)
+all: $(FUNCTION_DEPLOYMENT_OBJ) $(FUNCTION_OBJS) $(MAIN_OBJ)
 
 print_var:
 	@echo $(FUNCTION_OBJS)
 
 $(MAIN_EXE): $(FUNCTION_OBJS) $(MAIN_OBJ)
 	@printf "$(BYELLOW)Linking executable $(BCYAN)$@$(RESET)\n"
-	$(CC) $(LDFLAGS) $^ $(FUNCTION_OBJS) -o $@ $(LDLIBS)
+	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
 $(FUNCTION_DEPLOYMENT_EXE): $(LIB_OBJS) $(FUNCTION_DEPLOYMENT_OBJ)
 	@printf "$(BYELLOW)Linking executable $(BCYAN)$@$(RESET)\n"
@@ -110,7 +111,7 @@ touch_function:
 	@mkdir -p $(FUNCTIONDIR)
 	@touch $(FUNCTIONDIR)/$(FUNCNAME).asm
 
-run: $(MAIN_EXE) $(FUNCTION_DEPLOYMENT_EXE)  $(FUNCTION_OBJS)
+run: $(MAIN_EXE) $(FUNCTION_DEPLOYMENT_EXE)
 	./$<
 
 clean:
