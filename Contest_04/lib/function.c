@@ -75,11 +75,8 @@ double cot(double x) {
 void init_Function(const char *raw_rpn, const char *func_name) {
     add_func_name(func_name);
 
-    Function *function = (Function *) malloc(sizeof(Function));
-    VERIFY_CONTRACT(function != NULL, "Unable to allocate memory");
-
-    function->raw_func = init_RawFunction(raw_rpn);
-    VERIFY_CONTRACT(function->raw_func != NULL, "Unable to allocate memory");
+    RPN *func_rpn = init_RPN(raw_rpn);
+    VERIFY_CONTRACT(func_rpn != NULL, "Unable to allocate memory");
 
     char command[CMD_SIZE];
     memset(command, 0, sizeof(command));
@@ -100,24 +97,24 @@ void init_Function(const char *raw_rpn, const char *func_name) {
     intel_asm_cdecl_function_definition_start_template(output, func_name);
     set_default_global_label_cntr();
 
-    for (uint32_t i = 0; i < function->raw_func->obj_rpn->size; ++i) {
-        if (function->raw_func->obj_rpn->rpn[i]->type == OPERATOR) {
-            if (function->raw_func->obj_rpn->rpn[i]->obj->operator->type == BINARY) {
+    for (uint32_t i = 0; i < func_rpn->size; ++i) {
+        if (func_rpn->rpn[i]->type == OPERATOR) {
+            if (func_rpn->rpn[i]->obj->operator->type == BINARY) {
                 intel_asm_load_fpu_template(output);
                 intel_asm_load_fpu_template(output);
                 intel_asm_call_binary_operator(output,
-                                               function->raw_func->obj_rpn->rpn[i]->obj->operator->obj->binary->type);
+                                               func_rpn->rpn[i]->obj->operator->obj->binary->type);
                 intel_asm_UPload_fpu_template(output);
             }
             else {
                 intel_asm_load_fpu_template(output);
                 intel_asm_call_unary_operator(output,
-                                              function->raw_func->obj_rpn->rpn[i]->obj->operator->obj->unary->type);
+                                              func_rpn->rpn[i]->obj->operator->obj->unary->type);
                 intel_asm_UPload_fpu_template(output);
             }
         }
-        else if (function->raw_func->obj_rpn->rpn[i]->type == OPERAND) {
-            add_fpu(function->raw_func->obj_rpn->rpn[i]->obj->operand->obj);
+        else if (func_rpn->rpn[i]->type == OPERAND) {
+            add_fpu(func_rpn->rpn[i]->obj->operand->obj);
             add_fpu(1);
         }
         else {
@@ -129,16 +126,16 @@ void init_Function(const char *raw_rpn, const char *func_name) {
     intel_asm_cdecl_function_definition_end_template(output);
     fclose(output);
 
-    del_Function(function);
+    del_RPN(func_rpn);
 }
-void del_Function(Function *function) {
-    if (function != NULL) {
-        if (function->raw_func != NULL) {
-            del_RawFunction(function->raw_func);
-        }
-        free(function);
-    }
-}
+//void del_Function(Function *function) {
+//    if (function != NULL) {
+//        if (function->raw_func != NULL) {
+//            del_RawFunction(function->raw_func);
+//        }
+//        free(function);
+//    }
+//}
 
 void intel_asm_cdecl_function_definition_start_template(FILE *output, const char *func_name) {
     if (output == NULL) { raise(SIGSEGV); }
@@ -187,28 +184,27 @@ void intel_asm_cdecl_function_definition_start_template(FILE *output, const char
 void intel_asm_cdecl_function_definition_end_template(FILE *output) {
     if (output == NULL) { raise(SIGSEGV); }
 
-    fprintf(output, "%s", "    fldcw   word [fpu_ctrl]\n");
+    fprintf(output, "%s", "\tfldcw   word [fpu_ctrl]\n");
 
-    fprintf(output, "%s", "    fstcw   word [fpu_ctrl]\n");
-    fprintf(output, "%s", "    finit\n");
-    fprintf(output, "%s", "    mov     edi, [ebx]\n");
-    fprintf(output, "%s", "    fld     qword [edi]\n");
-    fprintf(output, "%s", "    fldcw   word [fpu_ctrl]\n");
+    fprintf(output, "%s", "\tfstcw\tword [fpu_ctrl]\n");
+    fprintf(output, "%s", "\tfinit\n");
+    fprintf(output, "%s", "\tlea \tedi, [ebx]\n");
+    fprintf(output, "%s", "\tfld \tqword [edi]\n");
+    fprintf(output, "%s", "\tfldcw\tword [fpu_ctrl]\n");
 
-    fprintf(output, "%s", "    mov     ebx, [tmp_ebx]\n");
-    fprintf(output, "%s", "    mov     edi, [tmp_edi]\n");
-    fprintf(output, "%s", "    mov     esi, [tmp_esi]\n");
+    fprintf(output, "%s", "\tmov \tebx, [tmp_ebx]\n");
+    fprintf(output, "%s", "\tmov \tedi, [tmp_edi]\n");
+    fprintf(output, "%s", "\tmov \tesi, [tmp_esi]\n");
 
-    fprintf(output, "%s", "    FUNCTION_EPILOGUE\n");
+    fprintf(output, "%s", "\tFUNCTION_EPILOGUE\n");
 
-    fprintf(output, "%s", "    ret\n");
-
-    fprintf(output, "%s", "section .data\n");
-    fprintf(output, "%s", "    DWORD_SIZE      equ     4\n");
-    fprintf(output, "%s", "    QWORD_SIZE      equ     8\n");
+    fprintf(output, "%s", "\tret\n");
 
     fprintf(output, "%s", "section .data\n");
-    fprintf(output, "%s", "    fpus       dq      ");
+    fprintf(output, "%s", "\tQWORD_SIZE  \tequ     8\n");
+
+    fprintf(output, "%s", "section .data\n");
+    fprintf(output, "%s", "\tfpus\t\tdq      ");
 
     for (uint32_t i = global_fpus_q - 1; i > 0; --i) {
         fprintf(output, "%lf, ", global_fpus[i]);
@@ -237,24 +233,23 @@ void intel_asm_load_fpu_template(FILE *output) {
     token_3[4] = (char) (global_label_cntr + 49);
     token_3[5] = '\0';
 
-    fprintf(output, "%s", "    mov     edi, [ebx]\n");
-    fprintf(output, "%s", "    fld     qword [edi]\n");
-    fprintf(output, "%s", "    add     ebx, QWORD_SIZE\n");
-    fprintf(output, "%s", "    fld1\n");
-    fprintf(output, "%s", "    fcompp\n");
-    fprintf(output, "%s", "    fstsw   ax\n");
-    fprintf(output, "%s", "    sahf\n");
-    fprintf(output, "    je      .%s\n", token_2);
-    fprintf(output, "    jne      .%s\n", token_3);
-    fprintf(output, "    .%s:\n", token_2);
-    fprintf(output, "%s", "        mov     edi, [ebx]\n");
-    fprintf(output, "%s", "        fld     qword [edi]\n");
-    fprintf(output, "%s", "        add     ebx, QWORD_SIZE\n");
-    fprintf(output, "        jmp    .%s\n", token_1);
+    fprintf(output, "%s", "\tlea \tedi, [ebx]\n");
+    fprintf(output, "%s", "\tfld \tqword [edi]\n");
+    fprintf(output, "%s", "\tadd \tebx, QWORD_SIZE\n");
+    fprintf(output, "%s", "\tfld1\n");
+    fprintf(output, "%s", "\tfcompp\n");
+    fprintf(output, "%s", "\tsahf\n");
+    fprintf(output, "\tje  \t%s\n", token_2);
+    fprintf(output, "\tjne \t.%s\n", token_3);
+    fprintf(output, "\t.%s:\n", token_2);
+    fprintf(output, "%s", "\t\tlea \tedi, [ebx]\n");
+    fprintf(output, "%s", "\t\tfld \tqword [edi]\n");
+    fprintf(output, "%s", "\t\tadd \tebx, QWORD_SIZE\n");
+    fprintf(output,       "\t\tjmp \t.%s\n", token_1);
 
-    fprintf(output, "    .%s:\n", token_3);
-    fprintf(output, "%s", "        fld     qword [val]\n");
-    fprintf(output, "        jmp    .%s\n", token_1);
+    fprintf(output, "\t.%s:\n", token_3);
+    fprintf(output, "%s", "\t\tfld \tqword [val]\n");
+    fprintf(output, "\t\tjmp \t.%s\n", token_1);
     fprintf(output, ".%s:\n", token_1);
 
     ++global_label_cntr;
@@ -262,102 +257,128 @@ void intel_asm_load_fpu_template(FILE *output) {
 void intel_asm_UPload_fpu_template(FILE *output) {
     if (output == NULL) { raise(SIGSEGV); }
 
-    fprintf(output, "%s", "    sub     ebx, QWORD_SIZE\n");
-    fprintf(output, "%s", "    fstp    qword [ebx]\n");
+    fprintf(output, "%s", "\tsub \tebx, QWORD_SIZE\n");
+    fprintf(output, "%s", "\tfstp\tqword [ebx]\n");
+    fprintf(output, "%s", "\tsub \tebx, QWORD_SIZE\n");
+    fprintf(output, "%s", "\tfld1\n");
+    fprintf(output, "%s", "\tfstp\tqword [ebx]\n");
 }
 
 void intel_asm_call_binary_operator(FILE *output, OperatorLabel label) {
     if (output == NULL) { raise(SIGSEGV); }
 
-    if (label == ADD) {
-        fprintf(output, "%s", "    faddp\n");
+    switch (label) {
+        case (ADD):
+            fprintf(output, "%s", "\tfaddp\n");
+            break;
+        case (SUB):
+            fprintf(output, "%s", "\tfsubrp\n");
+            break;
+        case (MUL):
+            fprintf(output, "%s", "\tfmulp\n");
+            break;
+        case (DIV):
+            fprintf(output, "%s", "\tfdivrp\n");
+            break;
+        default:
+            fprintf(output, "%s", "\tALIGN_STACK 16\n");
+            fprintf(output, "%s", "\tsub \tesp, 8\n");
+            fprintf(output, "%s", "\tfstp\tqword [esp]\n");
+            fprintf(output, "%s", "\tsub \tesp, 8\n");
+            fprintf(output, "%s", "\tfstp\tqword [esp]\n");
+            fprintf(output, "%s", "\tcall \tpow\n");
+            fprintf(output, "%s", "\tUNALIGN_STACK 16\n");
+            break;
     }
-    else if (label == SUB) {
-        fprintf(output, "%s", "    fsubrp\n");
-    }
-    else if (label == MUL) {
-        fprintf(output, "%s", "    fmulp\n");
-    }
-    else if (label == DIV) {
-        fprintf(output, "%s", "    fdivrp\n");
-    }
-    else {
-        fprintf(output, "%s", "    ALIGN_STACK 16\n");
-        fprintf(output, "%s", "    sub		esp, 8\n");
-        fprintf(output, "%s", "    fstp	qword [esp]\n");
-        fprintf(output, "%s", "    sub		esp, 8\n");
-        fprintf(output, "%s", "    fstp	qword [esp]\n");
-        fprintf(output, "%s", "    call	pow\n");
-        fprintf(output, "%s", "    UNALIGN_STACK 16\n");
-    }
+//    if (label == ADD) {
+//        fprintf(output, "%s", "\tfaddp\n");
+//    }
+//    else if (label == SUB) {
+//        fprintf(output, "%s", "\tfsubrp\n");
+//    }
+//    else if (label == MUL) {
+//        fprintf(output, "%s", "\tfmulp\n");
+//    }
+//    else if (label == DIV) {
+//        fprintf(output, "%s", "\tfdivrp\n");
+//    }
+//    else {
+//        fprintf(output, "%s", "\tALIGN_STACK 16\n");
+//        fprintf(output, "%s", "\tsub		esp, 8\n");
+//        fprintf(output, "%s", "\tfstp	qword [esp]\n");
+//        fprintf(output, "%s", "\tsub		esp, 8\n");
+//        fprintf(output, "%s", "\tfstp	qword [esp]\n");
+//        fprintf(output, "%s", "\tcall	pow\n");
+//        fprintf(output, "%s", "\tUNALIGN_STACK 16\n");
+//    }
 }
 void intel_asm_call_unary_operator(FILE *output, OperatorLabel label) {
-    fprintf(output, "%s", "    ALIGN_STACK 16");
-    fprintf(output, "%s", "    sub		esp, 8");
-    fprintf(output, "%s", "    fstp	qword [esp]");
-    fprintf(output, "%s", "    sub		esp, 8");
-    fprintf(output, "%s", "    fstp	qword [esp]");
+    fprintf(output, "%s", "\tALIGN_STACK 16");
+    fprintf(output, "%s", "\tsub \tesp, 8");
+    fprintf(output, "%s", "\tfstp\tqword [esp]");
+    fprintf(output, "%s", "\tsub \tesp, 8");
+    fprintf(output, "%s", "\tfstp\tqword [esp]");
     switch (label) {
         case EXP:
-            fprintf(output, "%s", "    call	exp");
+            fprintf(output, "%s", "\tcall \texp");
             break;
         case LOG:
-            fprintf(output, "%s", "    call	log");
+            fprintf(output, "%s", "\tcall \tlog");
             break;
         case SIN:
-            fprintf(output, "%s", "    call	sin");
+            fprintf(output, "%s", "\tcall \tsin");
             break;
         case COS:
-            fprintf(output, "%s", "    call	cos");
+            fprintf(output, "%s", "\tcall \tcos");
             break;
         case TAN:
-            fprintf(output, "%s", "    call	tan");
+            fprintf(output, "%s", "\tcall \ttan");
             break;
         case COT:
-            fprintf(output, "%s", "    call	cot");
+            fprintf(output, "%s", "\tcall \tcot");
             break;
         case SQRT:
-            fprintf(output, "%s", "    call	sqrt");
+            fprintf(output, "%s", "\tcall \tsqrt");
             break;
         default:
             VERIFY_CONTRACT(0, "Invalid operator label");
     }
-    fprintf(output, "%s", "    UNALIGN_STACK 16");
+    fprintf(output, "%s", "\tUNALIGN_STACK 16");
 }
 
-RawFunction *init_RawFunction(const char *raw_rpn) {
-    RawFunction *function = (RawFunction *) malloc(sizeof(RawFunction));
-    VERIFY_CONTRACT(function != NULL, "Unable to allocate memory");
-
-    function->obj_rpn = init_RPN(raw_rpn);
-    function->obj_var = NULL;
-
-    bool isvarset = false;
-    for (uint32_t i = 0; i < function->obj_rpn->size; ++i) {
-        if (function->obj_rpn->rpn[i]->type == VARIABLE) {
-            if (!isvarset) {
-                function->obj_var = init_Variable(function->obj_rpn->rpn[i]->obj->variable->obj);
-                isvarset = true;
-            }
-            else {
-                VERIFY_CONTRACT(0, "Only R^2 dimension");
-            }
-        }
-    }
-
-    return function;
-}
-void del_RawFunction(RawFunction *function) {
-    if (function != NULL) {
-        if (function->obj_rpn != NULL) {
-            del_RPN(function->obj_rpn);
-        }
-        if (function->obj_var != NULL) {
-            del_Variable(function->obj_var);
-        }
-        free(function);
-    }
-}
+//RawFunction *init_RawFunction(const char *raw_rpn) {
+//    RawFunction *function = (RawFunction *) malloc(sizeof(RawFunction));
+//    VERIFY_CONTRACT(function != NULL, "Unable to allocate memory");
+//
+//    function->obj_rpn = init_RPN(raw_rpn);
+//    function->obj_var = NULL;
+//
+//    bool isvarset = false;
+//    for (uint32_t i = 0; i < function->obj_rpn->size; ++i) {
+//        if (function->obj_rpn->rpn[i]->type == VARIABLE) {
+//            if (!isvarset) {
+//                function->obj_var = init_Variable(function->obj_rpn->rpn[i]->obj->variable->obj);
+//                isvarset = true;
+//            }
+//            else {
+//                VERIFY_CONTRACT(0, "Only R^2 dimension");
+//            }
+//        }
+//    }
+//
+//    return function;
+//}
+//void del_RawFunction(RawFunction *function) {
+//    if (function != NULL) {
+//        if (function->obj_rpn != NULL) {
+//            del_RPN(function->obj_rpn);
+//        }
+//        if (function->obj_var != NULL) {
+//            del_Variable(function->obj_var);
+//        }
+//        free(function);
+//    }
+//}
 
 RPN *init_RPN(const char *raw_rpn) {
     if (raw_rpn == NULL) {

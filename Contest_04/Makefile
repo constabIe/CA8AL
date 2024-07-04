@@ -4,7 +4,6 @@ AS  = nasm
 GDB = gdb
 
 CFLAGS = \
-		-m32 \
 		-Wall \
 		-Werror \
 		-Wextra
@@ -13,24 +12,26 @@ ASFLAGS = \
 		-f elf32 \
 		-DUNIX
 
-LDFLAGS = \
-		-m32 \
-		-no-pie \
-		-z noexecstack
+LDFLAGS =
 
 LDLIBS = -lm
 
-ifeq (${DEBUG}, 1)
-	CFLAGS += -g
-	ASFLAGS += -g
-	LDFLAGS += -g
-else
-	LDFLAGS += -flto
+ifeq ($(i386), 1)
+  CFLAGS += -m32
+  LDFLAGS += -m32 -no-pie -z noexecstack
 endif
 
-ifeq (${MEMVIEW}, 1)
-	CFLAGS += -fsanitize=address,undefined
-	LDFLAGS += -fsanitize=address,undefined
+ifeq ($(DEBUG), 1)
+  CFLAGS += -g
+  ASFLAGS += -g
+  LDFLAGS += -g
+else
+  LDFLAGS += -flto
+endif
+
+ifeq ($(MEMVIEW), 1)
+  CFLAGS += -fsanitize=address,undefined
+  LDFLAGS += -fsanitize=address,undefined
 endif
 
 #--------
@@ -47,7 +48,6 @@ RESET   = \033[0m
 #-------
 # Files
 #-------
-
 
 BUILDDIR = build
 INCLUDEDIR = include
@@ -66,7 +66,7 @@ SOURCE_OBJS = $(SOURCES:(SOURCEDIR)/%.c=$(BUILDDIR)/%.o)
 FUNCTIONS = $(wildcard $(FUNCTIONDIR)/*.asm)
 FUNCTION_OBJS = $(FUNCTIONS:$(FUNCTIONDIR)/%.asm=$(BUILDDIR)/%.o)
 
-CFLAGS += -I $(abspath ${INCLUDEDIR})
+CFLAGS += -I $(abspath $(INCLUDEDIR))
 
 MAIN_OBJ = $(BUILDDIR)/main.o
 MAIN_EXE = $(BUILDDIR)/main
@@ -77,28 +77,28 @@ FUNCTION_DEPLOYMENT_EXE = $(BUILDDIR)/functions_deployment
 all: $(MAIN_EXE) $(FUNCTION_DEPLOYMENT_EXE)
 
 $(MAIN_EXE): $(MAIN_OBJ) $(FUNCTION_OBJS)
-	@printf "${BYELLOW}Linking executable ${BCYAN}$@${RESET}\n"
-	${CC} ${LDFLAGS} $^ -o $@ $(LDLIBS)
+	@printf "$(BYELLOW)Linking executable $(BCYAN)$@$(RESET)\n"
+	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
 $(FUNCTION_DEPLOYMENT_EXE): $(FUNCTION_DEPLOYMENT_OBJ) $(LIB_OBJS)
-	@printf "${BYELLOW}Linking executable ${BCYAN}$@${RESET}\n"
-	${CC} ${LDFLAGS} $^ -o $@ $(LDLIBS)
+	@printf "$(BYELLOW)Linking executable $(BCYAN)$@$(RESET)\n"
+	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
 $(BUILDDIR)/%.o: $(SOURCEDIR)/%.c Makefile
-	@printf "${BYELLOW}Building object file ${BCYAN}$@${RESET}\n"
+	@printf "$(BYELLOW)Building object file $(BCYAN)$@$(RESET)\n"
 	@mkdir -p $(dir $@)
-	${CC} -c ${CFLAGS} $< -o $@
+	$(CC) -c $(CFLAGS) $< -o $@
 
 $(BUILDDIR)/%.o: $(LIBDIR)/%.c Makefile
-	@printf "${BYELLOW}Building object file ${BCYAN}$@${RESET}\n"
+	@printf "$(BYELLOW)Building object file $(BCYAN)$@$(RESET)\n"
 	@mkdir -p $(dir $@)
-	${CC} -c ${CFLAGS} $< -o $@
+	$(CC) -c $(CFLAGS) $< -o $@
 
 $(BUILDDIR)/%.o: $(FUNCTIONDIR)/%.asm Makefile
-	@printf "${BYELLOW}Building object file ${BCYAN}$@${RESET}\n"
-	@mkdir -p ${BUILDDIR}
+	@printf "$(BYELLOW)Building object file $(BCYAN)$@$(RESET)\n"
+	@mkdir -p $(BUILDDIR)
 
-	${AS} ${ASFLAGS} $< -o $@
+	$(AS) $(ASFLAGS) $< -o $@
 
 run_main: $(MAIN_EXE) $(FUNCTION_DEPLOYMENT_EXE)
 	./$<
@@ -107,13 +107,13 @@ run_func: $(FUNCTION_DEPLOYMENT_EXE)
 	./$(FUNCTION_DEPLOYMENT_EXE)
 
 clean:
-	@printf "${BYELLOW}Cleaning proccess${RESET}\n"
-	rm -rf ${BUILDDIR}
-	rm -rf ${FUNCTIONDIR}
+	@printf "$(BYELLOW)Cleaning proccess$(RESET)\n"
+	rm -rf $(BUILDDIR)
+	rm -rf $(FUNCTIONDIR)
 
 
 functionn:
-	@printf "${BYELLOW}The implementation of the function ${BCYAN}$(FUNCNAME)${RESET}\n"
+	@printf "$(BYELLOW)The implementation of the function $(BCYAN)$(FUNCNAME)$(RESET)\n"
 	@mkdir -p $(FUNCTIONDIR)
 	@touch $(FUNCTIONDIR)/$(FUNCNAME).asm
 

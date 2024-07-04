@@ -1,6 +1,6 @@
-#ifndef __i386__
-#error Wrong architecture!
-#endif
+//#ifndef __i386__
+//#error Wrong architecture!
+//#endif
 
 #include <stdio.h>
 
