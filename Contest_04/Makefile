@@ -10,16 +10,18 @@ CFLAGS = \
 		-Wextra
 
 ASFLAGS = \
-		-m32 \
 		-f elf32 \
 		-DUNIX
 
 LDLIBS = -lm
-LDFLAGS = -m32
+LDFLAGS = \
+		-no-pie \
+		-z noexecstack \
 
 ifeq (${DEBUG}, 1)
 	CFLAGS += -g
 	ASFLAGS += -g
+	LDFLAGS += -g
 else
 	LDFLAGS += -flto
 endif
