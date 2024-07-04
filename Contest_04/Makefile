@@ -55,12 +55,10 @@ SOURCEDIR = src
 LIBDIR = lib
 FUNCTIONDIR = functions_implementation
 
-LIBS = $(LIBDIR)/function.c \
-		$(LIBDIR)/square.c
+LIBS =  $(notdir $(wildcard $(LIBDIR)/*.c))
 LIB_OBJS = $(LIBS:$(LIBDIR)/%.c=$(BUILDDIR)/%.o)
 
-SOURCES = $(SOURCEDIR)/functions_deployment.c \
-			$(SOURCEDIR)/main.c
+SOURCES = $(notdir $(wildcard $(SOURCEDIR)/*.c))
 SOURCE_OBJS = $(SOURCES:(SOURCEDIR)/%.c=$(BUILDDIR)/%.o)
 
 FUNCTIONS = $(notdir $(wildcard $(FUNCTIONDIR)/*.asm))
@@ -75,16 +73,16 @@ FUNCTION_DEPLOYMENT_OBJ = $(BUILDDIR)/functions_deployment.o
 FUNCTION_DEPLOYMENT_EXE = $(BUILDDIR)/functions_deployment
 
 
-all: $(FUNCTION_DEPLOYMENT_EXE) $(MAIN_EXE) run
+all: $(FUNCTION_DEPLOYMENT_EXE) $(MAIN_EXE) 
 
 print_var:
 	@echo "The value of MY_VAR is: $(FUNCTION_OBJS)"
 
-$(MAIN_EXE): $(MAIN_OBJ) $(FUNCTION_OBJS) | $(FUNCTION_DEPLOYMENT_EXE)
+$(MAIN_EXE): $(FUNCTION_OBJS) $(MAIN_OBJ) | $(FUNCTION_DEPLOYMENT_EXE)
 	@printf "$(BYELLOW)Linking executable $(BCYAN)$@$(RESET)\n"
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
-$(FUNCTION_DEPLOYMENT_EXE): $(FUNCTION_DEPLOYMENT_OBJ) $(LIB_OBJS)
+$(FUNCTION_DEPLOYMENT_EXE): $(LIB_OBJS) $(FUNCTION_DEPLOYMENT_OBJ)
 	@printf "$(BYELLOW)Linking executable $(BCYAN)$@$(RESET)\n"
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
@@ -102,11 +100,10 @@ $(BUILDDIR)/%.o: $(FUNCTIONDIR)/%.asm Makefile
 	@printf "$(BYELLOW)Building object file $(BCYAN)$@$(RESET)\n"
 	@mkdir -p $(BUILDDIR)
 
-	$(AS) $(ASFLAGS) $< -o $@
+	$(AS) $(ASFLAGS) $< -o $@ $(LDLIBS)
 
 run: $(MAIN_EXE) $(FUNCTION_DEPLOYMENT_EXE)
-	./$(FUNCTION_DEPLOYMENT_EXE)
-	./$(MAIN_EXE)
+	./$<
 
 run_func: $(FUNCTION_DEPLOYMENT_EXE)
 	./$(FUNCTION_DEPLOYMENT_EXE)
