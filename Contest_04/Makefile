@@ -1,15 +1,17 @@
-CC  = gcc # x86_64-linux-gnu-gcc
+CC  = x86_64-linux-gnu-gcc
 AS  = nasm
 GDB = gdb
 
 CFLAGS = \
+		-m32 \
 		-Wall \
-        -Werror \
-        -Wextra
+		-Werror \
+		-Wextra
 
 ASFLAGS = \
-	-f elf32 \
-	-DUNIX
+		-m32 \
+		-f elf32 \
+		-DUNIX
 
 LDLIBS = -lm
 
@@ -93,7 +95,7 @@ $(BUILDDIR)/%.o: $(FUNCTIONDIR)/%.asm
 
 	${AS} ${ASFLAGS} $< -o $@
 
-run_main: $(MAIN_EXE)
+run_main: $(MAIN_EXE) $(FUNCTION_DEPLOYMENT_EXE)
 	./$(MAIN_EXE)
 
 run_func: $(FUNCTION_DEPLOYMENT_EXE)
