@@ -36,17 +36,17 @@ f1:
     fcompp
     fstsw   ax
     sahf
-    je      .operand
-    jne     .val
-    .operand:
+    je      .operand_1
+    jne      .val_1
+    .operand_1:
         mov     edi, [ebx]
         fld     qword [edi]
         add     ebx, QWORD_SIZE
-        jmp     .cont_1
-    .val:
+jmp    .cont_1:
+    .val_1:
         fld     qword [val]
-        jmp     .cont_1
-.cont_1:
+jmp    .cont_1:
+cont_1:
     mov     edi, [ebx]
     fld     qword [edi]
     add     ebx, QWORD_SIZE
@@ -54,17 +54,17 @@ f1:
     fcompp
     fstsw   ax
     sahf
-    je      .operand
-    jne     .val
-    .operand:
+    je      .operand_2
+    jne      .val_2
+    .operand_2:
         mov     edi, [ebx]
         fld     qword [edi]
         add     ebx, QWORD_SIZE
-        jmp     .cont_2
-    .val:
+jmp    .cont_2:
+    .val_2:
         fld     qword [val]
-        jmp     .cont_2
-.cont_2:
+jmp    .cont_2:
+cont_2:
     fdivrp
     sub     ebx, QWORD_SIZE
     fstp    qword [ebx]

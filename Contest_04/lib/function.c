@@ -25,9 +25,9 @@ static uint32_t global_func_names_quantity = 0;
 static double global_fpus[FPUS_Q];
 static uint32_t global_fpus_q = 0;
 
-static uint32_t global_cont_label_cntr = 0;
-static void set_default_global_cont_label_cntr() {
-    global_cont_label_cntr = 0;
+static uint32_t global_label_cntr = 0;
+static void set_default_global_label_cntr() {
+    global_label_cntr = 0;
 }
 
 static void change_global_operator_name(OperatorLabel new_operator) {
@@ -80,25 +80,25 @@ void init_Function(const char *raw_rpn, const char *func_name) {
 
     function->raw_func = init_RawFunction(raw_rpn);
     VERIFY_CONTRACT(function->raw_func != NULL, "Unable to allocate memory");
-    printf("%d", 4);
+
     char command[CMD_SIZE];
     memset(command, 0, sizeof(command));
     const char *prefix_command = "make functionn FUNCNAME=";
     snprintf(command, sizeof(command), "%s%s", prefix_command, func_name);
-    printf("%d", 4);
+
     VERIFY_CONTRACT(system(command) != -1, "The error was raised after an attempt to initialize the shell command");
-    printf("%d", 4);
+
     const char *prefix_path = "functions_implementation/";
     char path[PATH_SIZE];
     const char *suffix_path = ".asm";
-    printf("%d", 4);
+
     snprintf(path, sizeof(path), "%s%s%s", prefix_path, func_name, suffix_path);
-    printf("%d", 4);
+
     FILE *output = fopen(path, "w");
-    printf("%d", 4);
+
 
     intel_asm_cdecl_function_definition_start_template(output, func_name);
-    set_default_global_cont_label_cntr();
+    set_default_global_label_cntr();
 
     for (uint32_t i = 0; i < function->raw_func->obj_rpn->size; ++i) {
         if (function->raw_func->obj_rpn->rpn[i]->type == OPERATOR) {
@@ -219,11 +219,23 @@ void intel_asm_cdecl_function_definition_end_template(FILE *output) {
 void intel_asm_load_fpu_template(FILE *output) {
     if (output == NULL) { raise(SIGSEGV); }
 
-    const char *label = "cont_";
-    char token[7];
-    snprintf(token, sizeof(token), "%s", label);
-    token[5] = (char) (global_cont_label_cntr + 49);
-    token[6] = '\0';
+    const char *label_1 = "cont_";
+    char token_1[7];
+    snprintf(token_1, sizeof(token_1), "%s", label_1);
+    token_1[5] = (char) (global_label_cntr + 49);
+    token_1[6] = '\0';
+
+    const char *label_2 = "operand_";
+    char token_2[10];
+    snprintf(token_2, sizeof(token_2), "%s", label_2);
+    token_2[8] = (char) (global_label_cntr + 49);
+    token_2[9] = '\0';
+
+    const char *label_3 = "val_";
+    char token_3[6];
+    snprintf(token_3, sizeof(token_3), "%s", label_3);
+    token_3[4] = (char) (global_label_cntr + 49);
+    token_3[5] = '\0';
 
     fprintf(output, "%s", "    mov     edi, [ebx]\n");
     fprintf(output, "%s", "    fld     qword [edi]\n");
@@ -232,23 +244,20 @@ void intel_asm_load_fpu_template(FILE *output) {
     fprintf(output, "%s", "    fcompp\n");
     fprintf(output, "%s", "    fstsw   ax\n");
     fprintf(output, "%s", "    sahf\n");
-    fprintf(output, "%s", "    je      .operand\n");
-    fprintf(output, "%s", "    jne     .val\n");
-    fprintf(output, "%s", "    .operand:\n");
+    fprintf(output, "    je      .%s\n", token_2);
+    fprintf(output, "    jne      .%s\n", token_3);
+    fprintf(output, "    .%s:\n", token_2);
     fprintf(output, "%s", "        mov     edi, [ebx]\n");
     fprintf(output, "%s", "        fld     qword [edi]\n");
     fprintf(output, "%s", "        add     ebx, QWORD_SIZE\n");
-    fprintf(output, "%s", "        jmp     .");
-    fprintf(output, "%s\n", token);
+    fprintf(output, "jmp    .%s:\n", token_1);
 
-    fprintf(output, "%s", "    .val:\n");
+    fprintf(output, "    .%s:\n", token_3);
     fprintf(output, "%s", "        fld     qword [val]\n");
-    fprintf(output, "%s", "        jmp     .");
-    fprintf(output, "%s\n", token);
-    fprintf(output, "%s", ".");
-    fprintf(output, "%s:\n", token);
+    fprintf(output, "jmp    .%s:\n", token_1);
+    fprintf(output, "%s:\n", token_1);
 
-    ++global_cont_label_cntr;
+    ++global_label_cntr;
 }
 void intel_asm_UPload_fpu_template(FILE *output) {
     if (output == NULL) { raise(SIGSEGV); }
