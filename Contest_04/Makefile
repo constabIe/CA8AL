@@ -13,11 +13,12 @@ ASFLAGS = \
 		-f elf32 \
 		-DUNIX
 
-LDLIBS = -lm
 LDFLAGS = \
 		-m32 \
 		-no-pie \
-		-z noexecstack \
+		-z noexecstack
+
+LDLIBS = -lm
 
 ifeq (${DEBUG}, 1)
 	CFLAGS += -g
@@ -46,7 +47,6 @@ RESET   = \033[0m
 #-------
 # Files
 #-------
-
 
 
 BUILDDIR = build
@@ -78,7 +78,7 @@ all: $(MAIN_EXE) $(FUNCTION_DEPLOYMENT_EXE)
 
 $(MAIN_EXE): $(MAIN_OBJ) $(FUNCTION_OBJS)
 	@printf "${BYELLOW}Linking executable ${BCYAN}$@${RESET}\n"
-	${CC} ${LDFLAGS} $< $(FUNCTION_OBJS) -o $@ ${LDLIBS}
+	${CC} ${LDFLAGS} $^ -o $@ $(LDLIBS)
 
 $(FUNCTION_DEPLOYMENT_EXE): $(FUNCTION_DEPLOYMENT_OBJ) $(LIB_OBJS)
 	@printf "${BYELLOW}Linking executable ${BCYAN}$@${RESET}\n"
@@ -101,7 +101,7 @@ $(BUILDDIR)/%.o: $(FUNCTIONDIR)/%.asm Makefile
 	${AS} ${ASFLAGS} $< -o $@
 
 run_main: $(MAIN_EXE) $(FUNCTION_DEPLOYMENT_EXE)
-	./$(MAIN_EXE)
+	./$<
 
 run_func: $(FUNCTION_DEPLOYMENT_EXE)
 	./$(FUNCTION_DEPLOYMENT_EXE)

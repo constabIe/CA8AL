@@ -1,5 +1,5 @@
 bits 32
-extern exp, log, sin, cos, tan, cot, sqrt, pow
+extern exp, log, sin, cos, tan, cot, sqrt, pow, printf
 %macro ALIGN_STACK 1.nolist
     sub     esp, %1
     and     esp, 0xfffffff0
@@ -29,9 +29,13 @@ f2:
     mov     ebx, fpus
     finit
     fstcw   word [fpu_ctrl]
-    mov     edi, [ebx]
+    lea     edi, [ebx]
     fld     qword [edi]
     add     ebx, QWORD_SIZE
+    ALIGN_STACK 4
+    push    debug
+    call    printf
+    UNALIGN_STACK 4
     fld1
     fcompp
     fstsw   ax
@@ -121,5 +125,11 @@ f2:
 section .data
     DWORD_SIZE      equ     4
     QWORD_SIZE      equ     8
+        mov     ebx, fpus
+        finit
+        fstcw   word [fpu_ctrl]
+        mov     edi, [ebx]
+        fld     qword [edi]
 section .data
+    debug       db      `yy_`, 0
     fpus       dq      1.000000, 4.000000, 0.000000, 0.000000, 1.000000, 3.000000, 1.000000, 2.000000, 1.000000, 3.000000
