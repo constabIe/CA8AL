@@ -75,7 +75,7 @@ FUNCTION_DEPLOYMENT_OBJ = $(BUILDDIR)/functions_deployment.o
 FUNCTION_DEPLOYMENT_EXE = $(BUILDDIR)/functions_deployment
 
 
-all: $(FUNCTION_DEPLOYMENT_EXE) $(MAIN_EXE)
+all: $(FUNCTION_DEPLOYMENT_EXE) $(MAIN_EXE) run
 
 print_var:
 	@echo "The value of MY_VAR is: $(FUNCTION_OBJS)"
@@ -104,8 +104,9 @@ $(BUILDDIR)/%.o: $(FUNCTIONDIR)/%.asm Makefile
 
 	$(AS) $(ASFLAGS) $< -o $@
 
-run_main: $(MAIN_EXE) $(FUNCTION_DEPLOYMENT_EXE)
-	./$<
+run: $(MAIN_EXE) $(FUNCTION_DEPLOYMENT_EXE)
+	./$(FUNCTION_DEPLOYMENT_EXE)
+	./$(MAIN_EXE)
 
 run_func: $(FUNCTION_DEPLOYMENT_EXE)
 	./$(FUNCTION_DEPLOYMENT_EXE)
