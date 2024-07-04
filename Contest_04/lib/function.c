@@ -235,6 +235,7 @@ void intel_asm_load_fpu_template(FILE *output) {
     fprintf(output, "%s", "\tadd \tebx, QWORD_SIZE\n");
     fprintf(output, "%s", "\tfld1\n");
     fprintf(output, "%s", "\tfcompp\n");
+    fprintf(output, "%s", "\tfstsw\tax\n");
     fprintf(output, "%s", "\tsahf\n");
     fprintf(output, "\tje  \t.%s\n", token_2);
     fprintf(output, "\tjne \t.%s\n", token_3);

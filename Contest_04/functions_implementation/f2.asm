@@ -34,7 +34,7 @@ f2:
 	add 	ebx, QWORD_SIZE
 	fld1
 	fcompp
-	sahf
+	fstsw	ax	sahf
 	je  	.operand_1
 	jne 	.val_1
 	.operand_1:
@@ -51,7 +51,7 @@ f2:
 	add 	ebx, QWORD_SIZE
 	fld1
 	fcompp
-	sahf
+	fstsw	ax	sahf
 	je  	.operand_2
 	jne 	.val_2
 	.operand_2:
@@ -74,7 +74,7 @@ f2:
 	add 	ebx, QWORD_SIZE
 	fld1
 	fcompp
-	sahf
+	fstsw	ax	sahf
 	je  	.operand_3
 	jne 	.val_3
 	.operand_3:
@@ -91,7 +91,7 @@ f2:
 	add 	ebx, QWORD_SIZE
 	fld1
 	fcompp
-	sahf
+	fstsw	ax	sahf
 	je  	.operand_4
 	jne 	.val_4
 	.operand_4:
