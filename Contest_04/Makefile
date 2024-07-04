@@ -75,7 +75,7 @@ $(MAIN_EXE): $(MAIN_OBJ) $(FUNCTION_OBJS) | $(FUNCTION_DEPLOYMENT_EXE)
 
 $(FUNCTION_DEPLOYMENT_EXE): $(FUNCTION_DEPLOYMENT_OBJ) $(LIB_OBJS)
 	@printf "${BYELLOW}Linking executable ${BCYAN}$@${RESET}\n"
-	${CC} ${LDFLAGS} $^ -o $@
+	${CC} ${LDFLAGS} $^ -o $@ $(LDLIBS)
 
 $(BUILDDIR)/%.o: $(SOURCEDIR)/%.c
 	@printf "${BYELLOW}Building object file ${BCYAN}$@${RESET}\n"
