@@ -1,3 +1,7 @@
+#ifndef __i386__
+#error Wrong architecture!
+#endif
+
 #include "function.h"
 
 int main(void) {

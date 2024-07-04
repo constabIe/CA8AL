@@ -1,4 +1,5 @@
-CC  = x86_64-linux-gnu-gcc
+# x86_64-linux-gnu-gcc
+CC  = gcc
 AS  = nasm
 GDB = gdb
 
@@ -79,17 +80,17 @@ $(FUNCTION_DEPLOYMENT_EXE): $(FUNCTION_DEPLOYMENT_OBJ) $(LIB_OBJS)
 	@printf "${BYELLOW}Linking executable ${BCYAN}$@${RESET}\n"
 	${CC} ${LDFLAGS} $^ -o $@ $(LDLIBS)
 
-$(BUILDDIR)/%.o: $(SOURCEDIR)/%.c
+$(BUILDDIR)/%.o: $(SOURCEDIR)/%.c Makefile
 	@printf "${BYELLOW}Building object file ${BCYAN}$@${RESET}\n"
 	@mkdir -p $(dir $@)
 	${CC} -c ${CFLAGS} $< -o $@
 
-$(BUILDDIR)/%.o: $(LIBDIR)/%.c
+$(BUILDDIR)/%.o: $(LIBDIR)/%.c Makefile
 	@printf "${BYELLOW}Building object file ${BCYAN}$@${RESET}\n"
 	@mkdir -p $(dir $@)
 	${CC} -c ${CFLAGS} $< -o $@
 
-$(BUILDDIR)/%.o: $(FUNCTIONDIR)/%.asm
+$(BUILDDIR)/%.o: $(FUNCTIONDIR)/%.asm Makefile
 	@printf "${BYELLOW}Building object file ${BCYAN}$@${RESET}\n"
 	@mkdir -p ${BUILDDIR}
 
@@ -112,5 +113,5 @@ functionn:
 	@mkdir -p $(FUNCTIONDIR)
 	@touch $(FUNCTIONDIR)/$(FUNCNAME).asm
 
-.PHONY: run clean function
+.PHONY: run clean functionn
 

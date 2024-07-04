@@ -1,3 +1,7 @@
+#ifndef __i386__
+#error Wrong architecture!
+#endif
+
 #include <stdio.h>
 
 extern double f1(double val);
