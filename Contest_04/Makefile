@@ -78,7 +78,7 @@ all: $(FUNCTION_DEPLOYMENT_EXE) $(MAIN_EXE)
 print_var:
 	@echo "The value of MY_VAR is: $(FUNCTION_OBJS)"
 
-$(MAIN_EXE): $(FUNCTION_OBJS) $(MAIN_OBJ) | $(FUNCTION_DEPLOYMENT_EXE)
+$(MAIN_EXE): $(FUNCTION_OBJS) $(MAIN_OBJ) | $(FUNCTION_DEPLOYMENT_EXE) $(FUNCTION_OBJS)
 	@printf "$(BYELLOW)Linking executable $(BCYAN)$@$(RESET)\n"
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
