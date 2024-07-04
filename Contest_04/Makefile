@@ -1,0 +1,117 @@
+CC  = gcc # x86_64-linux-gnu-gcc
+AS  = nasm
+GDB = gdb
+
+CFLAGS = \
+		-Wall \
+        -Werror \
+        -Wextra
+
+ASFLAGS = \
+	-f elf32 \
+	-DUNIX
+
+LDLIBS = -lm
+
+ifeq (${DEBUG}, 1)
+	CFLAGS += -g
+	ASFLAGS += -g
+else
+	LDFLAGS += -flto
+endif
+
+ifeq (${MEMVIEW}, 1)
+	CFLAGS += -fsanitize=address,undefined
+	LDFLAGS += -fsanitize=address,undefined
+endif
+
+#--------
+# Colors
+#--------
+
+BRED    = \033[1;31m
+BGREEN  = \033[1;32m
+BYELLOW = \033[1;33m
+GREEN   = \033[1;35m
+BCYAN   = \033[1;36m
+RESET   = \033[0m
+
+#-------
+# Files
+#-------
+
+
+
+BUILDDIR = build
+INCLUDEDIR = include
+SOURCEDIR = src
+LIBDIR = lib
+FUNCTIONDIR = functions_implementation
+
+LIBS = $(LIBDIR)/function.c \
+		$(LIBDIR)/square.c
+LIB_OBJS = $(LIBS:$(LIBDIR)/%.c=$(BUILDDIR)/%.o)
+
+SOURCES = $(SOURCEDIR)/functions_deployment.c \
+			$(SOURCEDIR)/main.c
+SOURCE_OBJS = $(SOURCES:(SOURCEDIR)/%.c=$(BUILDDIR)/%.o)
+
+FUNCTIONS = $(wildcard $(FUNCTIONDIR)/*.asm)
+FUNCTION_OBJS = $(FUNCTIONS:%.asm=$(BUILDDIR)/%.o)
+
+CFLAGS += -I $(abspath ${INCLUDEDIR})
+
+MAIN_OBJ = $(BUILDDIR)/main.o
+MAIN_EXE = $(BUILDDIR)/main
+
+FUNCTION_DEPLOYMENT_OBJ = $(BUILDDIR)/functions_deployment.o
+FUNCTION_DEPLOYMENT_EXE = $(BUILDDIR)/functions_deployment
+
+#all: $(MAIN_EXE) $(FUNCTION_DEPLOYMENT_EXE)
+#
+#$(MAIN_EXE): $(MAIN_OBJ) $(FUNCTION_OBJS) | $(FUNCTION_DEPLOYMENT_EXE)
+#	@printf "${BYELLOW}Linking executable ${BCYAN}$@${RESET}\n"
+#	${CC} -c $^ ${LDFLAGS} -o $@ ${LDLIBS}
+
+$(FUNCTION_DEPLOYMENT_EXE): $(FUNCTION_DEPLOYMENT_OBJ) $(LIB_OBJS)
+	@printf "${BYELLOW}Linking executable ${BCYAN}$@${RESET}\n"
+	${CC} ${LDFLAGS} $^ -o $@
+
+$(BUILDDIR)/%.o: $(SOURCEDIR)/%.c
+	@printf "${BYELLOW}Building object file ${BCYAN}$@${RESET}\n"
+	@mkdir -p $(dir $@)
+	${CC} -c ${CFLAGS} $< -o $@
+
+$(BUILDDIR)/%.o: $(LIBDIR)/%.c
+	@printf "${BYELLOW}Building object file ${BCYAN}$@${RESET}\n"
+	@mkdir -p $(dir $@)
+	${CC} -c ${CFLAGS} $< -o $@
+
+$(BUILDDIR)/%.o: $(FUNCTIONS)/%.asm
+	@printf "${BYELLOW}Building object file ${BCYAN}$@${RESET}\n"
+	@mkdir -p ${BUILDDIR}
+
+	${AS} ${ASFLAGS} $< -o $@
+
+run: $(FUNCTION_DEPLOYMENT_EXE)
+	./$(FUNCTION_DEPLOYMENT_EXE)
+
+clean:
+	@printf "${BYELLOW}Cleaning proccess${RESET}\n"
+	rm -rf ${BUILDDIR}
+	rm -rf ${FUNCTIONDIR}
+
+
+functionn:
+	@printf "${BYELLOW}The implementation of the function ${BCYAN}$(FUNCNAME)${RESET}\n"
+	@mkdir -p $(FUNCTIONDIR)
+	@touch $(FUNCTIONDIR)/$(FUNCNAME).asm
+#	@
+#	@if [ ! -f "$(FUNCTIONDIR)/$(FUNCNAME).asm" ]; then \
+#			touch "$(FUNCTIONDIR)/$(FUNCNAME).asm"; \
+#		else \
+#			rm -rf $(FUNCTIONDIR)/$(FUNCNAME).asm;
+#		fi
+
+.PHONY: run clean function
+
