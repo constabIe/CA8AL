@@ -15,6 +15,7 @@ ASFLAGS = \
 		-DUNIX
 
 LDLIBS = -lm
+LDFLAGS = -m32
 
 ifeq (${DEBUG}, 1)
 	CFLAGS += -g
