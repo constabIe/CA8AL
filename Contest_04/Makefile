@@ -57,7 +57,7 @@ SOURCES = $(SOURCEDIR)/functions_deployment.c \
 SOURCE_OBJS = $(SOURCES:(SOURCEDIR)/%.c=$(BUILDDIR)/%.o)
 
 FUNCTIONS = $(wildcard $(FUNCTIONDIR)/*.asm)
-FUNCTION_OBJS = $(FUNCTIONS:%.asm=$(BUILDDIR)/%.o)
+FUNCTION_OBJS = $(FUNCTIONS:$(FUNCTIONDIR)%.asm=$(BUILDDIR)/%.o)
 
 CFLAGS += -I $(abspath ${INCLUDEDIR})
 
