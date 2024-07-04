@@ -111,8 +111,8 @@ void init_Function(const char *raw_rpn, const char *func_name) {
             }
         }
         else if (func_rpn->rpn[i]->type == OPERAND) {
-            add_fpu(func_rpn->rpn[i]->obj->operand->obj);
             add_fpu(1);
+            add_fpu(func_rpn->rpn[i]->obj->operand->obj);
         }
         else {
             add_fpu(0);
@@ -142,41 +142,41 @@ void intel_asm_cdecl_function_definition_start_template(FILE *output, const char
     fprintf(output, "%s", "extern exp, log, sin, cos, tan, cot, sqrt, pow\n");
 
     fprintf(output, "%s", "%macro ALIGN_STACK 1.nolist\n");
-    fprintf(output, "%s", "    sub     esp, %1\n");
-    fprintf(output, "%s", "    and     esp, 0xfffffff0\n");
-    fprintf(output, "%s", "    add     esp, %1\n");
+    fprintf(output, "%s", "\tsub \tesp, %1\n");
+    fprintf(output, "%s", "\tand \tesp, 0xfffffff0\n");
+    fprintf(output, "%s", "\tadd \tesp, %1\n");
     fprintf(output, "%s", "%endmacro\n");
 
     fprintf(output, "%s", "%macro UNALIGN_STACK 1.nolist\n");
-    fprintf(output, "%s", "    add     esp, %1\n");
+    fprintf(output, "%s", "\tadd \tesp, %1\n");
     fprintf(output, "%s", "%endmacro\n");
 
     fprintf(output, "%s", "%macro FUNCTION_PROLOGUE 1.nolist\n");
-    fprintf(output, "%s", "    enter   %1, 0\n");
-    fprintf(output, "%s", "    and     esp, 0xfffffff0\n");
+    fprintf(output, "%s", "\tenter   %1, 0\n");
+    fprintf(output, "%s", "\tand \tesp, 0xfffffff0\n");
     fprintf(output, "%s", "%endmacro\n");
 
     fprintf(output, "%s", "%macro FUNCTION_EPILOGUE 0.nolist\n");
-    fprintf(output, "%s", "    leave\n");
+    fprintf(output, "%s", "\tleave\n");
     fprintf(output, "%s", "%endmacro\n");
 
-    fprintf(output, "%s", "%define val             ebp + 8\n");
-    fprintf(output, "%s", "%define tmp_ebx         ebp - 4\n");
-    fprintf(output, "%s", "%define tmp_edi         ebp - 12\n");
-    fprintf(output, "%s", "%define tmp_esi         ebp - 16\n");
-    fprintf(output, "%s", "%define fpu_ctrl        ebp - 20\n");
+    fprintf(output, "%s", "%define val\t\t\tebp + 8\n");
+    fprintf(output, "%s", "%define tmp_ebx\t\tebp - 4\n");
+    fprintf(output, "%s", "%define tmp_edi\t\tebp - 12\n");
+    fprintf(output, "%s", "%define tmp_esi\t\tebp - 16\n");
+    fprintf(output, "%s", "%define fpu_ctrl\tebp - 20\n");
 
     fprintf(output, "global %s\n", func_name);
     fprintf(output, "%s:\n", func_name);
-    fprintf(output, "%s", "    FUNCTION_PROLOGUE 20\n");
-    fprintf(output, "%s", "    mov     [tmp_ebx], ebx\n");
-    fprintf(output, "%s", "    mov     [tmp_edi], edi\n");
-    fprintf(output, "%s", "    mov     [tmp_esi], esi\n");
+    fprintf(output, "%s", "\tFUNCTION_PROLOGUE 20\n");
+    fprintf(output, "%s", "\tmov \t[tmp_ebx], ebx\n");
+    fprintf(output, "%s", "\tmov \t[tmp_edi], edi\n");
+    fprintf(output, "%s", "\tmov \t[tmp_esi], esi\n");
 
-    fprintf(output, "%s", "    mov     ebx, fpus\n");
+    fprintf(output, "%s", "\tmov \tebx, fpus\n");
 
-    fprintf(output, "%s", "    finit\n");
-    fprintf(output, "%s", "    fstcw   word [fpu_ctrl]\n");
+    fprintf(output, "%s", "\tfinit\n");
+    fprintf(output, "%s", "\tfstcw\tword [fpu_ctrl]\n");
 }
 void intel_asm_cdecl_function_definition_end_template(FILE *output) {
     if (output == NULL) { raise(SIGSEGV); }
@@ -203,7 +203,7 @@ void intel_asm_cdecl_function_definition_end_template(FILE *output) {
     fprintf(output, "%s", "section .data\n");
     fprintf(output, "%s", "\tfpus\t\tdq      ");
 
-    for (uint32_t i = global_fpus_q - 1; i > 0; --i) {
+    for (uint32_t i = 0; i < global_fpus_q; ++i) {
         fprintf(output, "%lf, ", global_fpus[i]);
     }
     fprintf(output, "%lf\n", global_fpus[0]);
