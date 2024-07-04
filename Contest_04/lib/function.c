@@ -162,7 +162,7 @@ void intel_asm_cdecl_function_definition_start_template(FILE *output, const char
     fprintf(output, "%s", "    and     esp, 0xfffffff0\n");
     fprintf(output, "%s", "%endmacro\n");
 
-    fprintf(output, "%s", "%macro FUNCTION_EPILOGUE 1.nolist\n");
+    fprintf(output, "%s", "%macro FUNCTION_EPILOGUE 0.nolist\n");
     fprintf(output, "%s", "    leave\n");
     fprintf(output, "%s", "%endmacro\n");
 
@@ -250,11 +250,11 @@ void intel_asm_load_fpu_template(FILE *output) {
     fprintf(output, "%s", "        mov     edi, [ebx]\n");
     fprintf(output, "%s", "        fld     qword [edi]\n");
     fprintf(output, "%s", "        add     ebx, QWORD_SIZE\n");
-    fprintf(output, "jmp    .%s:\n", token_1);
+    fprintf(output, "    jmp    .%s:\n", token_1);
 
     fprintf(output, "    .%s:\n", token_3);
     fprintf(output, "%s", "        fld     qword [val]\n");
-    fprintf(output, "jmp    .%s:\n", token_1);
+    fprintf(output, "    jmp    .%s:\n", token_1);
     fprintf(output, "%s:\n", token_1);
 
     ++global_label_cntr;
