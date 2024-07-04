@@ -71,7 +71,7 @@ all: $(MAIN_EXE) $(FUNCTION_DEPLOYMENT_EXE)
 
 $(MAIN_EXE): $(MAIN_OBJ) $(FUNCTION_OBJS) | $(FUNCTION_DEPLOYMENT_EXE)
 	@printf "${BYELLOW}Linking executable ${BCYAN}$@${RESET}\n"
-	${CC} -c $^ ${LDFLAGS} -o $@ ${LDLIBS}
+	${CC} ${LDFLAGS} $^ -o $@ ${LDLIBS}
 
 $(FUNCTION_DEPLOYMENT_EXE): $(FUNCTION_DEPLOYMENT_OBJ) $(LIB_OBJS)
 	@printf "${BYELLOW}Linking executable ${BCYAN}$@${RESET}\n"
