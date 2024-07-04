@@ -12,7 +12,7 @@ extern exp, log, sin, cos, tan, cot, sqrt, pow
     enter   %1, 0
     and     esp, 0xfffffff0
 %endmacro
-%macro FUNCTION_EPILOGUE 1.nolist
+%macro FUNCTION_EPILOGUE 0.nolist
     leave
 %endmacro
 %define val             ebp + 8
@@ -42,11 +42,11 @@ f1:
         mov     edi, [ebx]
         fld     qword [edi]
         add     ebx, QWORD_SIZE
-jmp    .cont_1:
+        jmp    .cont_1:
     .val_1:
         fld     qword [val]
-jmp    .cont_1:
-cont_1:
+        jmp    .cont_1:
+.cont_1:
     mov     edi, [ebx]
     fld     qword [edi]
     add     ebx, QWORD_SIZE
@@ -60,11 +60,11 @@ cont_1:
         mov     edi, [ebx]
         fld     qword [edi]
         add     ebx, QWORD_SIZE
-jmp    .cont_2:
+        jmp    .cont_2:
     .val_2:
         fld     qword [val]
-jmp    .cont_2:
-cont_2:
+        jmp    .cont_2:
+.cont_2:
     fdivrp
     sub     ebx, QWORD_SIZE
     fstp    qword [ebx]

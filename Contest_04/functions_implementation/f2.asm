@@ -12,7 +12,7 @@ extern exp, log, sin, cos, tan, cot, sqrt, pow
     enter   %1, 0
     and     esp, 0xfffffff0
 %endmacro
-%macro FUNCTION_EPILOGUE 1.nolist
+%macro FUNCTION_EPILOGUE 0.nolist
     leave
 %endmacro
 %define val             ebp + 8
@@ -42,11 +42,11 @@ f2:
         mov     edi, [ebx]
         fld     qword [edi]
         add     ebx, QWORD_SIZE
-jmp    .cont_1:
+        jmp    .cont_1:
     .val_1:
         fld     qword [val]
-jmp    .cont_1:
-cont_1:
+        jmp    .cont_1:
+.cont_1:
     mov     edi, [ebx]
     fld     qword [edi]
     add     ebx, QWORD_SIZE
@@ -60,11 +60,11 @@ cont_1:
         mov     edi, [ebx]
         fld     qword [edi]
         add     ebx, QWORD_SIZE
-jmp    .cont_2:
+        jmp    .cont_2:
     .val_2:
         fld     qword [val]
-jmp    .cont_2:
-cont_2:
+        jmp    .cont_2:
+.cont_2:
     faddp
     sub     ebx, QWORD_SIZE
     fstp    qword [ebx]
@@ -81,11 +81,11 @@ cont_2:
         mov     edi, [ebx]
         fld     qword [edi]
         add     ebx, QWORD_SIZE
-jmp    .cont_3:
+        jmp    .cont_3:
     .val_3:
         fld     qword [val]
-jmp    .cont_3:
-cont_3:
+        jmp    .cont_3:
+.cont_3:
     mov     edi, [ebx]
     fld     qword [edi]
     add     ebx, QWORD_SIZE
@@ -99,11 +99,11 @@ cont_3:
         mov     edi, [ebx]
         fld     qword [edi]
         add     ebx, QWORD_SIZE
-jmp    .cont_4:
+        jmp    .cont_4:
     .val_4:
         fld     qword [val]
-jmp    .cont_4:
-cont_4:
+        jmp    .cont_4:
+.cont_4:
     fmulp
     sub     ebx, QWORD_SIZE
     fstp    qword [ebx]
