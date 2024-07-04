@@ -35,7 +35,7 @@ f2:
 	fld1
 	fcompp
 	sahf
-	je  	operand_1
+	je  	.operand_1
 	jne 	.val_1
 	.operand_1:
 		lea 	edi, [ebx]
@@ -52,7 +52,7 @@ f2:
 	fld1
 	fcompp
 	sahf
-	je  	operand_2
+	je  	.operand_2
 	jne 	.val_2
 	.operand_2:
 		lea 	edi, [ebx]
@@ -75,7 +75,7 @@ f2:
 	fld1
 	fcompp
 	sahf
-	je  	operand_3
+	je  	.operand_3
 	jne 	.val_3
 	.operand_3:
 		lea 	edi, [ebx]
@@ -92,7 +92,7 @@ f2:
 	fld1
 	fcompp
 	sahf
-	je  	operand_4
+	je  	.operand_4
 	jne 	.val_4
 	.operand_4:
 		lea 	edi, [ebx]

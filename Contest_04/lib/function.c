@@ -80,7 +80,7 @@ void init_Function(const char *raw_rpn, const char *func_name) {
 
     char command[CMD_SIZE];
     memset(command, 0, sizeof(command));
-    const char *prefix_command = "make functionn FUNCNAME=";
+    const char *prefix_command = "make touch_function FUNCNAME=";
     snprintf(command, sizeof(command), "%s%s", prefix_command, func_name);
 
     VERIFY_CONTRACT(system(command) != -1, "The error was raised after an attempt to initialize the shell command");
@@ -92,7 +92,7 @@ void init_Function(const char *raw_rpn, const char *func_name) {
     snprintf(path, sizeof(path), "%s%s%s", prefix_path, func_name, suffix_path);
 
     FILE *output = fopen(path, "w");
-
+    printf("rrrr");
 
     intel_asm_cdecl_function_definition_start_template(output, func_name);
     set_default_global_label_cntr();

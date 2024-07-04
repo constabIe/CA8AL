@@ -76,11 +76,11 @@ FUNCTION_DEPLOYMENT_EXE = $(BUILDDIR)/functions_deployment
 all: $(FUNCTION_DEPLOYMENT_EXE) $(MAIN_EXE)
 
 print_var:
-	@echo "The value of MY_VAR is: $(FUNCTION_OBJS)"
+	@echo $(FUNCTION_OBJS)
 
-$(MAIN_EXE): $(FUNCTION_OBJS) $(MAIN_OBJ) | $(FUNCTION_DEPLOYMENT_EXE) $(FUNCTION_OBJS)
+$(MAIN_EXE): $(FUNCTION_OBJS) $(MAIN_OBJ)
 	@printf "$(BYELLOW)Linking executable $(BCYAN)$@$(RESET)\n"
-	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
+	$(CC) $(LDFLAGS) $^ $(FUNCTION_OBJS) -o $@ $(LDLIBS)
 
 $(FUNCTION_DEPLOYMENT_EXE): $(LIB_OBJS) $(FUNCTION_DEPLOYMENT_OBJ)
 	@printf "$(BYELLOW)Linking executable $(BCYAN)$@$(RESET)\n"
@@ -98,26 +98,25 @@ $(BUILDDIR)/%.o: $(LIBDIR)/%.c Makefile
 
 $(BUILDDIR)/%.o: $(FUNCTIONDIR)/%.asm Makefile
 	@printf "$(BYELLOW)Building object file $(BCYAN)$@$(RESET)\n"
-	@mkdir -p $(BUILDDIR)
+	@mkdir -p $(dir $@)
 
 	$(AS) $(ASFLAGS) $< -o $@ $(LDLIBS)
 
-run: $(MAIN_EXE) $(FUNCTION_DEPLOYMENT_EXE)
-	./$<
-
-run_func: $(FUNCTION_DEPLOYMENT_EXE)
+func: $(FUNCTION_DEPLOYMENT_EXE)
 	./$(FUNCTION_DEPLOYMENT_EXE)
+
+touch_function:
+	@printf "$(BYELLOW)The implementation of the function $(BCYAN)$(FUNCNAME)$(RESET)\n"
+	@mkdir -p $(FUNCTIONDIR)
+	@touch $(FUNCTIONDIR)/$(FUNCNAME).asm
+
+run: $(MAIN_EXE) $(FUNCTION_DEPLOYMENT_EXE)  $(FUNCTION_OBJS)
+	./$<
 
 clean:
 	@printf "$(BYELLOW)Cleaning proccess$(RESET)\n"
 	rm -rf $(BUILDDIR)
 	rm -rf $(FUNCTIONDIR)
-
-
-functionn:
-	@printf "$(BYELLOW)The implementation of the function $(BCYAN)$(FUNCNAME)$(RESET)\n"
-	@mkdir -p $(FUNCTIONDIR)
-	@touch $(FUNCTIONDIR)/$(FUNCNAME).asm
 
 .PHONY: run clean functionn
 
