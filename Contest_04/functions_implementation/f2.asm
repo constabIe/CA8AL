@@ -15,11 +15,11 @@ extern exp, log, sin, cos, tan, cot, sqrt, pow
 %macro FUNCTION_EPILOGUE 0.nolist
 	leave
 %endmacro
-%define val		ebp + 8
+%define val			ebp + 8
 %define tmp_ebx		ebp - 4
 %define tmp_edi		ebp - 12
 %define tmp_esi		ebp - 16
-%define fpu_ctrl		ebp - 20
+%define fpu_ctrl	ebp - 20
 global f2
 f2:
 	FUNCTION_PROLOGUE 20
@@ -113,18 +113,28 @@ f2:
 	sub 	ebx, QWORD_SIZE
 	fld1
 	fstp	qword [ebx]
-	fldcw   word [fpu_ctrl]
-	fstcw	word [fpu_ctrl]
-	finit
 	lea 	edi, [ebx]
 	fld 	qword [edi]
-	fldcw	word [fpu_ctrl]
-	mov 	ebx, [tmp_ebx]
-	mov 	edi, [tmp_edi]
-	mov 	esi, [tmp_esi]
+	add 	ebx, QWORD_SIZE
+	fld1
+	fcompp
+	fstsw	ax
+	sahf
+	je  	.operand_5
+	jne 	.val_5
+	.operand_5:
+		lea 	edi, [ebx]
+		fld 	qword [edi]
+		add 	ebx, QWORD_SIZE
+		jmp 	.cont_5
+	.val_5:
+		fld 	qword [val]
+		jmp 	.cont_5
+.cont_5:
+	fldcw   word [fpu_ctrl]
 	FUNCTION_EPILOGUE
 	ret
 section .data
 	QWORD_SIZE  	equ     8
 section .data
-	fpus		dq      1.000000, 3.000000, 1.000000, 2.000000, 1.000000, 3.000000, 0.000000, 0.000000, 1.000000, 4.000000, 1.000000
+	fpus		dq      1.000000, 3.000000, 1.000000, 2.000000, 1.000000, 3.000000, 0.000000, 0.000000, 1.000000, 4.000000

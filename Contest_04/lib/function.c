@@ -181,20 +181,10 @@ void intel_asm_cdecl_function_definition_start_template(FILE *output, const char
 void intel_asm_cdecl_function_definition_end_template(FILE *output) {
     if (output == NULL) { raise(SIGSEGV); }
 
+    intel_asm_load_fpu_template(output);
+
     fprintf(output, "%s", "\tfldcw   word [fpu_ctrl]\n");
-
-    fprintf(output, "%s", "\tfstcw\tword [fpu_ctrl]\n");
-    fprintf(output, "%s", "\tfinit\n");
-    fprintf(output, "%s", "\tlea \tedi, [ebx]\n");
-    fprintf(output, "%s", "\tfld \tqword [edi]\n");
-    fprintf(output, "%s", "\tfldcw\tword [fpu_ctrl]\n");
-
-    fprintf(output, "%s", "\tmov \tebx, [tmp_ebx]\n");
-    fprintf(output, "%s", "\tmov \tedi, [tmp_edi]\n");
-    fprintf(output, "%s", "\tmov \tesi, [tmp_esi]\n");
-
     fprintf(output, "%s", "\tFUNCTION_EPILOGUE\n");
-
     fprintf(output, "%s", "\tret\n");
 
     fprintf(output, "%s", "section .data\n");
@@ -203,10 +193,10 @@ void intel_asm_cdecl_function_definition_end_template(FILE *output) {
     fprintf(output, "%s", "section .data\n");
     fprintf(output, "%s", "\tfpus\t\tdq      ");
 
-    for (uint32_t i = 0; i < global_fpus_q; ++i) {
+    for (uint32_t i = 0; i < global_fpus_q - 1; ++i) {
         fprintf(output, "%lf, ", global_fpus[i]);
     }
-    fprintf(output, "%lf\n", global_fpus[0]);
+    fprintf(output, "%lf", global_fpus[global_fpus_q - 1]);
 }
 
 void intel_asm_load_fpu_template(FILE *output) {

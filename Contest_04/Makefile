@@ -78,7 +78,7 @@ all: $(FUNCTION_DEPLOYMENT_OBJ) $(LIB_OBJS) $(MAIN_OBJ)
 print_var:
 	@echo $(FUNCTION_OBJS)
 
-$(MAIN_EXE): $(FUNCTION_OBJS) $(MAIN_OBJ)
+$(MAIN_EXE): $(FUNCTION_OBJS) $(MAIN_OBJ) | $(FUNCTION_DEPLOYMENT_EXE)
 	@printf "$(BYELLOW)Linking executable $(BCYAN)$@$(RESET)\n"
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
@@ -110,7 +110,7 @@ touch_function:
 	@mkdir -p $(FUNCTIONDIR)
 	@touch $(FUNCTIONDIR)/$(FUNCNAME).asm
 
-run: $(MAIN_EXE) func
+run: $(MAIN_EXE)
 	./$<
 
 clean:
