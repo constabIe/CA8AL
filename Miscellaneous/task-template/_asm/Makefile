@@ -35,6 +35,15 @@ SOURCE = slv.asm
 
 OBJECTS = $(SOURCE:%.asm=build/%.o)
 
+# if IO methods are alternative for the library io.inc
+# SOURCES = \
+# 	../../../standart_IO/src/macro.c \
+# 	../../../standart_IO/src/benchmark.c \
+# 	slv.asm
+
+# OBJECTS_HALFWAY_DONE = $(SOURCES:../../../standart_IO/src/%.c=build/%.o)
+# OBJECTS              = $(OBJECTS_HALFWAY_DONE:%.asm=build/%.o)
+
 EXECUTABLE = build/slv_asm
 
 #---------------
